@@ -5,7 +5,7 @@
 <!-- ![index.png](./index.png) -->
 要求:<br>
 
-1. 可以显示图书的封面, 当然也要可以点进去(留好接口)
+1. 可以显示图书的封面, 当然也要可以点进去(留好接口), 点进去需要传参为点击的图书路径
 2. 有一个向上面的图一样的菜单, 菜单实现的功能要有
     + 可以对图书进行排序, 比如按打开的时间进行排序, 按阅读的时长进行排序
     + 需要留出一个添加图书的接口
@@ -20,14 +20,14 @@
 要求:<br>
 
 1. 必须实现可以直接选择手机文件夹, 查看文件夹中内容，添加单个文件的需求(需求的文件格式见附录)
-
+2. 在选择了文件后, 如果文件符合格式(附录的格式), 将文件复制到指定的目录(未定), 然后返回文件名
 #### 选做(尽量的挑战一下)
 1. 实现可以同时选择多个文件的效果
 2. 实现智能导入的效果, 即自动搜索符合条件的文件
 
 ### 模块三
 设置界面, 效果可能是这样的<br>
-<!-- ![setting](./seting.png) -->
+<!-- ![setting](./setting.png) -->
 要求<br>
 
 1. 最基本的要求是调整字体大小
@@ -69,20 +69,20 @@
     {
         "book_name" : "book_name",
         "cover" : "/cover.png",
-        "path" : "/book_path/book_name"
+        "path" : "/book_path/book_name",
         "pages_count" : 2,
         "pages" : [{
             "pages" : 1,
             "image" : "/page1.png",
-            "text" : "/text1.txt",
+            "text" : "/text1.txt"
         }, {
             "pages" : 2,
             "image" : "/page2.png",
-            "text" : "/text2.txt",
+            "text" : "/text2.txt"
         }],
         "last_read_page" : 0,
         "last_read_time" : "1221212",
-        "total_read_time": "123123123",
+        "total_read_time": "123123123"
     }
     ```
 
