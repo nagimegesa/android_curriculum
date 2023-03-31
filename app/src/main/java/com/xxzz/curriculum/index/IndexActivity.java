@@ -7,12 +7,19 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.xxzz.curriculum.R;
+
+import java.io.File;
+import java.util.EventListener;
 
 public class IndexActivity extends AppCompatActivity {
 
@@ -32,6 +39,28 @@ public class IndexActivity extends AppCompatActivity {
         });
 
         change_fragment(R.id.index_button);
+
+        boolean res = createBaseDir();
+        if(res == false) {
+            Context context = null;
+            Log.w("xxzz_app", "create init dir failed");
+            Toast.makeText(context, "初始化文件夹失败", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    private boolean createBaseDir() {
+        File basePath = Environment.getExternalStorageDirectory();
+        File appDataPath = new File(basePath, "xxzz_app");
+        boolean res = true;
+        if(!appDataPath.exists()) {
+            res = appDataPath.mkdir();
+            File bookPath = new File(appDataPath, "Book");
+            File coverPath = new File(appDataPath, "cover");
+            res &= bookPath.mkdir();
+            res &= coverPath.mkdir();
+        }
+        return res;
     }
 
     @SuppressLint("NonConstantResourceId")
