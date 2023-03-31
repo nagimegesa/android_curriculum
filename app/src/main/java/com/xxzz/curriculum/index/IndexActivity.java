@@ -3,7 +3,6 @@ package com.xxzz.curriculum.index;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RadioGroup;
@@ -15,12 +14,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.xxzz.curriculum.Permission;
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.Utils;
 import com.xxzz.curriculum.read.ReadActivity;
 
 import java.io.File;
+import java.util.List;
 
 public class IndexActivity extends AppCompatActivity {
     private Object waitObject = new Object();
@@ -39,26 +41,28 @@ public class IndexActivity extends AppCompatActivity {
         });
 
         change_fragment(R.id.index_button);
-
-        // Permission permission = new Permission();
-        // permission.checkPermissions(this);
-//        Intent intent = new Intent(IndexActivity.this, ReadActivity.class);
-//        intent.putExtra("book_name", "aili_book");
-//        startActivity(intent);
-    }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode ==Permission.RequestCode) {
-            boolean res = createBaseDir();
-            if(!res) {
-                Utils.makeToast(getApplicationContext(), "初始化文件夹失败", Toast.LENGTH_LONG);
-            }
-            Utils.makeToast(getApplicationContext(), "初始化文件夹成功", Toast.LENGTH_LONG);
-            Intent intent = new Intent(IndexActivity.this, ReadActivity.class);
-            intent.putExtra("book_name", "aili_book");
-            startActivity(intent);
+        boolean canWrite =
+                XXPermissions.isGranted(getApplicationContext(), Permission.WRITE_EXTERNAL_STORAGE);
+        if(canWrite) {
+            Utils.makeToast(getApplicationContext(), "创建文件夹", Toast.LENGTH_SHORT);
+            createBaseDir();
+        } else {
+            XXPermissions.with(this)
+                    .permission(Permission.WRITE_EXTERNAL_STORAGE)
+                    .permission(Permission.READ_EXTERNAL_STORAGE)
+                    .request(new OnPermissionCallback() {
+                        @Override
+                        public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
+                            if (permissions.contains(Permission.WRITE_EXTERNAL_STORAGE)) {
+                                createBaseDir();
+                                Utils.makeToast(getApplicationContext(), "获得权限", Toast.LENGTH_SHORT);
+                            }
+                        }
+                    });
         }
+        Intent intent = new Intent(IndexActivity.this, ReadActivity.class);
+        intent.putExtra("book_name", "aili_book");
+        startActivity(intent);
     }
 
     private boolean createBaseDir() {
