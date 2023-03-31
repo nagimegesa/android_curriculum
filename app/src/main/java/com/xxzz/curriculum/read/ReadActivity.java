@@ -1,16 +1,11 @@
 package com.xxzz.curriculum.read;
 
-import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
-import com.xxzz.curriculum.Permission;
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.Utils;
 
@@ -69,7 +64,7 @@ public class ReadActivity extends AppCompatActivity {
         Book readBook = new Book();
 
         readBook.setName(context.getString("book_name"));
-        readBook.setPages(context.getInt("pages_cnt"));
+        readBook.setPages(context.getInt("pages_counts"));
         JSONArray array = context.getJSONArray("pages");
         HashMap<Integer, String> pages2img = new HashMap<>();
         HashMap<Integer, String> pages2text = new HashMap<>();
@@ -86,13 +81,5 @@ public class ReadActivity extends AppCompatActivity {
         readBook.setTextPath(pages2text);
 
         return readBook;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == Permission.RequestCode) {
-            Utils.makeToast(getApplicationContext(), "授权成功", Toast.LENGTH_SHORT);
-        }
     }
 }
