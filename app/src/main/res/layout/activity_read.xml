@@ -6,25 +6,32 @@
     android:layout_height="match_parent"
     tools:context=".read.ReadActivity"
     android:orientation="vertical">
-
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="650dp"
-        tools:ignore="MissingConstraints"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/read_main_img"
+        android:layout_height="match_parent">
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewpager"
             android:layout_width="match_parent"
-            android:layout_height="400dp" />
-        <TextView
-            android:id="@+id/read_main_text"
+            android:layout_height="700dp" />
+        <LinearLayout
+            android:id="@+id/read_bottom_info"
+            android:layout_marginTop="700dp"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="250dp" />
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
-    </LinearLayout>
+            android:layout_height="30dp"
+            android:layout_gravity="bottom">
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/read_bottom_setting"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="测试文字"
+                android:background="@color/teal_200"/>
+        </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

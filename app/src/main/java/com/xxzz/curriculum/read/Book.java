@@ -39,6 +39,10 @@ public class Book {
         this.textPath = textPath;
     }
 
+    public void setReadPage(int readPage) {
+        this.readPage = readPage;
+    }
+
     public String getIndexText(int index) {
         return textPath.get(index);
     }
