@@ -49,7 +49,10 @@ public class IndexActivity extends AppCompatActivity {
         } else {
             XXPermissions.with(this)
                     .permission(Permission.WRITE_EXTERNAL_STORAGE)
-                    .permission(Permission.READ_EXTERNAL_STORAGE)
+                    // .permission(Permission.READ_EXTERNAL_STORAGE)
+                    .permission(Permission.READ_MEDIA_AUDIO)
+                    .permission(Permission.READ_MEDIA_IMAGES)
+                    .permission(Permission.READ_MEDIA_VIDEO)
                     .request(new OnPermissionCallback() {
                         @Override
                         public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
@@ -60,9 +63,9 @@ public class IndexActivity extends AppCompatActivity {
                         }
                     });
         }
-        Intent intent = new Intent(IndexActivity.this, ReadActivity.class);
-        intent.putExtra("book_name", "aili_book");
-        startActivity(intent);
+//        Intent intent = new Intent(IndexActivity.this, ReadActivity.class);
+//        intent.putExtra("book_name", "aili_book");
+//        startActivity(intent);
     }
 
     private boolean createBaseDir() {
