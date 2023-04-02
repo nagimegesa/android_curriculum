@@ -1,11 +1,14 @@
 package com.xxzz.curriculum.read;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +32,7 @@ public class ReadActivity extends AppCompatActivity {
     private BookReader reader;
     private boolean isShowSetting = false;
     private final ArrayList<View> views = new ArrayList<>();
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,29 +41,8 @@ public class ReadActivity extends AppCompatActivity {
         if(getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
-
-        Intent intent = getIntent();
-        String name = intent.getStringExtra("book_name");
-        Book book = null;
-        try {
-            book = getBook(name);
-        } catch (IOException | JSONException e) {
-            Utils.makeToast(getApplicationContext(),"IO出错", Toast.LENGTH_LONG);
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        assert book != null;
-        for(int i = 0;i < book.getPages(); ++i)
-            views.add(getLayoutInflater().inflate(R.layout.activity_read_content, null));
-        reader = new BookReader(getFilesDir().getAbsolutePath(), book);
-        ViewPager pager = this.findViewById(R.id.viewpager);
-        pager.setAdapter(new ReadPageAdapter(views));
-        pager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener());
-        pager.setCurrentItem(reader.getPageNow() - 1);
-
-        View v = findViewById(R.id.read_bottom_setting);
-        v.setVisibility(View.GONE);
+        initBook();
+        initGUI();
     }
 
     @Override
@@ -81,15 +64,93 @@ public class ReadActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        if(ev.getAction() != MotionEvent.ACTION_DOWN)
-            return super.dispatchTouchEvent(ev);
+    @SuppressLint("ClickableViewAccessibility")
+    private void initBook() {
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("book_name");
+        Book book = null;
+        try {
+            book = getBook(name);
+        } catch (IOException | JSONException e) {
+            Utils.makeToast(getApplicationContext(),"IO出错", Toast.LENGTH_LONG);
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        assert book != null;
+        for(int i = 0;i < book.getPages(); ++i)
+            views.add(getLayoutInflater().inflate(R.layout.activity_read_content, null));
+        reader = new BookReader(getFilesDir().getAbsolutePath(), book);
+        ViewPager pager = this.findViewById(R.id.read_viewpager);
+        pager.setAdapter(new ReadPageAdapter(views));
+        SeekBar bar = findViewById(R.id.read_seek_bar);
+        pager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                bar.setProgress(position);
+            }
+        });
+        pager.setOnTouchListener(new PagerOnTouch(new PagerOnTouch.TouchCallback() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public void onClick(boolean isClick) {
+                View v = findViewById(R.id.read_bottom_setting);
+                int stat = isShowSetting ? View.GONE : View.VISIBLE;
+                v.setVisibility(stat);
+                isShowSetting = !isShowSetting;
+            }
+        }));
+        pager.setCurrentItem(reader.getPageNow() - 1);
         View v = findViewById(R.id.read_bottom_setting);
-        int stat = isShowSetting ? View.GONE : View.VISIBLE;
-        v.setVisibility(stat);
-        isShowSetting = !isShowSetting;
-        return true;
+        v.setVisibility(View.GONE);
+    }
+
+    private void initGUI() {
+        SeekBar seekBar = findViewById(R.id.read_seek_bar);
+        seekBar.setMax(reader.getBook().getPages() - 1);
+        seekBar.setMin(0);
+        ViewPager pager = findViewById(R.id.read_viewpager);
+        seekBar.setOnSeekBarChangeListener(new SeekBarOnChange(new SeekBarOnChange.SeekBarOnChangeCallBack() {
+            @Override
+            public void onSeekBarChange(int process) {
+                pager.setCurrentItem(process);
+            }
+        }));
+
+        Button lastPageButton = findViewById(R.id.read_last_page);
+        Button nextPageButton = findViewById(R.id.read_next_page);
+
+        lastPageButton.setOnClickListener(v -> {
+            int process = seekBar.getProgress();
+            if(process > 0)
+                seekBar.setProgress(process - 1);
+        });
+
+        nextPageButton.setOnClickListener(v -> {
+            int process = seekBar.getProgress();
+            if(process < seekBar.getMax())
+                seekBar.setProgress(process + 1);
+        });
+
+        RadioGroup group = findViewById(R.id.read_radio_group);
+        group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.read_content:
+                        // TODO : set CONTENT GUI
+                        break;
+                    case R.id.read_night_mode:
+                        // TODO : get ConfigClass and change NightMode
+                        break;
+                    case R.id.read_setting:
+                        // TODO : get setting GUI
+                        break;
+                    default:break;
+                }
+            }
+        });
     }
 
     private Book getBook(String name) throws IOException, JSONException, InterruptedException {
