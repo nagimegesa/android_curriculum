@@ -9,10 +9,32 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/read_viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+        <RelativeLayout
+            android:layout_alignParentTop="true"
+            android:id="@+id/read_top_layout"
+            android:background="@color/my_gray"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+            <android.widget.Button
+                android:drawableStart="@drawable/left"
+                android:paddingStart="10dp"
+                android:id="@+id/read_back_button"
+                android:background="@color/my_gray"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/read_top_title"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="@color/white"
+                android:gravity="center"/>
+        </RelativeLayout>
         <LinearLayout
             android:layout_alignParentBottom="true"
             android:id="@+id/read_bottom_info"
@@ -34,12 +56,10 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal">
 
-                <Button
+                <android.widget.Button
+                    style="@style/read_change_page_button_style"
                     android:id="@+id/read_last_page"
-                    android:layout_weight="1"
-                    android:layout_width="200dp"
-                    android:layout_height="50dp"
-                    android:text="上一页"/>
+                    android:text="上一页" />
 
                 <SeekBar
                     android:id="@+id/read_seek_bar"
@@ -47,40 +67,40 @@
                     android:layout_weight="1"
                     android:layout_width="300dp"
                     android:layout_height="50dp" />
-                <Button
+                <android.widget.Button
+                    style="@style/read_change_page_button_style"
                     android:id="@+id/read_next_page"
-                    android:layout_weight="1"
-                    android:layout_width="200dp"
-                    android:layout_height="50dp"
                     android:text="下一页" />
             </LinearLayout>
-            <RadioGroup
-                android:id="@+id/read_radio_group"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
-                <RadioButton
+                <android.widget.Button
                     android:drawableTop="@drawable/menu"
                     android:id="@+id/read_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    style="@style/read_radio_style"
+                    style="@style/read_button_style"
+                    android:background="@drawable/read_bottom_button"
                     android:text="目录" />
-                <RadioButton
+                <android.widget.Button
                     android:drawableTop="@drawable/night"
                     android:id="@+id/read_night_mode"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    style="@style/read_radio_style"
+                    style="@style/read_button_style"
+                    android:background="@drawable/read_bottom_button"
                     android:text="夜间模式" />
-                <RadioButton
+                <android.widget.Button
                     android:drawableTop="@drawable/set"
                     android:id="@+id/read_setting"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    style="@style/read_radio_style"
+                    style="@style/read_button_style"
+                    android:background="@drawable/read_bottom_button"
                     android:text="设置" />
-            </RadioGroup>
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

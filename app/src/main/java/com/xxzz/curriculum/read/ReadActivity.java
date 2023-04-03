@@ -2,12 +2,11 @@ package com.xxzz.curriculum.read;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +30,9 @@ import java.util.HashMap;
 public class ReadActivity extends AppCompatActivity {
     private BookReader reader;
     private boolean isShowSetting = false;
+
+    private boolean isNightMode = true;
+
     private final ArrayList<View> views = new ArrayList<>();
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -94,9 +96,9 @@ public class ReadActivity extends AppCompatActivity {
             @SuppressLint("ClickableViewAccessibility")
             @Override
             public void onClick(boolean isClick) {
-                View v = findViewById(R.id.read_bottom_setting);
                 int stat = isShowSetting ? View.GONE : View.VISIBLE;
-                v.setVisibility(stat);
+                findViewById(R.id.read_bottom_setting).setVisibility(stat);
+                findViewById(R.id.read_top_layout).setVisibility(stat);
                 isShowSetting = !isShowSetting;
             }
         }));
@@ -132,25 +134,42 @@ public class ReadActivity extends AppCompatActivity {
                 seekBar.setProgress(process + 1);
         });
 
-        RadioGroup group = findViewById(R.id.read_radio_group);
-        group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @SuppressLint("NonConstantResourceId")
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.read_content:
-                        // TODO : set CONTENT GUI
-                        break;
-                    case R.id.read_night_mode:
-                        // TODO : get ConfigClass and change NightMode
-                        break;
-                    case R.id.read_setting:
-                        // TODO : get setting GUI
-                        break;
-                    default:break;
-                }
-            }
+        Button nightMode = findViewById(R.id.read_night_mode);
+        Button setting = findViewById(R.id.read_setting);
+        Button content = findViewById(R.id.read_content);
+
+        nightMode.setOnClickListener((v) -> {
+            changeNightLightMode((Button) v);
         });
+
+        setting.setOnClickListener((v)->{
+            // TODO : set setting menu
+        });
+
+        content.setOnClickListener((v)-> {
+            // TODO : set content menu
+        });
+
+        Button back = findViewById(R.id.read_back_button);
+        back.setOnClickListener((v)-> {
+            ReadActivity.this.finish();
+        });
+
+        TextView view = findViewById(R.id.read_top_title);
+        view.setText(reader.getBook().getName());
+
+        findViewById(R.id.read_top_layout).setVisibility(View.GONE);
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private void changeNightLightMode(Button button) {
+        isNightMode = !isNightMode;
+        int drawableId = isNightMode ? R.drawable.night : R.drawable.light;
+        String text = isNightMode ? "夜间模式" : "白天模式";
+        button.setText(text);
+        Drawable drawable = getDrawable(drawableId);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        button.setCompoundDrawables(null, drawable, null, null);
     }
 
     private Book getBook(String name) throws IOException, JSONException, InterruptedException {
