@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.xxzz.curriculum.Permission;
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.Utils;
+import com.xxzz.curriculum.join.JoinBookActivity;
 import com.xxzz.curriculum.read.ReadActivity;
 
 import java.io.File;
@@ -96,6 +97,8 @@ public class IndexActivity extends AppCompatActivity {
 
     private String switchToAddBook() {
         // TODO : switch to the Read Activity with result back;
+        Intent intent = new Intent(this, JoinBookActivity.class);
+        startActivity(intent);
         return null;
     }
 

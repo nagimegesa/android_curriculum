@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Permission {
-    private String[] permissions = {
+    public static String[] permissions = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
@@ -22,7 +22,9 @@ public class Permission {
 
     public static int RequestCode = 100;
 
-    public void checkPermissions(Activity activity) {
+    public boolean checkPermissions(Activity activity) {
+        boolean res = true;
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             for (String permission : permissions) {
                 if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
@@ -32,8 +34,10 @@ public class Permission {
             //有需要去动态申请的权限
             if (permissionList.size() > 0) {
                 requestPermission(activity);
+                res = false;
             }
         }
+        return res;
     }
     //去申请的权限
     private void requestPermission(Activity activity) {
