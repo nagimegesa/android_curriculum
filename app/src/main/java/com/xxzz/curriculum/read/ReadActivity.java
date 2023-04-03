@@ -29,10 +29,18 @@ import java.util.HashMap;
 
 public class ReadActivity extends AppCompatActivity {
     private BookReader reader;
-    private boolean isShowSetting = false;
-
+    private boolean isBasicShowAble = true;
+    private boolean isAloneClickShow = true;
     private boolean isNightMode = true;
 
+    private static final int[] basicClickShowId = new int[] {
+            R.id.read_top_layout,
+            R.id.read_bottom_menu
+    };
+    
+    private static final int[] aloneClickShowId = new int[] {
+            R.id.read_top_menu
+    };
     private final ArrayList<View> views = new ArrayList<>();
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -96,15 +104,13 @@ public class ReadActivity extends AppCompatActivity {
             @SuppressLint("ClickableViewAccessibility")
             @Override
             public void onClick(boolean isClick) {
-                int stat = isShowSetting ? View.GONE : View.VISIBLE;
-                findViewById(R.id.read_bottom_setting).setVisibility(stat);
-                findViewById(R.id.read_top_layout).setVisibility(stat);
-                isShowSetting = !isShowSetting;
+                setBasicShowAbleStat(!isBasicShowAble);
+                if(isAloneClickShow) {
+                    setShowAbleStat(false);
+                }
             }
         }));
         pager.setCurrentItem(reader.getPageNow() - 1);
-        View v = findViewById(R.id.read_bottom_setting);
-        v.setVisibility(View.GONE);
     }
 
     private void initGUI() {
@@ -158,13 +164,36 @@ public class ReadActivity extends AppCompatActivity {
         TextView view = findViewById(R.id.read_top_title);
         view.setText(reader.getBook().getName());
 
-        findViewById(R.id.read_top_layout).setVisibility(View.GONE);
+        Button topMenu = findViewById(R.id.read_top_menu_button);
+        topMenu.setOnClickListener((v)-> {
+            int showAble = isAloneClickShow ? View.GONE : View.VISIBLE;
+            findViewById(R.id.read_top_menu).setVisibility(showAble);
+            isAloneClickShow = !isAloneClickShow;
+        });
+
+        setShowAbleStat(false);
+    }
+    
+    private void setBasicShowAbleStat(boolean isShow) {
+        int show = isShow ? View.VISIBLE : View.GONE;
+        for(int id : basicClickShowId) {
+            findViewById(id).setVisibility(show);
+        }
+        isBasicShowAble = isShow;
+    }
+    private void setShowAbleStat(boolean isShow) {
+        setBasicShowAbleStat(isShow);
+        int show = isShow ? View.VISIBLE : View.GONE;
+        for(int id : aloneClickShowId) {
+            findViewById(id).setVisibility(show);
+        }
+        isAloneClickShow = isShow;
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private void changeNightLightMode(Button button) {
         isNightMode = !isNightMode;
-        int drawableId = isNightMode ? R.drawable.night : R.drawable.light;
+        int drawableId = isNightMode ? R.drawable.read_meun_night : R.drawable.read_menu_light;
         String text = isNightMode ? "夜间模式" : "白天模式";
         button.setText(text);
         Drawable drawable = getDrawable(drawableId);
