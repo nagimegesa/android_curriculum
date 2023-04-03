@@ -55,7 +55,9 @@ public class FileOperation {
           //  System.out.println("文件取消删除!");
        // }
     }
-    private static void copyFileUsingStream(File source, File dest) throws IOException {
+    static void copyFileUsingStream(String sourcepath, String destpath) throws IOException {
+        File source = new File(sourcepath);
+        File dest = new File(destpath) ;
         InputStream is = null;
         OutputStream os = null;
         try {
@@ -109,6 +111,54 @@ public class FileOperation {
         } catch (Exception e) {
             System.out.println("文件夹复制失败!");
         }
+    }
+    public static boolean ChectFile(File file  ){
+        File[] files = file.listFiles();
+        String [] filename = {"main","text","jbk_config.json"};
+        int count=0;
+        //判断目录是否为空
+        if (files == null){
+            return false ;
+        }
+        for (File f : files) {
+            if (f.isFile()){ //包含文件名
+                if (f.getName().contains(filename[2]))
+                    count ++;
+            }
+            else if (f.isDirectory()&&(f.getName().contains(filename[0])||f.getName().contains(filename[1]))){//如果是目录
+                count ++;
+            }
+        }
+        if(count == 3)
+            return true;
+
+        return false;
+    }
+    public static boolean deleteDFile(File file){//删除目录下的所有子文件
+        //判断文件不为null或文件目录存在
+        if (file == null || !file.exists()){
+            System.out.println("文件删除失败,请检查文件路径是否正确");
+            return false;
+        }
+        //取得这个目录下的所有子文件对象
+        File[] files = file.listFiles();
+        //遍历该目录下的文件对象
+        for (File f: files){
+            //打印文件名
+            String name = file.getName();
+            System.out.println(name);
+            //判断子目录是否存在子目录,如果是文件则删除
+            if (f.isDirectory()){
+                deleteDFile(f);
+            }else {
+                f.delete();
+                file.delete();
+            }
+
+        }
+        //删除空文件夹  for循环已经把上一层节点的目录清空。
+        //
+        return true;
     }
 
 }

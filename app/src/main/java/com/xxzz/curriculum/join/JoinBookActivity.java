@@ -1,6 +1,10 @@
 package com.xxzz.curriculum.join;
 
 
+import static com.xxzz.curriculum.join.FileOperation.ChectFile;
+import static com.xxzz.curriculum.join.FileOperation.copyDir;
+import static com.xxzz.curriculum.join.FileOperation.copyFileUsingStream;
+import static com.xxzz.curriculum.join.FileOperation.deleteDFile;
 import static com.xxzz.curriculum.join.UnzipUtil.unzipFile;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,7 +57,7 @@ public class JoinBookActivity extends AppCompatActivity {
         //intent.setType(“video/*;image/*”);//同时选择视频和图片
         intent.setType("*/*");//无类型限制
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        //intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); //打开多个文件
         startActivityForResult(intent, mTag);
     }
 
@@ -63,7 +67,7 @@ public class JoinBookActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
             if (requestCode == mTag) {
-                File file = null;
+                //File file = null;
                 //使用ACTION_GET_CONTENT时 选择文件时多个调用用ClipData
                 ClipData clipData = data.getClipData();
                 if (clipData!=null)
@@ -75,9 +79,16 @@ public class JoinBookActivity extends AppCompatActivity {
                         try {
                             String path = URLDecoder.decode(itemAt.getUri().getPath(), "UTF-8");
                             path = path.split(":")[1];
+                            String BookPath = "/storage/emulated/0/xxzz_app/Book";
+                            String CoverPath = "/storage/emulated/0/xxzz_app/Cover";
                             File tmpPath = getCacheDir();
                             unzipFile(path, tmpPath.getAbsolutePath());
-
+                            if(ChectFile(tmpPath)){
+                                copyDir(tmpPath.getAbsolutePath()+"/main",CoverPath);
+                                copyDir(tmpPath.getAbsolutePath()+"/text",BookPath);
+                                copyFileUsingStream(tmpPath.getAbsolutePath()+"/jbk_config.json","/storage/emulated/0/xxzz_app/jbk_config.json");
+                            }
+                            deleteDFile(tmpPath);
                         } catch (UnsupportedEncodingException e) {
                             throw new RuntimeException(e);
                         } catch (IOException e) {
@@ -89,56 +100,30 @@ public class JoinBookActivity extends AppCompatActivity {
                     }
                 }
 
-                Uri uri = data.getData();
+                    Uri uri = data.getData();
                 if (uri != null) {
                     try {
                         String path = URLDecoder.decode(uri.getPath(), "UTF-8");
                         path = path.split(":")[1];
+                        String BookPath = "/storage/emulated/0/xxzz_app/Book";
+                        String CoverPath = "/storage/emulated/0/xxzz_app/Cover";
                         File tmpPath = getCacheDir();
                         unzipFile(path, tmpPath.getAbsolutePath());
-                        // File configFile = new File(getCacheDir(), "")
-                        if(path.isEmpty()) {
-
+                        if(ChectFile(tmpPath)){
+                            copyDir(tmpPath.getAbsolutePath()+"/main",CoverPath);
+                            copyDir(tmpPath.getAbsolutePath()+"/text",BookPath);
+                            copyFileUsingStream(tmpPath.getAbsolutePath()+"/jbk_config.json","/storage/emulated/0/xxzz_app/jbk_config.json");
                         }
+                        deleteDFile(tmpPath);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    // CommonUtils
-                    // Toast.makeText(this, "文件路径："+ uri.getPath().toString(), Toast.LENGTH_SHORT).show();
-//                    String Path = uri.getPath().split(":")[1];
-//                    String externalCacheDir = getExternalCacheDir().getPath()+"/test.zip";
-//                    file = new File(externalCacheDir);
-//                    String path = uri.getPath().split(":")[0]+Environment.getExternalStorageDirectory().getPath()+"/xxzz_app/Book/";
-//                    File extractTo = new File(path);
-//
-//                   String mylast = "/document/primary:xxzz_app/Book/test_book.jbk";
-//                    String mylastPath =uri.getPath();
-//                    try {
-//                        unzipFile(mylastPath,mylast);
-//                    } catch (Exception e) {
-//                        throw new RuntimeException(e);
-//                    }
-
-//                    String absolutePath = file.getAbsolutePath();
-//                    Toast.makeText(this, "文件路径："+ absolutePath, Toast.LENGTH_SHORT).show();
-//                    String path = Environment.getExternalStorageDirectory().getPath()+"/xxzz_app/Book/";
-                    //Toast.makeText(this, "文件路径："+ path, Toast.LENGTH_SHORT).show();
-//                    String[] temp = uri.getPath().split("/");
-//                    String filename = temp[temp.length-1];
-//                    String zipPath = getExternalCacheDir().getPath()+filename;
-//                    try {
-//                        unzipFile (absolutePath,path);
-//                    } catch (IOException e) {
-//                        throw new RuntimeException(e);
-//                    }
-                    //file = CommonUtils.uri2File(uri);
-                    if (file == null) {
-                        Toast.makeText(this, "文件地址未找到：", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    // 上传文件
-                    // upLoadFile(file);
+////                    if (file == null) {
+////                        Toast.makeText(this, "文件地址未找到：", Toast.LENGTH_SHORT).show();
+////                        return;
+////                    }
                 }
+                return;
             }
         }
     }
