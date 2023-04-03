@@ -121,7 +121,7 @@ public class IndexActivity extends AppCompatActivity {
                 fragment = IndexFragment.getInstance();
                 break;
             case R.id.setting_button:
-                fragment = SettingFragment.getInstance();
+                fragment = SettingFragment.getInstance(this);
                 break;
             default:
                 break;
