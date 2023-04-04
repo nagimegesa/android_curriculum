@@ -1,5 +1,7 @@
 package com.xxzz.curriculum.read;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -29,19 +31,16 @@ import java.util.HashMap;
 
 public class ReadActivity extends AppCompatActivity {
     private BookReader reader;
-    private boolean isBasicShowAble = true;
-    private boolean isAloneClickShow = true;
+    private boolean isBasicShowAble = false;
+    private boolean isTopMenuShow = false;
+    private boolean isLeftFragmentShow = false;
     private boolean isNightMode = true;
 
-    private static final int[] basicClickShowId = new int[] {
-            R.id.read_top_layout,
-            R.id.read_bottom_menu
-    };
-    
-    private static final int[] aloneClickShowId = new int[] {
-            R.id.read_top_menu
-    };
     private final ArrayList<View> views = new ArrayList<>();
+
+    public ReadActivity() {
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,10 +103,17 @@ public class ReadActivity extends AppCompatActivity {
             @SuppressLint("ClickableViewAccessibility")
             @Override
             public void onClick(boolean isClick) {
-                setBasicShowAbleStat(!isBasicShowAble);
-                if(isAloneClickShow) {
-                    setShowAbleStat(false);
+                if(!isBasicShowAble) {
+                    Animator top = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_show_top_layout);
+                    Animator bottom = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_show_bottom_menu);
+                    top.setTarget(findViewById(R.id.read_top_layout));
+                    bottom.setTarget(findViewById(R.id.read_bottom_menu));
+                    top.start();
+                    bottom.start();
+                } else {
+                    closeBasicMenu();
                 }
+                isBasicShowAble = !isBasicShowAble;
             }
         }));
         pager.setCurrentItem(reader.getPageNow() - 1);
@@ -153,7 +159,10 @@ public class ReadActivity extends AppCompatActivity {
         });
 
         content.setOnClickListener((v)-> {
-            // TODO : set content menu
+            Animator animator = AnimatorInflater.loadAnimator(this, R.animator.read_show_left_fram_animation);
+            animator.setTarget(findViewById(R.id.read_left_frame));
+            animator.start();
+            isLeftFragmentShow = true;
         });
 
         Button back = findViewById(R.id.read_back_button);
@@ -166,34 +175,46 @@ public class ReadActivity extends AppCompatActivity {
 
         Button topMenu = findViewById(R.id.read_top_menu_button);
         topMenu.setOnClickListener((v)-> {
-            int showAble = isAloneClickShow ? View.GONE : View.VISIBLE;
-            findViewById(R.id.read_top_menu).setVisibility(showAble);
-            isAloneClickShow = !isAloneClickShow;
+            if(!isTopMenuShow) {
+                Animator animator = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_show_top_menu);
+                animator.setTarget(findViewById(R.id.read_top_menu));
+                animator.start();
+                isTopMenuShow = true;
+            } else {
+                closeTopMenu();
+            }
         });
+    }
 
-        setShowAbleStat(false);
+    private void closeBasicMenu() {
+        Animator top = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_close_top_layout);
+        Animator bottom = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_close_bottom_menu);
+        top.setTarget(findViewById(R.id.read_top_layout));
+        bottom.setTarget(findViewById(R.id.read_bottom_menu));
+        if(isLeftFragmentShow) closeLeftFragment();
+        if(isTopMenuShow) closeTopMenu();
+        top.start();
+        bottom.start();
     }
-    
-    private void setBasicShowAbleStat(boolean isShow) {
-        int show = isShow ? View.VISIBLE : View.GONE;
-        for(int id : basicClickShowId) {
-            findViewById(id).setVisibility(show);
-        }
-        isBasicShowAble = isShow;
+
+    private void closeTopMenu() {
+        Animator animator = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_close_top_menu);
+        animator.setTarget(findViewById(R.id.read_top_menu));
+        animator.start();
+        isTopMenuShow = false;
     }
-    private void setShowAbleStat(boolean isShow) {
-        setBasicShowAbleStat(isShow);
-        int show = isShow ? View.VISIBLE : View.GONE;
-        for(int id : aloneClickShowId) {
-            findViewById(id).setVisibility(show);
-        }
-        isAloneClickShow = isShow;
+
+    private void closeLeftFragment() {
+         Animator animator = AnimatorInflater.loadAnimator(this, R.animator.read_close_left_fram_animation);
+         animator.setTarget(findViewById(R.id.read_left_frame));
+         animator.start();
+         isLeftFragmentShow = false;
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private void changeNightLightMode(Button button) {
         isNightMode = !isNightMode;
-        int drawableId = isNightMode ? R.drawable.read_meun_night : R.drawable.read_menu_light;
+        int drawableId = isNightMode ? R.drawable.read_menu_night : R.drawable.read_menu_light;
         String text = isNightMode ? "夜间模式" : "白天模式";
         button.setText(text);
         Drawable drawable = getDrawable(drawableId);
