@@ -1,4 +1,31 @@
 ## android 课设需求
+
+### 重要说明
+1. **关于夜间模式**
+夜间模式的设置本质为采用不同的风格渲染组件, 也就是说如果需要实现夜间模式, 再写UI的时候就需要尽量不采用硬编码<br>
+举个栗子, 再写 button组件的时候需要设置 textColor属性, **不要这样写**
+```xml
+<Button
+    android:textColor = "#000000" />
+```
+**必须这样写**
+```xml
+<!--@color/Black 为 /res/color.xml 中定义的颜色 -->
+<Button
+    android:textColor = "@color/Black" />
+```
+2. 关于同一风格的问题
+   + 关于写UI界面的id, 必须加上统一的前缀, 举个栗子, 阅读模式的 组件 id 全部为 read_ 开头
+   + 关于每个人添加的drawable, style, mipmap 文件, 同上, 只要是只有自己用的上的文件(**注意是资源文件**), 加上自己的前缀(**不要用自己的名字, 和一些没有意义的字符**)
+   + 关于每个的java文件非必要不要直接创建在com.xxzz.curriculum目录下, 要在自己的目录下创建(**注意Config类**需要创建在该目录下)
+
+3. 关于 Util类的问题
+Util类为工具类, 主要写一些比较常用但是又不是很好归类的函数, 如果自己遇到了一些需求先想想是不是整个项目很常用的功能, 必要时添加Utils类中函数, 然后更新README
+并且,如果自己需要Utils里面的功能, **不要自己造轮子**,目前Util类中的函数如下
+   1. makeToast, 创建一个 Toast 并显示
+   2. readAllFile 读取指定路径文件内容
+
+
 ### 模块一 初始界面
 要求:
 1. 可以显示图书的封面, 当然也要可以点进去(留好接口), 点进去需要传参为点击的图书名, 参数名为 book_name,  直接采用putExtra方式
@@ -25,10 +52,35 @@
 要求
 1. 最基本的要求是调整字体大小
 2. 书签和收藏管理
-3. 对于以上的需求保存在本地, 以json的格式
+3. 对于用户的设置需求保存在本地, 采用 xml 的形式, 参考 **getSharedPreferences** 函数
 4. 可以设置打开和关闭背景音乐
+5. **夜间模式(增加为必须做)**
+#### 具体需求如下
+1. 设置 Config 类, 记录当前状态下用户的设置, 比如有没有开启音乐, 字体大小时多少
+   + Config 类要求单例模式实现
+   + 要求提供 get, set 方法 比如 ``setMouseStat(boolean stat)`` 表示设置背景英语的状态
+2. 添加 BooKMark, 和 BookCollection类, 分别表示书签和收藏
+   + 其中BookMark类要求继承BooCollection类
+   + BookCollection 类中要记录图书名以及那一页的信息
+   + BookMark类中要求有书签数据的信息。
+3. 为BookMark和BookCollection添加一个管理系统要求可以增伤对应的书签和收藏
+4. 用户书签和收藏信息保存在本地以Json的格式, 具体要求如下
+   1. 书签文件存在 /data/0/com.curriculum/files/User/Mark.json
+   2. 收藏文件存在 /data/0/com.curriculum/files/User/Collection.json
+   3. Mark.json格式如下
+   ```json
+   {
+      "count": 1,
+      "info": [{
+          "book_name" : "name",
+          "page": 1,
+          "text": "text"
+      }]
+   } 
+   ```
+   4. Collection.json 同 Mark.json, 但没有 text 字段
 #### 选做(尽量的挑战一下)
-1. 护眼模式和夜间开关  
+1. 护眼模式
 ### 模块四 阅读模块
 要求
 1. 可以调用模块三书签和收藏管理的接口
