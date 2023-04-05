@@ -26,16 +26,16 @@ public class PagerOnTouch implements View.OnTouchListener {
             case MotionEvent.ACTION_UP:
                 int endX = (int) event.getX();
                 int endY = (int) event.getY();
-                touchCallback.onClick(
-                        Math.abs(endX - startX) < 50
-                                && Math.abs(endY - startY) < 50);
+                if(Math.abs(endX - startX) < 10
+                            && Math.abs(endY - startY) < 10)
+                    touchCallback.onClick();
                 break;
         }
         return false;
     }
 
     public interface TouchCallback {
-        public default void onClick(boolean isClick) {
+        public default void onClick() {
         }
     }
 }

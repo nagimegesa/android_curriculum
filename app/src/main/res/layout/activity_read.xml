@@ -131,6 +131,15 @@
                     android:text="设置" />
             </LinearLayout>
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/read_bottom_setting_menu"
+            android:background="@color/my_gray"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="-150dp"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:orientation="horizontal">
+        </LinearLayout>
         <RelativeLayout
             android:background="@color/my_gray"
             android:id="@+id/read_left_frame"
@@ -150,13 +159,14 @@
                     android:paddingTop="0dp"
                     style="@style/read_button_style"
                     android:text="书签" />
-                <android.widget.Button
-                    android:paddingTop="0dp"
-                    style="@style/read_button_style"
-                    android:text="目录" />
+<!--                <android.widget.Button-->
+<!--                    android:paddingTop="0dp"-->
+<!--                    style="@style/read_button_style"-->
+<!--                    android:text="目录" />-->
             </LinearLayout>
 
             <androidx.viewpager.widget.ViewPager
+                android:id="@+id/read_left_frame_viewpager"
                 android:layout_below="@+id/read_left_frame_top"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">

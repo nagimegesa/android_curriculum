@@ -34,6 +34,8 @@ public class ReadActivity extends AppCompatActivity {
     private boolean isBasicShowAble = false;
     private boolean isTopMenuShow = false;
     private boolean isLeftFragmentShow = false;
+
+    private boolean isBottomSettingMenuShow = false;
     private boolean isNightMode = true;
 
     private final ArrayList<View> views = new ArrayList<>();
@@ -102,7 +104,7 @@ public class ReadActivity extends AppCompatActivity {
         pager.setOnTouchListener(new PagerOnTouch(new PagerOnTouch.TouchCallback() {
             @SuppressLint("ClickableViewAccessibility")
             @Override
-            public void onClick(boolean isClick) {
+            public void onClick() {
                 if(!isBasicShowAble) {
                     Animator top = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_show_top_layout);
                     Animator bottom = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_show_bottom_menu);
@@ -156,6 +158,10 @@ public class ReadActivity extends AppCompatActivity {
 
         setting.setOnClickListener((v)->{
             // TODO : set setting menu
+            Animator animator = AnimatorInflater.loadAnimator(this, R.animator.read_show_bottom_setting_menu);
+            animator.setTarget(findViewById(R.id.read_bottom_setting_menu));
+            animator.start();
+            isBottomSettingMenuShow = true;
         });
 
         content.setOnClickListener((v)-> {
@@ -184,6 +190,15 @@ public class ReadActivity extends AppCompatActivity {
                 closeTopMenu();
             }
         });
+
+        Button addLoves = findViewById(R.id.read_add_love);
+        addLoves.setOnClickListener((v)-> {
+            // TODO : add lovers
+        });
+        Button addMark = findViewById(R.id.read_add_mark);
+        addMark.setOnClickListener((v)-> {
+            //TODO : add mark
+        });
     }
 
     private void closeBasicMenu() {
@@ -193,8 +208,16 @@ public class ReadActivity extends AppCompatActivity {
         bottom.setTarget(findViewById(R.id.read_bottom_menu));
         if(isLeftFragmentShow) closeLeftFragment();
         if(isTopMenuShow) closeTopMenu();
+        if(isBottomSettingMenuShow) closeBottomSettingMenu();
         top.start();
         bottom.start();
+    }
+
+    private void closeBottomSettingMenu() {
+        Animator animator = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_close_bottom_setting_menu);
+        animator.setTarget(findViewById(R.id.read_bottom_setting_menu));
+        animator.start();
+        isBottomSettingMenuShow = false;
     }
 
     private void closeTopMenu() {
