@@ -3,4 +3,10 @@
     <item
         android:id="@+id/add_book"
         android:title="添加书籍"/>
+    <item
+        android:id="@+id/dete_book"
+        android:title="删除书籍"/>
+    <item
+        android:id="@+id/sort_book"
+        android:title="最近阅读"/>
 </menu>

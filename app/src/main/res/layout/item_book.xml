@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+        <ImageView
+            android:id="@+id/book"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="@color/black"
+            android:paddingLeft="2px"
+            android:paddingTop="2px"
+            android:paddingRight="2px"
+            android:paddingBottom="2px"/>
+    </LinearLayout>
+</LinearLayout>

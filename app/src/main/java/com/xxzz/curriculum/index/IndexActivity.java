@@ -20,10 +20,7 @@ public class IndexActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
-
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"})
         RadioGroup group = (RadioGroup) findViewById(R.id.bottom_radio);
-
         group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -33,20 +30,25 @@ public class IndexActivity extends AppCompatActivity {
 
         change_fragment(R.id.index_button);
     }
-
-    @SuppressLint("NonConstantResourceId")
+    
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add_book:
                 startAddBook();
                 break;
+            case R.id.dete_book:
+                deteleBook();
+                break;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
+    
+    private void deteleBook(){
 
+    }
     private void startAddBook() {
         String s = switchToAddBook();
         // TODO : do something for add book

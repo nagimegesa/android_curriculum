@@ -4,14 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".index.IndexActivity">
-
-
     <FrameLayout
         android:id="@+id/main_container"
         android:layout_width="match_parent"
         android:layout_height="660dp">
     </FrameLayout>
-
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -22,13 +19,11 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true">
-
         <RadioGroup
             android:id="@+id/bottom_radio"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
-
             <RadioButton
                 android:id="@+id/index_button"
                 android:layout_width="match_parent"
@@ -36,7 +31,6 @@
                 android:text="@string/index_name"
                 style="@style/radio_style"
                 android:drawableTop="@drawable/index_svg"/>
-
             <RadioButton
                 android:id="@+id/setting_button"
                 android:layout_width="match_parent"
