@@ -8,11 +8,11 @@ import com.xxzz.curriculum.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class myBookAdapter extends BaseAdapter {
+public class IndexBookAdapter extends BaseAdapter {
     private Context context;
     private final List<String> datas = new ArrayList<String>();
 
-    public myBookAdapter(Context context) {
+    public IndexBookAdapter(Context context) {
         this.context = context;
     }
 

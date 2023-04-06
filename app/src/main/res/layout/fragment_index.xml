@@ -25,14 +25,14 @@
         android:gravity="center"
         android:orientation="horizontal" >
         <Button
+            android:id="@+id/index_add_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="add"
             android:text="增加" />
         <Button
+            android:id="@+id/index_del_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="del"
             android:text="减少" />
     </LinearLayout>
     <ListView

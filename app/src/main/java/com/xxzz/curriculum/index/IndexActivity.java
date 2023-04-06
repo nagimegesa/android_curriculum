@@ -38,7 +38,7 @@ public class IndexActivity extends AppCompatActivity {
                 startAddBook();
                 break;
             case R.id.dete_book:
-                deteleBook();
+                deleteBook();
                 break;
             default:
                 break;
@@ -46,7 +46,7 @@ public class IndexActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     
-    private void deteleBook(){
+    private void deleteBook(){
 
     }
     private void startAddBook() {
