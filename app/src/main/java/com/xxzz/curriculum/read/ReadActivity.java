@@ -8,16 +8,19 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.Utils;
+import com.xxzz.curriculum.index.IndexActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,7 +29,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ReadActivity extends AppCompatActivity {
@@ -38,7 +40,7 @@ public class ReadActivity extends AppCompatActivity {
     private boolean isBottomSettingMenuShow = false;
     private boolean isNightMode = true;
 
-    private final ArrayList<View> views = new ArrayList<>();
+   // private final ArrayList<View> views = new ArrayList<>();
 
     public ReadActivity() {
     }
@@ -56,25 +58,6 @@ public class ReadActivity extends AppCompatActivity {
         initGUI();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        for(int i = 1; i <= reader.getBook().getPages(); ++i)  {
-            ImageView img = views.get(i - 1).findViewById(R.id.read_main_img);
-            TextView text = views.get(i - 1).findViewById(R.id.read_main_text);
-            Pages pages = null;
-            try {
-                pages = reader.getIndexPage(i);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            if(pages != null) {
-                img.setImageBitmap(pages.getMap());
-                text.setText(pages.getText());
-            }
-        }
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     private void initBook() {
         Intent intent = getIntent();
@@ -89,22 +72,22 @@ public class ReadActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
         assert book != null;
-        for(int i = 0;i < book.getPages(); ++i)
-            views.add(getLayoutInflater().inflate(R.layout.activity_read_content, null));
         reader = new BookReader(getFilesDir().getAbsolutePath(), book);
-        ViewPager pager = this.findViewById(R.id.read_viewpager);
-        pager.setAdapter(new ReadPageAdapter(views));
+        ViewPager2 pager = this.findViewById(R.id.read_viewpager);
+        pager.setAdapter(new ReadPageAdapter(reader));
         SeekBar bar = findViewById(R.id.read_seek_bar);
-        pager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 bar.setProgress(position);
             }
+
         });
-        pager.setOnTouchListener(new PagerOnTouch(new PagerOnTouch.TouchCallback() {
-            @SuppressLint("ClickableViewAccessibility")
+
+        FrameLayout frameLayout = findViewById(R.id.read_center_frame);
+        frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick() {
+            public void onClick(View v) {
                 if(!isBasicShowAble) {
                     Animator top = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_show_top_layout);
                     Animator bottom = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_show_bottom_menu);
@@ -117,15 +100,16 @@ public class ReadActivity extends AppCompatActivity {
                 }
                 isBasicShowAble = !isBasicShowAble;
             }
-        }));
+        });
         pager.setCurrentItem(reader.getPageNow() - 1);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private void initGUI() {
         SeekBar seekBar = findViewById(R.id.read_seek_bar);
         seekBar.setMax(reader.getBook().getPages() - 1);
         seekBar.setMin(0);
-        ViewPager pager = findViewById(R.id.read_viewpager);
+        ViewPager2 pager = findViewById(R.id.read_viewpager);
         seekBar.setOnSeekBarChangeListener(new SeekBarOnChange(new SeekBarOnChange.SeekBarOnChangeCallBack() {
             @Override
             public void onSeekBarChange(int process) {
@@ -198,6 +182,54 @@ public class ReadActivity extends AppCompatActivity {
         Button addMark = findViewById(R.id.read_add_mark);
         addMark.setOnClickListener((v)-> {
             //TODO : add mark
+        });
+
+        SeekBar changeTextSize = findViewById(R.id.read_change_text_size);
+        changeTextSize.setOnSeekBarChangeListener(new SeekBarOnChange(new SeekBarOnChange.SeekBarOnChangeCallBack() {
+            @Override
+            public void onSeekBarChange(int process) {
+                // TODO : change Text Size
+            }
+        }));
+
+        SeekBar changeLight = findViewById(R.id.read_change_light);
+        changeLight.setOnSeekBarChangeListener(new SeekBarOnChange(new SeekBarOnChange.SeekBarOnChangeCallBack() {
+            @Override
+            public void onSeekBarChange(int process) {
+                // TODO : change system light value
+            }
+        }));
+
+        Button moreSetting = findViewById(R.id.read_more_setting);
+        moreSetting.setOnClickListener((v)-> {
+            Intent intent = new Intent(this, IndexActivity.class);
+            intent.putExtra("which", IndexActivity.FragmentPage.SETTING_FRAGMENT.ordinal());
+            startActivity(intent);
+        });
+
+        RadioGroup group = findViewById(R.id.read_bottom_radio);
+
+        group.setOnCheckedChangeListener((g, id) -> {
+            int forward = id == R.id.read_up_down
+                    ? ViewPager2.ORIENTATION_VERTICAL : ViewPager2.ORIENTATION_HORIZONTAL;
+            pager.setOrientation(forward);
+            RadioButton up_button = findViewById(R.id.read_up_down);
+            RadioButton left_button = findViewById(R.id.read_left_right);
+            Drawable up = null, down = null;
+            if(id == R.id.read_up_down) {
+                up = getDrawable(R.drawable.read_up_forward_down);
+                down = getDrawable(R.drawable.read_left_forward_up);
+            } else {
+                up = getDrawable(R.drawable.read_up_forward_up);
+                down = getDrawable(R.drawable.read_left_forward_down);
+            }
+
+            assert up != null && down != null;
+            up.setBounds(0, 0, up.getIntrinsicWidth(), up.getIntrinsicHeight());
+            up_button.setCompoundDrawables(null, up, null, null);
+
+            down.setBounds(0, 0, down.getIntrinsicWidth(), down.getIntrinsicHeight());
+            left_button.setCompoundDrawables(null, down, null, null);
         });
     }
 
@@ -274,10 +306,8 @@ public class ReadActivity extends AppCompatActivity {
             pages2img.put(page, img);
             pages2text.put(page, text);
         }
-
         readBook.setImgPath(pages2img);
         readBook.setTextPath(pages2text);
-
         return readBook;
     }
 }
