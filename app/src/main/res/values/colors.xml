@@ -7,6 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+<<<<<<< HEAD
     <!--     标题等  -->
     <color name="textPrimary">#212121</color>
     <color name="textSecondary">#757575</color>
@@ -15,4 +16,7 @@
     <color name="common_bg">#F5F5F5</color>
 
 
+=======
+    <color name="my_gray">#292929</color>
+>>>>>>> main
 </resources>

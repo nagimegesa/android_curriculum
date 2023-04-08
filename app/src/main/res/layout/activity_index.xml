@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/index_name"
-                style="@style/radio_style"
+                style="@style/index_radio_style"
                 android:drawableTop="@drawable/index_svg"/>
 
             <RadioButton
@@ -42,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/setting_name"
-                style="@style/radio_style"
+                style="@style/index_radio_style"
                 android:drawableTop="@drawable/index_svg">
             </RadioButton>
         </RadioGroup>

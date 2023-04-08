@@ -25,7 +25,10 @@ import java.io.File;
 import java.util.List;
 
 public class IndexActivity extends AppCompatActivity {
-    private Object waitObject = new Object();
+    public enum FragmentPage {
+        INDEX_FRAGMENT,
+        SETTING_FRAGMENT,
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +69,18 @@ public class IndexActivity extends AppCompatActivity {
 //        Intent intent = new Intent(IndexActivity.this, ReadActivity.class);
 //        intent.putExtra("book_name", "aili_book");
 //        startActivity(intent);
+    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        int which = intent.getIntExtra("which", FragmentPage.INDEX_FRAGMENT.ordinal());
+        if(which == FragmentPage.INDEX_FRAGMENT.ordinal()) {
+            change_fragment(R.id.index_button);
+        } else if(which == FragmentPage.SETTING_FRAGMENT.ordinal()) {
+            change_fragment(R.id.setting_button);
+        }
     }
 
     private boolean createBaseDir() {
