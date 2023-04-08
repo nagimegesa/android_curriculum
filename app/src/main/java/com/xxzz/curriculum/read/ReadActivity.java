@@ -1,21 +1,26 @@
 package com.xxzz.curriculum.read;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.Utils;
+import com.xxzz.curriculum.index.IndexActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,24 +29,22 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ReadActivity extends AppCompatActivity {
     private BookReader reader;
-    private boolean isBasicShowAble = true;
-    private boolean isAloneClickShow = true;
+    private boolean isBasicShowAble = false;
+    private boolean isTopMenuShow = false;
+    private boolean isLeftFragmentShow = false;
+
+    private boolean isBottomSettingMenuShow = false;
     private boolean isNightMode = true;
 
-    private static final int[] basicClickShowId = new int[] {
-            R.id.read_top_layout,
-            R.id.read_bottom_menu
-    };
-    
-    private static final int[] aloneClickShowId = new int[] {
-            R.id.read_top_menu
-    };
-    private final ArrayList<View> views = new ArrayList<>();
+   // private final ArrayList<View> views = new ArrayList<>();
+
+    public ReadActivity() {
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,25 +56,6 @@ public class ReadActivity extends AppCompatActivity {
         }
         initBook();
         initGUI();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        for(int i = 1; i <= reader.getBook().getPages(); ++i)  {
-            ImageView img = views.get(i - 1).findViewById(R.id.read_main_img);
-            TextView text = views.get(i - 1).findViewById(R.id.read_main_text);
-            Pages pages = null;
-            try {
-                pages = reader.getIndexPage(i);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            if(pages != null) {
-                img.setImageBitmap(pages.getMap());
-                text.setText(pages.getText());
-            }
-        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -88,36 +72,44 @@ public class ReadActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
         assert book != null;
-        for(int i = 0;i < book.getPages(); ++i)
-            views.add(getLayoutInflater().inflate(R.layout.activity_read_content, null));
         reader = new BookReader(getFilesDir().getAbsolutePath(), book);
-        ViewPager pager = this.findViewById(R.id.read_viewpager);
-        pager.setAdapter(new ReadPageAdapter(views));
+        ViewPager2 pager = this.findViewById(R.id.read_viewpager);
+        pager.setAdapter(new ReadPageAdapter(reader));
         SeekBar bar = findViewById(R.id.read_seek_bar);
-        pager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 bar.setProgress(position);
             }
+
         });
-        pager.setOnTouchListener(new PagerOnTouch(new PagerOnTouch.TouchCallback() {
-            @SuppressLint("ClickableViewAccessibility")
+
+        FrameLayout frameLayout = findViewById(R.id.read_center_frame);
+        frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(boolean isClick) {
-                setBasicShowAbleStat(!isBasicShowAble);
-                if(isAloneClickShow) {
-                    setShowAbleStat(false);
+            public void onClick(View v) {
+                if(!isBasicShowAble) {
+                    Animator top = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_show_top_layout);
+                    Animator bottom = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_show_bottom_menu);
+                    top.setTarget(findViewById(R.id.read_top_layout));
+                    bottom.setTarget(findViewById(R.id.read_bottom_menu));
+                    top.start();
+                    bottom.start();
+                } else {
+                    closeBasicMenu();
                 }
+                isBasicShowAble = !isBasicShowAble;
             }
-        }));
+        });
         pager.setCurrentItem(reader.getPageNow() - 1);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private void initGUI() {
         SeekBar seekBar = findViewById(R.id.read_seek_bar);
         seekBar.setMax(reader.getBook().getPages() - 1);
         seekBar.setMin(0);
-        ViewPager pager = findViewById(R.id.read_viewpager);
+        ViewPager2 pager = findViewById(R.id.read_viewpager);
         seekBar.setOnSeekBarChangeListener(new SeekBarOnChange(new SeekBarOnChange.SeekBarOnChangeCallBack() {
             @Override
             public void onSeekBarChange(int process) {
@@ -150,10 +142,17 @@ public class ReadActivity extends AppCompatActivity {
 
         setting.setOnClickListener((v)->{
             // TODO : set setting menu
+            Animator animator = AnimatorInflater.loadAnimator(this, R.animator.read_show_bottom_setting_menu);
+            animator.setTarget(findViewById(R.id.read_bottom_setting_menu));
+            animator.start();
+            isBottomSettingMenuShow = true;
         });
 
         content.setOnClickListener((v)-> {
-            // TODO : set content menu
+            Animator animator = AnimatorInflater.loadAnimator(this, R.animator.read_show_left_fram_animation);
+            animator.setTarget(findViewById(R.id.read_left_frame));
+            animator.start();
+            isLeftFragmentShow = true;
         });
 
         Button back = findViewById(R.id.read_back_button);
@@ -166,34 +165,111 @@ public class ReadActivity extends AppCompatActivity {
 
         Button topMenu = findViewById(R.id.read_top_menu_button);
         topMenu.setOnClickListener((v)-> {
-            int showAble = isAloneClickShow ? View.GONE : View.VISIBLE;
-            findViewById(R.id.read_top_menu).setVisibility(showAble);
-            isAloneClickShow = !isAloneClickShow;
+            if(!isTopMenuShow) {
+                Animator animator = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_show_top_menu);
+                animator.setTarget(findViewById(R.id.read_top_menu));
+                animator.start();
+                isTopMenuShow = true;
+            } else {
+                closeTopMenu();
+            }
         });
 
-        setShowAbleStat(false);
+        Button addLoves = findViewById(R.id.read_add_love);
+        addLoves.setOnClickListener((v)-> {
+            // TODO : add lovers
+        });
+        Button addMark = findViewById(R.id.read_add_mark);
+        addMark.setOnClickListener((v)-> {
+            //TODO : add mark
+        });
+
+        SeekBar changeTextSize = findViewById(R.id.read_change_text_size);
+        changeTextSize.setOnSeekBarChangeListener(new SeekBarOnChange(new SeekBarOnChange.SeekBarOnChangeCallBack() {
+            @Override
+            public void onSeekBarChange(int process) {
+                // TODO : change Text Size
+            }
+        }));
+
+        SeekBar changeLight = findViewById(R.id.read_change_light);
+        changeLight.setOnSeekBarChangeListener(new SeekBarOnChange(new SeekBarOnChange.SeekBarOnChangeCallBack() {
+            @Override
+            public void onSeekBarChange(int process) {
+                // TODO : change system light value
+            }
+        }));
+
+        Button moreSetting = findViewById(R.id.read_more_setting);
+        moreSetting.setOnClickListener((v)-> {
+            Intent intent = new Intent(this, IndexActivity.class);
+            intent.putExtra("which", IndexActivity.FragmentPage.SETTING_FRAGMENT.ordinal());
+            startActivity(intent);
+        });
+
+        RadioGroup group = findViewById(R.id.read_bottom_radio);
+
+        group.setOnCheckedChangeListener((g, id) -> {
+            int forward = id == R.id.read_up_down
+                    ? ViewPager2.ORIENTATION_VERTICAL : ViewPager2.ORIENTATION_HORIZONTAL;
+            pager.setOrientation(forward);
+            RadioButton up_button = findViewById(R.id.read_up_down);
+            RadioButton left_button = findViewById(R.id.read_left_right);
+            Drawable up = null, down = null;
+            if(id == R.id.read_up_down) {
+                up = getDrawable(R.drawable.read_up_forward_down);
+                down = getDrawable(R.drawable.read_left_forward_up);
+            } else {
+                up = getDrawable(R.drawable.read_up_forward_up);
+                down = getDrawable(R.drawable.read_left_forward_down);
+            }
+
+            assert up != null && down != null;
+            up.setBounds(0, 0, up.getIntrinsicWidth(), up.getIntrinsicHeight());
+            up_button.setCompoundDrawables(null, up, null, null);
+
+            down.setBounds(0, 0, down.getIntrinsicWidth(), down.getIntrinsicHeight());
+            left_button.setCompoundDrawables(null, down, null, null);
+        });
     }
-    
-    private void setBasicShowAbleStat(boolean isShow) {
-        int show = isShow ? View.VISIBLE : View.GONE;
-        for(int id : basicClickShowId) {
-            findViewById(id).setVisibility(show);
-        }
-        isBasicShowAble = isShow;
+
+    private void closeBasicMenu() {
+        Animator top = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_close_top_layout);
+        Animator bottom = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_close_bottom_menu);
+        top.setTarget(findViewById(R.id.read_top_layout));
+        bottom.setTarget(findViewById(R.id.read_bottom_menu));
+        if(isLeftFragmentShow) closeLeftFragment();
+        if(isTopMenuShow) closeTopMenu();
+        if(isBottomSettingMenuShow) closeBottomSettingMenu();
+        top.start();
+        bottom.start();
     }
-    private void setShowAbleStat(boolean isShow) {
-        setBasicShowAbleStat(isShow);
-        int show = isShow ? View.VISIBLE : View.GONE;
-        for(int id : aloneClickShowId) {
-            findViewById(id).setVisibility(show);
-        }
-        isAloneClickShow = isShow;
+
+    private void closeBottomSettingMenu() {
+        Animator animator = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_close_bottom_setting_menu);
+        animator.setTarget(findViewById(R.id.read_bottom_setting_menu));
+        animator.start();
+        isBottomSettingMenuShow = false;
+    }
+
+    private void closeTopMenu() {
+        Animator animator = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_close_top_menu);
+        animator.setTarget(findViewById(R.id.read_top_menu));
+        animator.start();
+        isTopMenuShow = false;
+    }
+
+    private void closeLeftFragment() {
+         Animator animator = AnimatorInflater.loadAnimator(this, R.animator.read_close_left_fram_animation);
+         animator.setTarget(findViewById(R.id.read_left_frame));
+         animator.start();
+         isLeftFragmentShow = false;
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private void changeNightLightMode(Button button) {
         isNightMode = !isNightMode;
-        int drawableId = isNightMode ? R.drawable.read_meun_night : R.drawable.read_menu_light;
+        int drawableId = isNightMode ? R.drawable.read_menu_night : R.drawable.read_menu_light;
         String text = isNightMode ? "夜间模式" : "白天模式";
         button.setText(text);
         Drawable drawable = getDrawable(drawableId);
@@ -230,10 +306,8 @@ public class ReadActivity extends AppCompatActivity {
             pages2img.put(page, img);
             pages2text.put(page, text);
         }
-
         readBook.setImgPath(pages2img);
         readBook.setTextPath(pages2text);
-
         return readBook;
     }
 }

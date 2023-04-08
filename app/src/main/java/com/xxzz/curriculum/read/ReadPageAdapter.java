@@ -1,39 +1,57 @@
 package com.xxzz.curriculum.read;
 
+import android.annotation.SuppressLint;
+import android.graphics.pdf.PdfDocument;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.xxzz.curriculum.R;
+
+import java.io.IOException;
 import java.util.List;
 
-public class ReadPageAdapter extends PagerAdapter {
-    private final List<View> views;
-    ReadPageAdapter(List<View> views) {
-       this.views = views;
-    }
-    @Override
-    public int getCount() {
-        return views.size();
-    }
-
-    @Override
-    public void destroyItem(@NonNull ViewGroup container, int position,
-                            @NonNull Object object) {
-        ((ViewPager) container).removeView(views.get(position));
+public class ReadPageAdapter extends RecyclerView.Adapter<ReadPageAdapter.Holder> {
+    private BookReader reader;
+    ReadPageAdapter(BookReader reader) {
+        this.reader = reader;
     }
 
     @NonNull
     @Override
-    public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        ((ViewPager) container).addView(views.get(position));
-        return views.get(position);
+    public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+       return new Holder(LayoutInflater.from(parent.getContext())
+               .inflate(R.layout.activity_read_content, parent, false));
     }
 
     @Override
-    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return view == object;
+    public void onBindViewHolder(@NonNull Holder holder, int position) {
+        ImageView imageView = holder.itemView.findViewById(R.id.read_main_img);
+        TextView  textView = holder.itemView.findViewById(R.id.read_main_text);
+        Pages pages = null;
+        try {
+            pages = reader.getIndexPage(position + 1);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        imageView.setImageBitmap(pages.getMap());
+        textView.setText(pages.getText());
+    }
+
+    @Override
+    public int getItemCount() {
+        return reader.getBook().getPages();
+    }
+
+    class Holder extends RecyclerView.ViewHolder {
+        @SuppressLint("CutPasteId")
+        public Holder(@NonNull View itemView) {
+            super(itemView);
+        }
     }
 }
