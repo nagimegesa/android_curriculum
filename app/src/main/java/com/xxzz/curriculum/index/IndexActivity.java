@@ -66,9 +66,9 @@ public class IndexActivity extends AppCompatActivity {
                         }
                     });
         }
-        Intent intent = new Intent(IndexActivity.this, ReadActivity.class);
-        intent.putExtra("book_name", "aili_book");
-        startActivity(intent);
+//        Intent intent = new Intent(IndexActivity.this, ReadActivity.class);
+//        intent.putExtra("book_name", "aili_book");
+//        startActivity(intent);
     }
 
 
