@@ -1,12 +1,16 @@
 package com.xxzz.curriculum.index;
 
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -14,33 +18,18 @@ import com.xxzz.curriculum.R;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.file.Files;
 
-interface fontSizeInter {
-
-    public void setBookFontSize(float fontSize);
-
-}
-
-interface BookMarkInter {
-
-    public void addBookMark(String title, int page);
-
-    public void deleteBookMark(String title, int page);
-
-    public void getAllBookMark();
-}
-
 public class SettingFragment extends Fragment {
     static private SettingFragment fragment;
-
+    private float defaultFontSize = 24;
+    private Spinner readFontSize = null;
+    String[] arr = {"8","12","16","20","24"};
     private Context parent;
-
     public SettingFragment(Context parent) {
         this.parent = parent;
     }
@@ -59,9 +48,10 @@ public class SettingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         File dir = new File(parent.getFilesDir() + "/BookMark/");
         //文件名
-        String fileName = "bookmark.json";
+        String fileName = "bookmarks.json";
         try {
             //文件存在则不需创建
             if (!dir.exists()) {
@@ -76,6 +66,20 @@ public class SettingFragment extends Fragment {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        readFontSize = readFontSize.findViewById(R.id.sp_setFontSize);
+
+        readFontSize.setSelection(0); //设置默认选中项
+        readFontSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override
@@ -84,25 +88,6 @@ public class SettingFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_setting, container, false);
     }
 
-    public void addBookMark(String title, int page) {
-
-    }
-
-}
-
-class FontConfig implements fontSizeInter {
-    private float minFontSize = 4;
-    private float defaultFontSize = 24;
-    private float fontSize = 20;
-
-    public void setBookFontSize(float fontSize) {
-        if (fontSize < minFontSize)
-            fontSize = minFontSize;
-        this.fontSize = fontSize;
-    }
-}
-
-class BookMark implements BookMarkInter {
     public void addBookMark(String title, int page) {
     }
 
@@ -132,33 +117,22 @@ class BookMark implements BookMarkInter {
         }
         return null;
     }
-}
 
-class MusicServer {
-    private static MediaPlayer mp = null;
+    public void setReadFontSize(float fontSize) {
 
-    public static void play(Context context, int resource) {
-        stop(context);
-        mp = MediaPlayer.create(context, resource);
-        mp.setLooping(true);
-        mp.start();
-    }
-
-    public static void stop(Context context) {
-        if (mp != null) {
-            mp.stop();
-            mp.release();
-            mp = null;
+        if (fontSize > 10) {
+//            setText(String.valueOf(fontSize - 1));
+//            setReadFontSize(fontSize - 1);
+//            saveSetting(setting);
+        }
+        if (fontSize < 60) {
+//            setText(String.valueOf(fontSize + 1));
+//            setReadWordSize(fontSize + 1);
+//            saveSetting(setting);
         }
     }
-}
-
-class EyeCareMode {
 
 }
 
-class NightMode {
-
-}
 
 
