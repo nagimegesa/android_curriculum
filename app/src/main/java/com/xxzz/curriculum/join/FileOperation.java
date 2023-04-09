@@ -7,22 +7,7 @@ import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 public class FileOperation {
-    static void readfile(File file){
-        try (Reader reader = new FileReader(file.getPath())) {
-            // 按照字符来读.
-            while (true) {
-                char[] buffer = new char[1024];
-                int len = reader.read(buffer);
-                if (len == -1) {
-                    break;
-                }
-                String s = new String(buffer, 0, len);
-                System.out.println(s);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     private static void scanDir(File rootFile, String toDeleteDir) throws IOException {
         File[] files = rootFile.listFiles();
@@ -112,10 +97,10 @@ public class FileOperation {
             System.out.println("文件夹复制失败!");
         }
     }
-    public static boolean ChectFile(File file  ){
+    public static boolean CheckFile(File file  ){
         File[] files = file.listFiles();
         String [] filename = {"main","text","jbk_config.json"};
-        int count=0;
+        int count=0;2
         //判断目录是否为空
         if (files == null){
             return false ;

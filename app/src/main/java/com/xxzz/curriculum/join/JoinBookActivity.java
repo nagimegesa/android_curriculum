@@ -1,7 +1,7 @@
 package com.xxzz.curriculum.join;
 
 
-import static com.xxzz.curriculum.join.FileOperation.ChectFile;
+import static com.xxzz.curriculum.join.FileOperation.CheckFile;
 import static com.xxzz.curriculum.join.FileOperation.copyDir;
 import static com.xxzz.curriculum.join.FileOperation.copyFileUsingStream;
 import static com.xxzz.curriculum.join.FileOperation.deleteDFile;
@@ -48,7 +48,6 @@ public class JoinBookActivity extends AppCompatActivity {
     }
     // 打开文件管理器选择文件
     private void openFileManager() {
-
         // 打开文件管理器选择文件
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         //intent.setType(“image/*”);//选择图片
@@ -83,7 +82,7 @@ public class JoinBookActivity extends AppCompatActivity {
                             String CoverPath = "/storage/emulated/0/xxzz_app/Cover";
                             File tmpPath = getCacheDir();
                             unzipFile(path, tmpPath.getAbsolutePath());
-                            if(ChectFile(tmpPath)){
+                            if(CheckFile(tmpPath)){
                                 copyDir(tmpPath.getAbsolutePath()+"/main",CoverPath);
                                 copyDir(tmpPath.getAbsolutePath()+"/text",BookPath);
                                 copyFileUsingStream(tmpPath.getAbsolutePath()+"/jbk_config.json","/storage/emulated/0/xxzz_app/jbk_config.json");
@@ -109,7 +108,7 @@ public class JoinBookActivity extends AppCompatActivity {
                         String CoverPath = "/storage/emulated/0/xxzz_app/Cover";
                         File tmpPath = getCacheDir();
                         unzipFile(path, tmpPath.getAbsolutePath());
-                        if(ChectFile(tmpPath)){
+                        if(CheckFile(tmpPath)){
                             copyDir(tmpPath.getAbsolutePath()+"/main",CoverPath);
                             copyDir(tmpPath.getAbsolutePath()+"/text",BookPath);
                             copyFileUsingStream(tmpPath.getAbsolutePath()+"/jbk_config.json","/storage/emulated/0/xxzz_app/jbk_config.json");
