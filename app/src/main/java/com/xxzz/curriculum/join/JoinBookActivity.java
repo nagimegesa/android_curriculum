@@ -8,18 +8,13 @@ import static com.xxzz.curriculum.join.FileOperation.deleteDFile;
 import static com.xxzz.curriculum.join.UnzipUtil.unzipFile;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.widget.Toast;
 
-import com.xxzz.curriculum.Permission;
 import com.xxzz.curriculum.R;
-import com.xxzz.curriculum.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,23 +23,17 @@ import java.net.URLDecoder;
 
 public class JoinBookActivity extends AppCompatActivity {
     private int mTag = 1 ;
+    String BookPath = "/data/data/com.xxzz.curriculum/files/Book";
+    String CoverPath = "/data/data/com.xxzz.curriculum/files/Cover";
+    String jsonPath = "/data/data/com.xxzz.curriculum/files/jbk_config.json";
+
+    String []returnimage  ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_book);
-        Permission permission = new Permission();
-        // permission.checkPermissions(this);
-        if(permission.checkPermissions(this)) {
             openFileManager();
-        }
-    }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == Permission.RequestCode) {
-            //Utils.makeToast(getApplicationContext(), "授权成功", Toast.LENGTH_SHORT);
-            openFileManager();
-        }
+
     }
     // 打开文件管理器选择文件
     private void openFileManager() {
@@ -78,14 +67,12 @@ public class JoinBookActivity extends AppCompatActivity {
                         try {
                             String path = URLDecoder.decode(itemAt.getUri().getPath(), "UTF-8");
                             path = path.split(":")[1];
-                            String BookPath = "/storage/emulated/0/xxzz_app/Book";
-                            String CoverPath = "/storage/emulated/0/xxzz_app/Cover";
                             File tmpPath = getCacheDir();
                             unzipFile(path, tmpPath.getAbsolutePath());
                             if(CheckFile(tmpPath)){
                                 copyDir(tmpPath.getAbsolutePath()+"/main",CoverPath);
                                 copyDir(tmpPath.getAbsolutePath()+"/text",BookPath);
-                                copyFileUsingStream(tmpPath.getAbsolutePath()+"/jbk_config.json","/storage/emulated/0/xxzz_app/jbk_config.json");
+                                copyFileUsingStream(tmpPath.getAbsolutePath()+"/jbk_config.json",jsonPath);
                             }
                             deleteDFile(tmpPath);
                         } catch (UnsupportedEncodingException e) {
@@ -104,14 +91,13 @@ public class JoinBookActivity extends AppCompatActivity {
                     try {
                         String path = URLDecoder.decode(uri.getPath(), "UTF-8");
                         path = path.split(":")[1];
-                        String BookPath = "/storage/emulated/0/xxzz_app/Book";
-                        String CoverPath = "/storage/emulated/0/xxzz_app/Cover";
                         File tmpPath = getCacheDir();
                         unzipFile(path, tmpPath.getAbsolutePath());
+
                         if(CheckFile(tmpPath)){
                             copyDir(tmpPath.getAbsolutePath()+"/main",CoverPath);
                             copyDir(tmpPath.getAbsolutePath()+"/text",BookPath);
-                            copyFileUsingStream(tmpPath.getAbsolutePath()+"/jbk_config.json","/storage/emulated/0/xxzz_app/jbk_config.json");
+                            copyFileUsingStream(tmpPath.getAbsolutePath()+"/jbk_config.json",jsonPath);
                         }
                         deleteDFile(tmpPath);
                     } catch (IOException e) {

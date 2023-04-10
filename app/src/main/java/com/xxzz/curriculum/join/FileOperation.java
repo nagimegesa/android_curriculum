@@ -100,7 +100,7 @@ public class FileOperation {
     public static boolean CheckFile(File file  ){
         File[] files = file.listFiles();
         String [] filename = {"main","text","jbk_config.json"};
-        int count=0;2
+        int count=0;
         //判断目录是否为空
         if (files == null){
             return false ;

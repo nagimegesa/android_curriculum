@@ -4,27 +4,271 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".read.ReadActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".read.ReadActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="650dp"
-        tools:ignore="MissingConstraints"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/read_main_img"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/read_viewpager"
             android:layout_width="match_parent"
-            android:layout_height="400dp" />
-        <TextView
-            android:id="@+id/read_main_text"
+            android:layout_height="match_parent" />
+
+        <FrameLayout
+            android:id="@+id/read_center_frame"
             android:layout_width="match_parent"
-            android:layout_height="250dp" />
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
-    </LinearLayout>
+            android:layout_height="150dp"
+            android:layout_centerInParent="true" />
+
+        <LinearLayout
+            android:id="@+id/read_top_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/read_top_layout"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="-120dp"
+            android:background="@drawable/radius_bottom_left_right"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <android.widget.Button
+                android:id="@+id/read_add_love"
+                style="@style/read_basic_button"
+                android:text="添加收藏" />
+
+            <android.widget.Button
+                android:id="@+id/read_add_mark"
+                style="@style/read_basic_button"
+                android:text="添加书签" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/read_top_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="-50dp"
+            android:background="@color/my_gray">
+
+            <android.widget.Button
+                android:id="@+id/read_back_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/my_gray"
+                android:drawableStart="@drawable/read_top_left"
+                android:paddingStart="10dp" />
+
+            <TextView
+                android:id="@+id/read_top_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:textColor="@color/white" />
+
+            <android.widget.Button
+                android:id="@+id/read_top_menu_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:background="@color/my_gray"
+                android:drawableEnd="@drawable/read_top_menu"
+                android:paddingEnd="10dp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/read_bottom_info"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal" />
+
+        <LinearLayout
+            android:id="@+id/read_bottom_menu"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="-150dp"
+            android:background="@color/my_gray"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <android.widget.Button
+                    android:id="@+id/read_last_page"
+                    style="@style/read_change_page_button_style"
+                    android:text="上一页" />
+
+                <SeekBar
+                    android:id="@+id/read_seek_bar"
+                    android:layout_width="300dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1" />
+
+                <android.widget.Button
+                    android:id="@+id/read_next_page"
+                    style="@style/read_change_page_button_style"
+                    android:text="下一页" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <android.widget.Button
+                    android:id="@+id/read_content"
+                    style="@style/read_button_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/read_bottom_button"
+                    android:drawableTop="@drawable/read_menu_content"
+                    android:text="目录" />
+
+                <android.widget.Button
+                    android:id="@+id/read_night_mode"
+                    style="@style/read_button_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/read_bottom_button"
+                    android:drawableTop="@drawable/read_menu_night"
+                    android:text="夜间模式" />
+
+                <android.widget.Button
+                    android:id="@+id/read_setting"
+                    style="@style/read_button_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/read_bottom_button"
+                    android:drawableTop="@drawable/read_menu_setting"
+                    android:text="设置" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/read_bottom_setting_menu"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_marginBottom="-180dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/my_gray"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal">
+
+                <SeekBar
+                    android:id="@+id/read_change_text_size"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="字体大小"
+                    android:textAlignment="center"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal">
+
+                <SeekBar
+                    android:id="@+id/read_change_light"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="系统亮度"
+                    android:textAlignment="center"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp">
+                <RadioGroup
+                    android:id="@+id/read_bottom_radio"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <RadioButton
+                        android:id="@+id/read_up_down"
+                        android:drawableTop="@drawable/read_up_forward_up"
+                        style="@style/read_radio_style"
+                        android:text="上下滑动"/>
+                    <RadioButton
+                        android:id="@+id/read_left_right"
+                        android:drawableTop="@drawable/read_left_forward_up"
+                        style="@style/read_radio_style"
+                        android:text="左右滑动"/>
+                </RadioGroup>
+                <android.widget.Button
+                    android:drawableTop="@drawable/read_menu_setting"
+                    android:layout_weight="2"
+                    android:id="@+id/read_more_setting"
+                    style="@style/read_button_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="15dp"
+                    android:text="更多设置" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/read_left_frame"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="-300dp"
+            android:background="@color/my_gray">
+
+            <LinearLayout
+                android:id="@+id/read_left_frame_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <android.widget.Button
+                    style="@style/read_button_style"
+                    android:paddingTop="0dp"
+                    android:text="收藏" />
+
+                <android.widget.Button
+                    style="@style/read_button_style"
+                    android:paddingTop="0dp"
+                    android:text="书签" />
+                <!--                <android.widget.Button-->
+                <!--                    android:paddingTop="0dp"-->
+                <!--                    style="@style/read_button_style"-->
+                <!--                    android:text="目录" />-->
+            </LinearLayout>
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/read_left_frame_viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/read_left_frame_top" />
+        </RelativeLayout>
+    </RelativeLayout>
 </LinearLayout>
