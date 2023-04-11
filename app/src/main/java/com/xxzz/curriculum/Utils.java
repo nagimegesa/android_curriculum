@@ -18,13 +18,12 @@ public class Utils {
     }
 
     static public String readAllFile(Path path) throws IOException {
-        BufferedInputStream inputStream =
-                new BufferedInputStream(Files.newInputStream(path.toAbsolutePath()));
+        BufferedInputStream inputStream = new BufferedInputStream(Files.newInputStream(path.toAbsolutePath()));
         InputStreamReader inputReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
         BufferedReader reader = new BufferedReader(inputReader);
         StringBuilder builder = new StringBuilder();
         String line;
-        while((line = reader.readLine()) != null) {
+        while ((line = reader.readLine()) != null) {
             builder.append(line);
         }
         reader.close();

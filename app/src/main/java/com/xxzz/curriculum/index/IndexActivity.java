@@ -19,22 +19,17 @@ import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.Utils;
-import com.xxzz.curriculum.read.ReadActivity;
 
 import java.io.File;
 import java.util.List;
 
 public class IndexActivity extends AppCompatActivity {
-    public enum FragmentPage {
-        INDEX_FRAGMENT,
-        SETTING_FRAGMENT,
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
         @SuppressLint({"MissingInflatedId", "LocalSuppress"})
-        RadioGroup group = (RadioGroup) findViewById(R.id.bottom_radio);
+        RadioGroup group = findViewById(R.id.bottom_radio);
 
         group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -46,7 +41,7 @@ public class IndexActivity extends AppCompatActivity {
         change_fragment(R.id.index_button);
         boolean canWrite =
                 XXPermissions.isGranted(getApplicationContext(), Permission.WRITE_EXTERNAL_STORAGE);
-        if(canWrite) {
+        if (canWrite) {
             Utils.makeToast(getApplicationContext(), "创建文件夹", Toast.LENGTH_SHORT);
             createBaseDir();
         } else {
@@ -71,14 +66,13 @@ public class IndexActivity extends AppCompatActivity {
 //        startActivity(intent);
     }
 
-
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         int which = intent.getIntExtra("which", FragmentPage.INDEX_FRAGMENT.ordinal());
-        if(which == FragmentPage.INDEX_FRAGMENT.ordinal()) {
+        if (which == FragmentPage.INDEX_FRAGMENT.ordinal()) {
             change_fragment(R.id.index_button);
-        } else if(which == FragmentPage.SETTING_FRAGMENT.ordinal()) {
+        } else if (which == FragmentPage.SETTING_FRAGMENT.ordinal()) {
             change_fragment(R.id.setting_button);
         }
     }
@@ -86,14 +80,14 @@ public class IndexActivity extends AppCompatActivity {
     private boolean createBaseDir() {
         File appDataPath = getFilesDir();
         boolean res = true;
-        if(!appDataPath.exists()) {
+        if (!appDataPath.exists()) {
             res = appDataPath.mkdir();
         }
         File bookPath = new File(appDataPath, "Book");
         File coverPath = new File(appDataPath, "cover");
-        if(!bookPath.exists())
+        if (!bookPath.exists())
             res &= bookPath.mkdir();
-        if(!coverPath.exists())
+        if (!coverPath.exists())
             res &= coverPath.mkdir();
         return res;
     }
@@ -142,11 +136,16 @@ public class IndexActivity extends AppCompatActivity {
                 break;
         }
 
-        if(fragment != null) {
+        if (fragment != null) {
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.replace(R.id.main_container, fragment);
             transaction.commit();
         }
+    }
+
+    public enum FragmentPage {
+        INDEX_FRAGMENT,
+        SETTING_FRAGMENT,
     }
 }

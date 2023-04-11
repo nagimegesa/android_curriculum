@@ -12,8 +12,8 @@ import java.io.File;
 import java.util.List;
 
 public class ListViewAdaptor extends BaseAdapter {
+    private final LayoutInflater inflater;
     private List<File> fileList;
-    private LayoutInflater inflater;
 
     public ListViewAdaptor(LayoutInflater inflater) {
         this.inflater = inflater;
@@ -39,7 +39,7 @@ public class ListViewAdaptor extends BaseAdapter {
         File f = fileList.get(position);
         @SuppressLint("ViewHolder")
         View view = inflater.inflate(R.layout.join_item, null);
-        if(f.isDirectory()) {
+        if (f.isDirectory()) {
         } else {
         }
         return view;
