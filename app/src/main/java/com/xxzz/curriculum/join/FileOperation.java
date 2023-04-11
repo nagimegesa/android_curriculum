@@ -1,4 +1,6 @@
 package com.xxzz.curriculum.join;
+import static com.xxzz.curriculum.Utils.makeToast;
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -122,7 +124,8 @@ public class FileOperation {
     public static boolean deleteDFile(File file){//删除目录下的所有子文件
         //判断文件不为null或文件目录存在
         if (file == null || !file.exists()){
-            System.out.println("文件删除失败,请检查文件路径是否正确");
+            //System.out.println("文件删除失败,请检查文件路径是否正确");
+            //makeToast(this,"文件删除失败,请检查文件路径是否正确",100);
             return false;
         }
         //取得这个目录下的所有子文件对象
@@ -145,5 +148,8 @@ public class FileOperation {
         //
         return true;
     }
-
+    public static boolean IsJbk(File file){
+        String houzui = file.getName();
+        return houzui.endsWith(".jbk") || houzui.endsWith(".7z") || houzui.endsWith(".zip") || houzui.endsWith(".rar");
+    }
 }

@@ -1,18 +1,24 @@
 package com.xxzz.curriculum.join;
 
 
+import static com.xxzz.curriculum.Utils.makeToast;
 import static com.xxzz.curriculum.join.FileOperation.CheckFile;
+import static com.xxzz.curriculum.join.FileOperation.IsJbk;
 import static com.xxzz.curriculum.join.FileOperation.copyDir;
 import static com.xxzz.curriculum.join.FileOperation.copyFileUsingStream;
 import static com.xxzz.curriculum.join.FileOperation.deleteDFile;
 import static com.xxzz.curriculum.join.UnzipUtil.unzipFile;
 
+import androidx.annotation.MainThread;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.xxzz.curriculum.R;
 
@@ -20,6 +26,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JoinBookActivity extends AppCompatActivity {
     private int mTag = 1 ;
@@ -27,12 +35,57 @@ public class JoinBookActivity extends AppCompatActivity {
     String CoverPath = "/data/data/com.xxzz.curriculum/files/Cover";
     String jsonPath = "/data/data/com.xxzz.curriculum/files/jbk_config.json";
 
+    private List<File> FileList;
+    private ListViewAdaptor adapter;
+    private ListView listView;
+
     String []returnimage  ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_book);
-            openFileManager();
+        listView = (ListView) findViewById(R.id.join_list_view);
+        InitListView("/storage/emulated/0");
+        adapter = new ListViewAdaptor(JoinBookActivity.this,FileList);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                File file =FileList.get(i);
+                //makeToast(JoinBookActivity.this,file.getName(),100);
+                if(file.isDirectory()){
+                    InitListView(file.getPath());
+                    adapter = new ListViewAdaptor(JoinBookActivity.this,FileList);
+                    listView.setAdapter(adapter);
+                }
+                else if(IsJbk(file)){
+                    try {
+                        File tmpPath = getCacheDir();
+                        unzipFile(file.getPath(), tmpPath.getAbsolutePath());
+                        if(CheckFile(tmpPath)){
+                            copyDir(tmpPath.getAbsolutePath()+"/main",CoverPath);
+                            copyDir(tmpPath.getAbsolutePath()+"/text",BookPath);
+                            copyFileUsingStream(tmpPath.getAbsolutePath()+"/jbk_config.json",jsonPath);
+                            makeToast(JoinBookActivity.this,"加入成功",100);
+                        }
+                        else
+                            makeToast(JoinBookActivity.this,"所选文件不符合格式",100);
+
+                        deleteDFile(tmpPath);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                else{
+                    makeToast(JoinBookActivity.this,"所选文件不符合格式",100);
+                }
+
+
+            }
+        });
+           // openFileManager();
+        //  getLayoutInflater();
 
     }
     // 打开文件管理器选择文件
@@ -112,6 +165,14 @@ public class JoinBookActivity extends AppCompatActivity {
             }
         }
     }
+    public  void InitListView(String path){
 
+        FileList = new ArrayList<File>();
+        File file = new File(path);
+        File[] files = file.listFiles();
+        for (File f: files){
+            FileList.add(f);
+        }
+    }
 
 }

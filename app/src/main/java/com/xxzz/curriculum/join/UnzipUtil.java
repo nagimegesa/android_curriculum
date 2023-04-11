@@ -1,5 +1,7 @@
 package com.xxzz.curriculum.join;
 
+import static com.xxzz.curriculum.Utils.makeToast;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -79,18 +81,10 @@ public class UnzipUtil {
                 outputStream.write(bytes, 0, len);
             }
         } catch (IOException ex) {
+            //makeToast();
             System.out.println("解压文件时，写出到文件出错");
         }
     }
-
-    //测试方法
-//    public static void main(String[] args) throws IOException {
-//
-//        String zipPath = "D:/test/测试文件.zip";
-//        String descDir = "D:/test/解压/";
-//
-//        unzipFile(zipPath, descDir);
-//    }
 }
 
 
