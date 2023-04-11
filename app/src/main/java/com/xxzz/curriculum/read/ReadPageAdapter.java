@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class ReadPageAdapter extends RecyclerView.Adapter<ReadPageAdapter.Holder> {
-    private BookReader reader;
+    private final BookReader reader;
     ReadPageAdapter(BookReader reader) {
         this.reader = reader;
     }

@@ -2,7 +2,6 @@ package com.xxzz.curriculum.read;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 
 import com.xxzz.curriculum.Utils;
 
