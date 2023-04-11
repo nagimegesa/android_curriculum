@@ -27,6 +27,9 @@ public class Utils {
         while((line = reader.readLine()) != null) {
             builder.append(line);
         }
+        reader.close();
+        inputReader.close();
+        inputStream.close();
         return builder.toString();
     }
 }
