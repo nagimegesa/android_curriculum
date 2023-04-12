@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.xxzz.curriculum.Config;
 import com.xxzz.curriculum.R;
 
 import java.io.BufferedReader;
@@ -26,7 +27,7 @@ import java.nio.file.Files;
 
 public class SettingFragment extends Fragment {
     static private SettingFragment fragment;
-
+    Config config;
     private View view;
     private float defaultFontSize = 24;
     private Spinner readFontSize = null;

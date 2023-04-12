@@ -92,7 +92,7 @@ public class Config{
             serializer.startDocument("utf-8", true);
 
             //serializer.attribute(null, "id", String.valueOf(0));
-            // TODO: Write something into setting
+            // TODO: Write something into setting config
 
             serializer.endDocument();
             fos.close();
@@ -155,5 +155,4 @@ public class Config{
         }
         activity.recreate();
     }
-
 }
