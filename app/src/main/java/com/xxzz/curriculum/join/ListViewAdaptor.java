@@ -2,6 +2,7 @@ package com.xxzz.curriculum.join;
 
 import static com.xxzz.curriculum.join.FileOperation.CheckFile;
 import static com.xxzz.curriculum.join.FileOperation.IsJbk;
+import static com.xxzz.curriculum.join.FileOperation.deleteDFile;
 import static com.xxzz.curriculum.join.UnzipUtil.unzipFile;
 
 import android.annotation.SuppressLint;
@@ -91,6 +92,7 @@ public class ListViewAdaptor extends BaseAdapter {
                 viewHolder.FileName.setText(f.getName());
                 viewHolder.FileImage.setImageResource(R.drawable.file_text2);
             }
+                deleteDFile(tmpPath);
             } catch (IOException e) {
             throw new RuntimeException(e);
         }

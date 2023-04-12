@@ -57,6 +57,7 @@ public class IndexActivity extends AppCompatActivity {
                     .permission(Permission.READ_MEDIA_AUDIO)
                     .permission(Permission.READ_MEDIA_IMAGES)
                     .permission(Permission.READ_MEDIA_VIDEO)
+                    // .permission(Permission.MANAGE_EXTERNAL_STORAGE)
                     .request(new OnPermissionCallback() {
                         @Override
                         public void onGranted(@NonNull List<String> permissions, boolean allGranted) {

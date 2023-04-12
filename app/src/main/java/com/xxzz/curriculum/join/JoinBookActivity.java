@@ -10,15 +10,21 @@ import static com.xxzz.curriculum.join.FileOperation.deleteDFile;
 import static com.xxzz.curriculum.join.UnzipUtil.unzipFile;
 
 import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.Settings;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.xxzz.curriculum.R;
 
@@ -31,6 +37,7 @@ import java.util.List;
 
 public class JoinBookActivity extends AppCompatActivity {
     private int mTag = 1 ;
+    private int REQUEST_CODE =7325;
     String BookPath = "/data/data/com.xxzz.curriculum/files/Book";
     String CoverPath = "/data/data/com.xxzz.curriculum/files/Cover";
     String jsonPath = "/data/data/com.xxzz.curriculum/files/jbk_config.json";
@@ -43,13 +50,14 @@ public class JoinBookActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_join_book);
+        accesspermisson();
         listView = (ListView) findViewById(R.id.join_list_view);
         InitListView("/storage/emulated/0");
         adapter = new ListViewAdaptor(JoinBookActivity.this,FileList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 File file =FileList.get(i);
@@ -71,7 +79,6 @@ public class JoinBookActivity extends AppCompatActivity {
                         }
                         else
                             makeToast(JoinBookActivity.this,"所选文件不符合格式",100);
-
                         deleteDFile(tmpPath);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -88,83 +95,8 @@ public class JoinBookActivity extends AppCompatActivity {
         //  getLayoutInflater();
 
     }
-    // 打开文件管理器选择文件
-    private void openFileManager() {
-        // 打开文件管理器选择文件
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        //intent.setType(“image/*”);//选择图片
-        //intent.setType(“audio/*”); //选择音频
-        //intent.setType(“video/*”); //选择视频 （mp4 3gp 是android支持的视频格式）
-        //intent.setType(“video/*;image/*”);//同时选择视频和图片
-        intent.setType("*/*");//无类型限制
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); //打开多个文件
-        startActivityForResult(intent, mTag);
-    }
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (data != null) {
-            if (requestCode == mTag) {
-                //File file = null;
-                //使用ACTION_GET_CONTENT时 选择文件时多个调用用ClipData
-                ClipData clipData = data.getClipData();
-                if (clipData!=null)
-                {
-                    for (int i=0;i<clipData.getItemCount();i++)
-                    {
-                        ClipData.Item itemAt = clipData.getItemAt(i);
-                        //String path1 = FileUtils.getPath();//使用工具类对uri进行转化
-                        try {
-                            String path = URLDecoder.decode(itemAt.getUri().getPath(), "UTF-8");
-                            path = path.split(":")[1];
-                            File tmpPath = getCacheDir();
-                            unzipFile(path, tmpPath.getAbsolutePath());
-                            if(CheckFile(tmpPath)){
-                                copyDir(tmpPath.getAbsolutePath()+"/main",CoverPath);
-                                copyDir(tmpPath.getAbsolutePath()+"/text",BookPath);
-                                copyFileUsingStream(tmpPath.getAbsolutePath()+"/jbk_config.json",jsonPath);
-                            }
-                            deleteDFile(tmpPath);
-                        } catch (UnsupportedEncodingException e) {
-                            throw new RuntimeException(e);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-
-                        // file = new File(itemAt.getUri().getPath());
-
-                    }
-                }
-
-                    Uri uri = data.getData();
-                if (uri != null) {
-                    try {
-                        String path = URLDecoder.decode(uri.getPath(), "UTF-8");
-                        path = path.split(":")[1];
-                        File tmpPath = getCacheDir();
-                        unzipFile(path, tmpPath.getAbsolutePath());
-
-                        if(CheckFile(tmpPath)){
-                            copyDir(tmpPath.getAbsolutePath()+"/main",CoverPath);
-                            copyDir(tmpPath.getAbsolutePath()+"/text",BookPath);
-                            copyFileUsingStream(tmpPath.getAbsolutePath()+"/jbk_config.json",jsonPath);
-                        }
-                        deleteDFile(tmpPath);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-////                    if (file == null) {
-////                        Toast.makeText(this, "文件地址未找到：", Toast.LENGTH_SHORT).show();
-////                        return;
-////                    }
-                }
-                return;
-            }
-        }
-    }
     public  void InitListView(String path){
 
         FileList = new ArrayList<File>();
@@ -173,6 +105,31 @@ public class JoinBookActivity extends AppCompatActivity {
         for (File f: files){
             FileList.add(f);
         }
+    }
+
+    public void accesspermisson(){
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R ||
+                Environment.isExternalStorageManager()) {
+            Toast.makeText(this, "已获得访问所有文件的权限", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+            startActivityForResult(intent,REQUEST_CODE);
+        }
+
+
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == REQUEST_CODE){
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R || Environment.isExternalStorageManager()) {
+                Toast.makeText(this, "没有访问所有文件的权限", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+        }
+
     }
 
 }

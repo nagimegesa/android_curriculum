@@ -13,4 +13,5 @@
         android:id="@+id/file_name"
         android:layout_width="306dp"
         android:layout_height="97dp" />
+
 </LinearLayout>

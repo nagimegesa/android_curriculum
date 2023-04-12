@@ -1,15 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".join.JoinBookActivity">
+    tools:context=".join.JoinBookActivity"
+    tools:ignore="ExtraText">
+
+    <LinearLayout
+        android:id="@+id/join_Frame"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_above="@id/join_list_view"
+        android:layout_alignParentTop="true"
+        >
+
+        <ImageButton
+            android:id="@+id/imageBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/arrow_left2" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:textSize="25sp"
+            android:layout_width="238dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:layout_toRightOf="@+id/imageBtn"
+            android:text="导入本地书籍" />
+
+    </LinearLayout>
 
     <ListView
         android:id="@+id/join_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </ListView>
+        android:layout_height="689dp"
+        android:layout_alignParentBottom="true"
 
-</LinearLayout>
+    ></ListView>
+
+</RelativeLayout>
