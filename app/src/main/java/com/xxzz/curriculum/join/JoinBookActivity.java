@@ -20,9 +20,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -35,7 +37,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JoinBookActivity extends AppCompatActivity {
+public class JoinBookActivity extends AppCompatActivity implements View.OnClickListener {
     private int mTag = 1 ;
     private int REQUEST_CODE =7325;
     String BookPath = "/data/data/com.xxzz.curriculum/files/Book";
@@ -45,22 +47,27 @@ public class JoinBookActivity extends AppCompatActivity {
     private List<File> FileList;
     private ListViewAdaptor adapter;
     private ListView listView;
-
+    File FileTep = Environment.getExternalStorageDirectory();
     String []returnimage  ;
+
+    ImageButton imageButton ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_join_book);
+        imageButton = (ImageButton) findViewById(R.id.imageBtn);
+
         accesspermisson();
         listView = (ListView) findViewById(R.id.join_list_view);
-        InitListView("/storage/emulated/0");
+        InitListView(Environment.getExternalStorageDirectory().getPath());
         adapter = new ListViewAdaptor(JoinBookActivity.this,FileList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 File file =FileList.get(i);
+                FileTep = file;
                 //makeToast(JoinBookActivity.this,file.getName(),100);
                 if(file.isDirectory()){
                     InitListView(file.getPath());
@@ -93,8 +100,9 @@ public class JoinBookActivity extends AppCompatActivity {
         });
            // openFileManager();
         //  getLayoutInflater();
-
+        imageButton.setOnClickListener(this);
     }
+
 
 
     public  void InitListView(String path){
@@ -132,4 +140,22 @@ public class JoinBookActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.imageBtn:
+                if(FileTep==Environment.getExternalStorageDirectory()){
+                finish();
+            }
+                File file = FileTep.getParentFile();
+
+                InitListView(file.getPath());
+                adapter = new ListViewAdaptor(JoinBookActivity.this,FileList);
+                listView.setAdapter(adapter);
+                FileTep = FileTep.getParentFile();
+                break;
+
+
+        }
+    }
 }
