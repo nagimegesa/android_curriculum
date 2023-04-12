@@ -2,9 +2,8 @@
     <string name="app_name">curriculum</string>
     <string name="setting_name">设置</string>
     <string name="index_name">首页</string>
-<<<<<<< HEAD
-
-    <string name="setting_spinner">SpinnerTest</string>
+    <!--        设置界面 字体大小选择选项        -->
+    <string name="setting_fontSize_spinner">SpinnerTest</string>
     <string-array name="size_array">
         <item>12</item>
         <item>16</item>
@@ -14,9 +13,3 @@
     </string-array>
 
 </resources>
-
-=======
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-</resources>
->>>>>>> main

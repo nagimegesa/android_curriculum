@@ -66,6 +66,10 @@ public class IndexActivity extends AppCompatActivity {
                         }
                     });
         }
+
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
 //        Intent intent = new Intent(IndexActivity.this, ReadActivity.class);
 //        intent.putExtra("book_name", "aili_book");
 //        startActivity(intent);

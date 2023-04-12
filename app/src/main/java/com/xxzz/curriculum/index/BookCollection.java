@@ -4,6 +4,7 @@ public class BookCollection {
     private String bookName;
 
     public BookCollection(){
+
     }
 
 

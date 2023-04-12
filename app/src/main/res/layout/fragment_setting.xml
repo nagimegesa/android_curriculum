@@ -10,7 +10,7 @@
         android:id="@+id/top_relative"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
-        android:background="@color/toolbar_background">
+        android:background="@color/setting_toolbar_bg">
 
         <TextView
             android:id="@+id/titleText"
@@ -46,7 +46,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerInParent="true"
                     android:text="阅读设置"
-                    android:textColor="@color/textPrimary" />
+                    android:textColor="@color/setting_textprimary" />
 
             </RelativeLayout>
 
@@ -64,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="调节字体大小"
-                    android:textColor="@color/textSecondary"
+                    android:textColor="@color/setting_textsecondary"
                     android:textSize="15dp"
                     android:layout_gravity="left"/>
 
@@ -95,7 +95,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="背景音乐"
-                    android:textColor="@color/textSecondary"
+                    android:textColor="@color/setting_textsecondary"
                     android:textSize="15dp" />
 
                 <androidx.appcompat.widget.SwitchCompat
@@ -123,7 +123,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="夜间模式"
-                    android:textColor="@color/textSecondary"
+                    android:textColor="@color/setting_textsecondary"
                     android:textSize="15dp" />
 
                 <androidx.appcompat.widget.SwitchCompat
@@ -149,7 +149,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerInParent="true"
                     android:text="其他设置"
-                    android:textColor="@color/textPrimary" />
+                    android:textColor="@color/setting_textprimary" />
 
             </RelativeLayout>
 
@@ -167,7 +167,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="测试功能"
-                    android:textColor="@color/textSecondary"
+                    android:textColor="@color/setting_textsecondary"
                     android:textSize="15dp" />
 
                 <androidx.appcompat.widget.SwitchCompat

@@ -26,9 +26,10 @@ import java.nio.file.Files;
 
 public class SettingFragment extends Fragment {
     static private SettingFragment fragment;
+
+    private View view;
     private float defaultFontSize = 24;
     private Spinner readFontSize = null;
-    String[] arr = {"8","12","16","20","24"};
     private Context parent;
     public SettingFragment(Context parent) {
         this.parent = parent;
@@ -67,8 +68,13 @@ public class SettingFragment extends Fragment {
             throw new RuntimeException(e);
         }
 
-        readFontSize = readFontSize.findViewById(R.id.sp_setFontSize);
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_setting, container, false);
+        readFontSize = (Spinner) view.findViewById(R.id.sp_setFontSize);
         readFontSize.setSelection(0); //设置默认选中项
         readFontSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
@@ -80,57 +86,9 @@ public class SettingFragment extends Fragment {
 
             }
         });
+        return view;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_setting, container, false);
-    }
-
-    public void addBookMark(String title, int page) {
-    }
-
-    public void deleteBookMark(String title, int page) {
-    }
-
-    public void getAllBookMark() {
-    }
-
-    public String readBookMark() {
-        try {
-            InputStream is = this.getClass().getClassLoader().
-                    getResourceAsStream("");
-            InputStreamReader streamReader = new InputStreamReader(is);
-            BufferedReader reader = new BufferedReader(streamReader);
-            String line;
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                Log.d("", "line=" + line);
-                stringBuilder.append(line);
-            }
-            reader.close();
-            reader.close();
-            is.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public void setReadFontSize(float fontSize) {
-
-        if (fontSize > 10) {
-//            setText(String.valueOf(fontSize - 1));
-//            setReadFontSize(fontSize - 1);
-//            saveSetting(setting);
-        }
-        if (fontSize < 60) {
-//            setText(String.valueOf(fontSize + 1));
-//            setReadWordSize(fontSize + 1);
-//            saveSetting(setting);
-        }
-    }
 
 }
 
