@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/app_bar_search"
+        android:title="Search"
+        android:icon="@drawable/search"
+        app:showAsAction="ifRoom|withText"
+        app:actionViewClass="android.widget.SearchView"
+        android:hint="来搜索一下吧✧(≖ ◡ ≖✿)"></item>
     <item
         android:id="@+id/add_book"
-        android:title="添加书籍"/>
+        android:title="添加书籍"></item>
     <item
         android:id="@+id/dete_book"
-        android:title="删除书籍"/>
+        android:title="删除书籍"></item>
     <item
         android:id="@+id/sort_book"
-        android:title="最近阅读"/>
+        android:title="最近阅读"></item>
 </menu>

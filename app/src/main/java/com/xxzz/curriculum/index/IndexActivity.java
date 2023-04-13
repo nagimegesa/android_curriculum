@@ -15,7 +15,6 @@ import android.widget.RadioGroup;
 import com.xxzz.curriculum.R;
 
 public class IndexActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +26,6 @@ public class IndexActivity extends AppCompatActivity {
                 change_fragment(group.getCheckedRadioButtonId());
             }
         });
-
         change_fragment(R.id.index_button);
     }
     

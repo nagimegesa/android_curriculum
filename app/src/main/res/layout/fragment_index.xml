@@ -8,18 +8,6 @@
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <SearchView
-            android:id="@+id/search"
-            android:layout_width="420dp"
-            android:layout_height="wrap_content"
-            android:iconifiedByDefault="false"
-            android:inputType="text"
-            android:queryHint="来搜索一下吧✧(≖ ◡ ≖✿)"/>
-    </LinearLayout>
-    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -35,9 +23,14 @@
             android:layout_height="wrap_content"
             android:text="减少" />
     </LinearLayout>
-    <ListView
+    <GridView
         android:id="@+id/list"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnWidth="60dp"
+        android:gravity="center"
+        android:horizontalSpacing="20dp"
+        android:numColumns="2"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="10dp" />
 </LinearLayout>

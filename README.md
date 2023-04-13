@@ -4,7 +4,6 @@
 初始界面, 参考效果
 <!-- ![index.png](./index.png) -->
 要求:<br>
-
 1. 可以显示图书的封面, 当然也要可以点进去(留好接口)
 2. 有一个向上面的图一样的菜单, 菜单实现的功能要有
     + 可以对图书进行排序, 比如按打开的时间进行排序, 按阅读的时长进行排序
@@ -69,7 +68,7 @@
     {
         "book_name" : "book_name",
         "cover" : "/cover.png",
-        "path" : "/book_path/book_name"
+        "path" : "/book_path/book_name",
         "pages_count" : 2,
         "pages" : [{
             "pages" : 1,
@@ -84,7 +83,6 @@
         "last_read_time" : "1221212",
         "total_read_time": "123123123",
     }
-    ```
 
    以上各字段解释如下：
    + book_name 图书名
