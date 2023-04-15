@@ -12,7 +12,13 @@ import static com.xxzz.curriculum.join.UnzipUtil.unzipFile;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager.widget.ViewPager;
 
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
@@ -24,11 +30,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.xxzz.curriculum.R;
+import com.xxzz.curriculum.index.IndexActivity;
+import com.xxzz.curriculum.index.IndexFragment;
+import com.xxzz.curriculum.index.SettingFragment;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +54,7 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
     String BookPath = "/data/data/com.xxzz.curriculum/files/Book";
     String CoverPath = "/data/data/com.xxzz.curriculum/files/Cover";
     String jsonPath = "/data/data/com.xxzz.curriculum/files/jbk_config.json";
-
+    private ViewPager viewPager;
     private List<File> FileList;
     private ListViewAdaptor adapter;
     private ListView listView;
@@ -51,14 +62,21 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
     String []returnimage  ;
 
     ImageButton imageButton ;
+    Button button_join;
+    Button button_auto;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        //supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_join_book);
-        imageButton = (ImageButton) findViewById(R.id.imageBtn);
 
+        //viewPager= findViewById(R.id.main_viewpager);
+        imageButton = (ImageButton) findViewById(R.id.imageBtn);
+        button_join = findViewById(R.id.join_button);
+        button_auto = findViewById(R.id.smart_button);
         accesspermisson();
+
         listView = (ListView) findViewById(R.id.join_list_view);
         InitListView(Environment.getExternalStorageDirectory().getPath());
         adapter = new ListViewAdaptor(JoinBookActivity.this,FileList);
@@ -98,8 +116,31 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
 
             }
         });
-           // openFileManager();
-        //  getLayoutInflater();
+
+
+//        FragmentPagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+//            @NonNull
+//            @Override
+//            public Fragment getItem(int position) {
+//                Fragment fragment = null;
+//                switch (position){
+//                    case 0: fragment = new JoinFragment();break;
+//                   // case 1: fragment = new InfoFragment();break;
+//                    default:break;
+//                }
+//                return fragment;
+//            }
+//            @Override
+//            public int getCount() {
+//                return 1;
+//            }
+//        };
+        //viewPager.setAdapter(adapter);
+
+
+
+        button_join.setOnClickListener(this);
+        button_auto.setOnClickListener(this);
         imageButton.setOnClickListener(this);
     }
 
@@ -144,18 +185,86 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.imageBtn:
-                if(FileTep==Environment.getExternalStorageDirectory()){
-                finish();
-            }
-                File file = FileTep.getParentFile();
-
-                InitListView(file.getPath());
-                adapter = new ListViewAdaptor(JoinBookActivity.this,FileList);
-                listView.setAdapter(adapter);
-                FileTep = FileTep.getParentFile();
+                GoPrevious();
                 break;
+            case R.id.join_button:
+                GoHome();
+                break;
+            case R.id.smart_button:
+                try {
+                    FileList = new ArrayList<File>();
+                    GoSmart(Environment.getExternalStorageDirectory().getPath());
+                    adapter = new ListViewAdaptor(JoinBookActivity.this,FileList);
+                    listView.setAdapter(adapter);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                break;
+                //viewPager.setCurrentItem(0);break;
+
+        }
+    }
+
+    public void GoPrevious (){
+        if(FileTep==Environment.getExternalStorageDirectory()){
+            Intent intent = new Intent(JoinBookActivity.this , IndexActivity.class);
+            startActivity(intent);
+            //finish();
+        }
+        File file = FileTep.getParentFile();
+        InitListView(file.getPath());
+        adapter = new ListViewAdaptor(JoinBookActivity.this,FileList);
+        listView.setAdapter(adapter);
+        FileTep = FileTep.getParentFile();
+    }
+    public void GoHome(){
+        InitListView(Environment.getExternalStorageDirectory().getPath());
+        adapter = new ListViewAdaptor(JoinBookActivity.this,FileList);
+        listView.setAdapter(adapter);
+    }
+    public void GoSmart(String path) throws IOException {
+        File file = new File(path);
+        if (file == null || !file.exists()){
+            return ;
+        }
+
+        File[] files = file.listFiles();
+        //if(files.length==0) return;
+        for (File f: files){
+            if(f.isDirectory())
+                GoSmart(f.getPath());
+            else {
+                if(IsJbk(f)){
+                    File tmpPath = getCacheDir();
+                    unzipFile(file.getPath(), tmpPath.getAbsolutePath());
+                    if(CheckFile(tmpPath))
+                        FileList.add(f);
+                }
+            }
+        }
+
+    }
 
 
+
+    private void change_fragment(int id) {
+        Fragment fragment = null;
+        switch (id) {
+            case R.id.join_button:
+                fragment = JoinFragment.getFragment();
+                break;
+            case R.id.smart_button:
+                fragment = JoinFragment.getFragment();
+                break;
+            default:
+                break;
+        }
+
+        if(fragment != null) {
+            FragmentManager manager = getSupportFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.main_container, fragment);
+            transaction.commit();
         }
     }
 }

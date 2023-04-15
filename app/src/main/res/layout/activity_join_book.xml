@@ -10,15 +10,16 @@
     <LinearLayout
         android:id="@+id/join_Frame"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:layout_above="@id/join_list_view"
+        android:layout_height="42dp"
+
         android:layout_alignParentTop="true"
-        >
+
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/imageBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="5dp"
             android:scaleType="centerInside"
@@ -26,21 +27,53 @@
 
         <TextView
             android:id="@+id/textView"
-            android:textSize="25sp"
-            android:layout_width="238dp"
+            android:layout_width="318dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
             android:layout_toRightOf="@+id/imageBtn"
-            android:text="导入本地书籍" />
+            android:layout_weight="3"
+            android:text="@string/join_book"
+            android:textSize="25sp" />
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/join_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="689dp"
-        android:layout_alignParentBottom="true"
+        <ListView
+            android:id="@+id/join_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="629dp"
+            android:layout_alignParentTop="true"
 
-    ></ListView>
+            android:layout_marginTop="102dp"></ListView>
+
+        <LinearLayout
+            android:id="@+id/button_layout"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@id/join_Frame">
+
+            <RadioGroup
+                android:id="@+id/bottom_radio"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/join_button"
+                    style="@style/index_radio_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="25sp"
+                    android:text="@string/join_directory" />
+
+                <RadioButton
+                    android:id="@+id/smart_button"
+                    style="@style/index_radio_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="25sp"
+                    android:text="@string/smart_import"></RadioButton>
+            </RadioGroup>
+
+        </LinearLayout>
 
 </RelativeLayout>
