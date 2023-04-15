@@ -4,10 +4,9 @@
     <item
         android:id="@+id/app_bar_search"
         android:title="Search"
-        android:icon="@drawable/search"
+        android:icon="@drawable/read_searchbar"
         app:showAsAction="ifRoom|withText"
-        app:actionViewClass="android.widget.SearchView"
-        android:hint="来搜索一下吧✧(≖ ◡ ≖✿)"></item>
+        app:actionViewClass="android.widget.SearchView"></item>
     <item
         android:id="@+id/add_book"
         android:title="添加书籍"></item>

@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_above="@+id/button_layout"
-        android:background="@color/black"/>
+        android:background="@color/black" />
     <LinearLayout
         android:id="@+id/button_layout"
         android:layout_width="match_parent"
@@ -29,15 +29,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/index_name"
-                style="@style/radio_style"
+                style="@style/index_radio_style"
                 android:drawableTop="@drawable/index_svg"/>
             <RadioButton
                 android:id="@+id/setting_button"
+                style="@style/index_radio_style"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/setting_name"
-                style="@style/radio_style"
-                android:drawableTop="@drawable/index_svg">
+                android:drawableTop="@drawable/index_svg"
+                android:text="设置">
             </RadioButton>
         </RadioGroup>
     </LinearLayout>

@@ -13,11 +13,12 @@ public class SettingFragment extends Fragment {
     }
 
     /**
-     *  单例模式, 写的时候只能用这个得到 SettingFragment 的实例, 不要直接调用 new
+     * 单例模式, 写的时候只能用这个得到 SettingFragment 的实例, 不要直接调用 new
+     *
      * @return SettingFragment实例
      */
     public static SettingFragment getInstance() {
-        if(fragment == null)
+        if (fragment == null)
             fragment = new SettingFragment();
         return fragment;
     }
