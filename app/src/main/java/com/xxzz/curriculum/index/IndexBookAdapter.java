@@ -2,6 +2,8 @@ package com.xxzz.curriculum.index;
 
 import android.content.Context;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -53,9 +55,13 @@ public class IndexBookAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         BooKHolder bookholder=new BooKHolder();
-        convertView = View.inflate(context, R.layout.item_book, null);
-        bookholder.name=(TextView)convertView.findViewById(R.id.book_name);
+        View v = View.inflate(context, R.layout.item_book, null);
+        bookholder.name=(TextView)v.findViewById(R.id.book_name);
+        bookholder.image = (ImageView) v.findViewById(R.id.book_image);
         bookholder.name.setText(datas.get(position).getName());
-        return convertView;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(datas.get(position).getCoverPath());
+        bookholder.image.setImageBitmap(bitmap);
+        return v;
     }
 }

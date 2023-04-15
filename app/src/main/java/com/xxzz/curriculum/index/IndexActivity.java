@@ -1,18 +1,14 @@
 package com.xxzz.curriculum.index;
 
-import static java.security.AccessController.getContext;
-
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -30,11 +26,9 @@ import com.hjq.permissions.XXPermissions;
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.Utils;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class IndexActivity extends AppCompatActivity {
-    private List<String> datas = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +50,6 @@ public class IndexActivity extends AppCompatActivity {
         } else {
             XXPermissions.with(this)
                     .permission(Permission.WRITE_EXTERNAL_STORAGE)
-                    // .permission(Permission.READ_EXTERNAL_STORAGE)
                     .permission(Permission.READ_MEDIA_AUDIO)
                     .permission(Permission.READ_MEDIA_IMAGES)
                     .permission(Permission.READ_MEDIA_VIDEO)
@@ -70,9 +63,6 @@ public class IndexActivity extends AppCompatActivity {
                         }
                     });
         }
-//        Intent intent = new Intent(IndexActivity.this, ReadActivity.class);
-//        intent.putExtra("book_name", "aili_book");
-//        startActivity(intent);
     }
 
     @Override
@@ -134,25 +124,31 @@ public class IndexActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.layout.index_menu, menu);
         MenuItem searchViewItem = menu.findItem(R.id.app_bar_search);
-        GridView gridView=findViewById(R.id.resultlist);
-//        ArrayAdapter<String> resultadapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, datas);
-//        gridView.setAdapter(resultadapter);
-//        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchViewItem);
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                Toast t = Toast.makeText(IndexActivity.this, query, Toast.LENGTH_SHORT);
-//                t.setGravity(Gravity.TOP,0,0);
-//                t.show();
-//                searchView.clearFocus();
-//                return false;
-//            }
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                resultadapter.getFilter().filter(newText);
-//                return false;
-//            }
-//        });
+        GridView gridView=findViewById(R.id.index_search_list);
+        gridView.setVisibility(View.GONE);
+        List<String> s = IndexFragment.getInstance().getBookNameList();
+        ArrayAdapter<String> resultAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, s);
+        gridView.setAdapter(resultAdapter);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchViewItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Toast t = Toast.makeText(IndexActivity.this, query, Toast.LENGTH_SHORT);
+                t.setGravity(Gravity.TOP,0,0);
+                t.show();
+                searchView.clearFocus();
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(newText.isEmpty())
+                    return false;
+                gridView.setVisibility(View.VISIBLE);
+                resultAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
         return super.onCreateOptionsMenu(menu);
     }
 

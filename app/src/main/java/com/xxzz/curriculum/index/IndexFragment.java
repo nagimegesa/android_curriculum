@@ -33,9 +33,11 @@ public class IndexFragment extends Fragment{
     private IndexBookAdapter adapter;
 
     private List<BooKInfo> list;
+    private List<String> bookNameList;
     private static IndexFragment fragment;
 
     public IndexFragment() {
+        readBookInfoFromFile();
     }
     /**
      * 单例模式, 写的时候只能用这个得到 IndexFragment 的实例, 不要直接调用 new
@@ -70,7 +72,7 @@ public class IndexFragment extends Fragment{
         ((Button)view.findViewById(R.id.index_add_button)).setOnClickListener(this::add);
         ((Button)view.findViewById(R.id.index_del_button)).setOnClickListener(this::del);
 
-        adapter = new IndexBookAdapter(getActivity(), readBookInfoFromFile());
+        adapter = new IndexBookAdapter(getActivity(), list);
 
         gridview.setAdapter(adapter);
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -92,7 +94,19 @@ public class IndexFragment extends Fragment{
         return view;
     }
 
-    private List<BooKInfo> readBookInfoFromFile() {
-        return new ArrayList<>();
+    private void readBookInfoFromFile() {
+        this.list = new ArrayList<>();
+        this.bookNameList = new ArrayList<String>();
+        bookNameList.add("test1");
+        bookNameList.add("test2");
+        bookNameList.add("Aili");
+    }
+
+    public List<BooKInfo> getList() {
+        return list;
+    }
+
+    public List<String> getBookNameList() {
+        return bookNameList;
     }
 }

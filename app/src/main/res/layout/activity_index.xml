@@ -41,4 +41,14 @@
             </RadioButton>
         </RadioGroup>
     </LinearLayout>
+    <GridView
+        android:id="@+id/index_search_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnWidth="60dp"
+        android:gravity="center"
+        android:horizontalSpacing="20dp"
+        android:numColumns="2"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="10dp" />
 </RelativeLayout>
