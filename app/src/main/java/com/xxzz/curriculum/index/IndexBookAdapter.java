@@ -1,7 +1,6 @@
 package com.xxzz.curriculum.index;
 
 import android.content.Context;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
@@ -59,7 +58,6 @@ public class IndexBookAdapter extends BaseAdapter {
         bookholder.name=(TextView)v.findViewById(R.id.book_name);
         bookholder.image = (ImageView) v.findViewById(R.id.book_image);
         bookholder.name.setText(datas.get(position).getName());
-
         Bitmap bitmap = BitmapFactory.decodeFile(datas.get(position).getCoverPath());
         bookholder.image.setImageBitmap(bitmap);
         return v;

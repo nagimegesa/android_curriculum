@@ -1,43 +1,43 @@
 package com.xxzz.curriculum.index;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.SearchView;
-import android.widget.Toast;
-
-import androidx.fragment.app.Fragment;
 
 import com.xxzz.curriculum.R;
+import com.xxzz.curriculum.Utils;
 import com.xxzz.curriculum.read.ReadActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 
 public class IndexFragment extends Fragment{
     public GridView gridview;
     private IndexBookAdapter adapter;
 
-    private List<BooKInfo> list;
-    private List<String> bookNameList;
+    private List<BooKInfo> list=new ArrayList<>();
+    private List<String> bookNameList=new ArrayList<String>();
     private static IndexFragment fragment;
 
-    public IndexFragment() {
-        readBookInfoFromFile();
+    public IndexFragment()  {
+
     }
     /**
      * 单例模式, 写的时候只能用这个得到 IndexFragment 的实例, 不要直接调用 new
@@ -71,7 +71,6 @@ public class IndexFragment extends Fragment{
         gridview=view.findViewById(R.id.list);
         ((Button)view.findViewById(R.id.index_add_button)).setOnClickListener(this::add);
         ((Button)view.findViewById(R.id.index_del_button)).setOnClickListener(this::del);
-
         adapter = new IndexBookAdapter(getActivity(), list);
 
         gridview.setAdapter(adapter);
@@ -81,7 +80,7 @@ public class IndexFragment extends Fragment{
 //                Bundle bundle = new Bundle();
 //                bundle.putString("book_name", adapter.datas.get(position));
                 Intent intent = new Intent();
-                // intent.putExtra("book_name",adapter.datas.get(position));
+                intent.putExtra("book_name",bookNameList.get(position));
                 intent.setClass(getContext(), ReadActivity.class);
                 startActivity(intent);
 //                switch (position) {
@@ -91,15 +90,29 @@ public class IndexFragment extends Fragment{
 //                }
             }
         });
+        readBookInfoFromFile();
         return view;
     }
 
-    private void readBookInfoFromFile() {
-        this.list = new ArrayList<>();
-        this.bookNameList = new ArrayList<String>();
-        bookNameList.add("test1");
-        bookNameList.add("test2");
-        bookNameList.add("Aili");
+    private void readBookInfoFromFile(){
+//        this.list = new ArrayList<>();
+//        this.bookNameList = new ArrayList<String>();
+        String res = null;
+        try {
+            FragmentActivity activity = getActivity();
+            res = Utils.readAllFile(activity.getFilesDir().toPath().resolve("cover/test.json").toFile().toPath());
+            JSONObject context = new JSONObject(res);
+            JSONArray array = context.getJSONArray("cover");
+            for (int i=0;i<array.length();i++){
+                JSONObject object = array.getJSONObject(i);
+                BooKInfo bookinfo=new BooKInfo(object.getString("book_name"),object.getString("cover_path"));
+                list.add(bookinfo);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public List<BooKInfo> getList() {

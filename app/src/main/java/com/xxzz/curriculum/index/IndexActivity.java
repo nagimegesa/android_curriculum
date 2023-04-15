@@ -41,6 +41,7 @@ public class IndexActivity extends AppCompatActivity {
                 change_fragment(group.getCheckedRadioButtonId());
             }
         });
+
         change_fragment(R.id.index_button);
         boolean canWrite =
                 XXPermissions.isGranted(getApplicationContext(), Permission.WRITE_EXTERNAL_STORAGE);
@@ -121,9 +122,9 @@ public class IndexActivity extends AppCompatActivity {
 
     @SuppressLint("ResourceType")
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.layout.index_menu, menu);
-        MenuItem searchViewItem = menu.findItem(R.id.app_bar_search);
+        MenuItem searchViewItem = menu.findItem(R.id.read_bar_search);
         GridView gridView=findViewById(R.id.index_search_list);
         gridView.setVisibility(View.GONE);
         List<String> s = IndexFragment.getInstance().getBookNameList();
