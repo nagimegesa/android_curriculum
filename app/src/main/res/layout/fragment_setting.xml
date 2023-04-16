@@ -54,7 +54,7 @@
                 android:id="@+id/rl_reset_screen"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@color/common_bg"
+                android:background="@color/setting_common_bg"
                 android:gravity="center"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp">
@@ -63,7 +63,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="调节字体大小"
+                    android:text="@string/setting_fontSize"
                     android:textColor="@color/setting_textsecondary"
                     android:textSize="15dp"
                     android:layout_gravity="left"/>
@@ -82,10 +82,10 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rl_always_next"
+                android:id="@+id/rl_show_music"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@color/common_bg"
+                android:background="@color/setting_common_bg"
                 android:gravity="center"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp">
@@ -99,7 +99,7 @@
                     android:textSize="15dp" />
 
                 <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/sc_volume1"
+                    android:id="@+id/sc_music_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -113,7 +113,7 @@
                 android:id="@+id/rl_show_night"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@color/common_bg"
+                android:background="@color/setting_common_bg"
                 android:gravity="center"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp">
@@ -127,7 +127,7 @@
                     android:textSize="15dp" />
 
                 <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/sc_volume2"
+                    android:id="@+id/sc_night_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -157,7 +157,7 @@
                 android:id="@+id/test_show_status"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@color/common_bg"
+                android:background="@color/setting_common_bg"
                 android:gravity="center"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp">

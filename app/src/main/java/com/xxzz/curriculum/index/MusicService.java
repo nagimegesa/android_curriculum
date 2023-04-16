@@ -9,7 +9,7 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
-public class BackgroundMusic extends Service {
+public class MusicService extends Service {
     // TODO: add local music
     private static MediaPlayer mediaPlayer = null;
 

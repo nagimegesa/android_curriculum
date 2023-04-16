@@ -3,38 +3,26 @@ package com.xxzz.curriculum;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Environment;
-import android.util.Xml;
+import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.SwitchCompat;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlSerializer;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 
 public class Config {
-    static private Config config;
-    static private float minFontSize = 5; //最小字号
-    static private float defaultFontSize = 16; //默认字号
-    static private float maxFontSize = 20;//最大字号
-    SwitchCompat nightCompat;
-    private Activity activity;
+    static public Config config;
+    static public float minFontSize = 8; //最小字号
+    static public float defaultFontSize = 20; //默认字号
+    static public float maxFontSize = 32;//最大字号
+    static private float fontSizeArray[] = {8, 12, 16, 20, 24, 28, 32};
     private Context parent;
-    private SharedPreferences preferences;
-    private SharedPreferences.Editor editor;
-    private float readFontSize; //阅读字体大小
-    private boolean musicStatus;//背景音乐状态
-    private boolean nightStatus;//夜间模式
+    private float readFontSize = defaultFontSize; //阅读字体大小
+    private boolean musicStatus = false;//背景音乐状态
+    private boolean nightStatus = false;//夜间模式
 
     public Config(Context parent) {
-        this.parent = parent;
-        this.readFontSize = 20;
-        this.musicStatus = false;
-        this.nightStatus = false;
+//        this.parent = parent;
+//        this.readFontSize = 20;
+//        this.musicStatus = false;
+//        this.nightStatus = false;
     }
 
     /**
@@ -53,14 +41,10 @@ public class Config {
         return readFontSize;
     }
 
-    public void setReadFontSize(int readFontSize) {
-        this.readFontSize = readFontSize;
-    }
-
     public void setReadFontSize(float fontSize) {
-
+        SharedPreferences sharedPreferences = parent.getSharedPreferences("setting", parent.MODE_PRIVATE);
+        readFontSize = sharedPreferences.getFloat("readFontSize", 0);
         if (fontSize > minFontSize) {
-//            setText(String.valueOf(fontSize - 1));
 //            setReadFontSize(fontSize - 1);
 //            saveSetting(setting);
         }
@@ -123,11 +107,10 @@ public class Config {
 //     */
 //    public void getConfig() {
 //        try {
-//            File path = new File(Environment.getExternalStorageDirectory() + File.separator + "Settings", "Ceshi.xml");
+//            File path = new File(Environment.getExternalStorageDirectory() + File.separator + "Settings", "Setting.xml");
 //            FileInputStream fis = new FileInputStream(path);
 //            XmlPullParser parser = Xml.newPullParser();// 获得pull解析器对象
 //            parser.setInput(fis, "utf-8");// 指定解析的文件和编码格式
-//
 //            int eventType = parser.getEventType(); // 获得事件类型
 //
 //            while (eventType != XmlPullParser.END_DOCUMENT) {
@@ -149,18 +132,41 @@ public class Config {
 //        }
 //    }
 
-    private void saveSettingConfig(Context context){
-        preferences = context.getSharedPreferences("setting",Context.MODE_PRIVATE);
+    private int getSpinnerPlace(Spinner readFontSize){
+        SharedPreferences sharedPreferences = parent.getSharedPreferences("setting", parent.MODE_PRIVATE);
+        float fontSize = sharedPreferences.getFloat("readFontSize", 0);
+        int flag = 0;
+        if (readFontSize.getSelectedItem().toString() != Float.toString(fontSize)) {
+            for(int i=0;i< fontSizeArray.length;i++){
+                if(fontSize == fontSizeArray[i])
+                    flag = i;
+            }
+            //readFontSize.setSelection(flag);
+        }
+        return flag;
+    }
+    public void saveSettingConfig(Context context) {
+        SharedPreferences preferences;
+        SharedPreferences.Editor editor;
+        preferences = context.getSharedPreferences("setting", Context.MODE_PRIVATE);
         editor = preferences.edit();
-        editor.putFloat("readFontSize",this.getReadFontSize());
-        editor.putBoolean("musicStatus",this.isMusicStatus());
-        editor.putBoolean("nightStatus",this.isNightStatus());
-        editor.apply();
+        editor.putFloat("readFontSize", this.getReadFontSize());
+        editor.putBoolean("musicStatus", this.isMusicStatus());
+        editor.putBoolean("nightStatus", this.isNightStatus());
+        editor.commit();
     }
 
+    public void readSettingConfig() {
+        //  读取设置
+        SharedPreferences sharedPreferences = parent.getSharedPreferences("setting", parent.MODE_PRIVATE);
+        readFontSize = sharedPreferences.getFloat("readFontSize", 0);
+        nightStatus = sharedPreferences.getBoolean("nightStatus", true);
+        musicStatus = sharedPreferences.getBoolean("musicStatus", true);
+        //Log
+    }
 
     //切换夜间模式
-    private void switchMode() {
+    public void switchMode(Activity activity) {
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO) {
             //当前为日间模式
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES); //切换为夜间模式

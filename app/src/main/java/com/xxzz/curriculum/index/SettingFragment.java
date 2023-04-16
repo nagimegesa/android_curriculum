@@ -1,37 +1,38 @@
 package com.xxzz.curriculum.index;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import com.xxzz.curriculum.Config;
 import com.xxzz.curriculum.R;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.file.Files;
 
 public class SettingFragment extends Fragment {
     static private SettingFragment fragment;
-    Config config;
     private View view;
-    private float defaultFontSize = 24;
-    private Spinner readFontSize = null;
+    int flag = 3; // spinner -- 默认字号为20
+    private float fontSize;
+    private Spinner readFontSize;
+    private SwitchCompat nightStatus, musicStatus;
     private Context parent;
+
     public SettingFragment(Context parent) {
         this.parent = parent;
     }
@@ -50,7 +51,8 @@ public class SettingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //
+        Config.getInstance(parent).saveSettingConfig(parent);
         File dir = new File(parent.getFilesDir() + "/BookMark/");
         //文件名
         String fileName = "bookmarks.json";
@@ -61,36 +63,61 @@ public class SettingFragment extends Fragment {
                 dir.mkdirs();
             }
             File file = new File(dir, fileName);
-            if(!file.exists()) {
+            if (!file.exists()) {
                 OutputStream out = Files.newOutputStream(file.toPath());
                 out.close();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
+        // TODO: write bookCollection
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_setting, container, false);
-        readFontSize = (Spinner) view.findViewById(R.id.sp_setFontSize);
-        readFontSize.setSelection(0); //设置默认选中项
-        readFontSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+        readFontSize = view.findViewById(R.id.sp_setFontSize);
+        nightStatus = (SwitchCompat) view.findViewById(R.id.sc_night_switch);
+        musicStatus = view.findViewById(R.id.sc_music_switch);
+        //
+        //Config.getInstance(parent).readSettingConfig();
+        //getSpinnerPlace();
+        readFontSize.setSelection(flag); //设置默认选中项
+        readFontSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-
+                //Config.getInstance(parent).setReadFontSize();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                Log.d("fontSize", "NothingSelected");
             }
         });
+        //
+        nightStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //Config.getInstance(parent).switchMode(getActivityFromView());
+            }
+        });
+
+
         return view;
     }
 
-
+    public Activity getActivityFromView() {
+        if (null != view) {
+            Context context = view.getContext();
+            while (context instanceof ContextWrapper) {
+                if (context instanceof Activity) {
+                    return (Activity) context;
+                }
+                context = ((ContextWrapper) context).getBaseContext();
+            }
+        }
+        return null;
+    }
 }
 
 
