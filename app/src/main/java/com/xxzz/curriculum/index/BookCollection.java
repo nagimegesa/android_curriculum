@@ -5,6 +5,7 @@ public class BookCollection {
     private int page;
     private  String text;
     public BookCollection(){
+
     }
 
 
