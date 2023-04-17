@@ -137,6 +137,34 @@
 
             </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/rl_swipe_mode"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/setting_common_bg"
+                android:gravity="center"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="上滑"
+                    android:textColor="@color/setting_textsecondary"
+                    android:textSize="15dp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/sc_swipe_mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:longClickable="false" />
+
+            </RelativeLayout>
+
             <!--          其他设置              -->
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -179,7 +207,6 @@
                     android:clickable="true"
                     android:longClickable="false" />
             </RelativeLayout>
-
 
         </LinearLayout>
     </ScrollView>

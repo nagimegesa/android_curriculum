@@ -42,7 +42,7 @@ public class Config {
         editor = sharedPreferences.edit();
         //readFontSize = sharedPreferences.getFloat("readFontSize", 0);
         if (fontSize >= minFontSize && fontSize <= maxFontSize) {
-            //readFontSize = fontSize;
+            readFontSize = fontSize;
             editor.putFloat("readFontSize", fontSize);
             editor.apply();
         }
@@ -77,8 +77,6 @@ public class Config {
         this.musicStatus = false;
         this.nightStatus = false;
     }
-
-
 
     private int getSpinnerPlace(Spinner readFontSize,Context parent) {
         sharedPreferences = parent.getSharedPreferences("setting", parent.MODE_PRIVATE);
