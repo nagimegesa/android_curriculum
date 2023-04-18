@@ -16,13 +16,14 @@
 
         android:orientation="horizontal">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/imageBtn"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="5dp"
-            android:scaleType="centerInside"
+
+
             android:src="@drawable/arrow_left2" />
 
         <TextView
@@ -36,13 +37,18 @@
 
     </LinearLayout>
 
-        <ListView
-            android:id="@+id/join_list_view"
-            android:layout_width="match_parent"
-            android:layout_height="629dp"
-            android:layout_alignParentTop="true"
+    <ListView
+        android:id="@+id/join_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="587dp"
+        android:layout_alignParentTop="true"
 
-            android:layout_marginTop="102dp"></ListView>
+        android:layout_marginTop="102dp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/join_list_view"
+        />
 
         <LinearLayout
             android:id="@+id/button_layout"
@@ -75,5 +81,36 @@
             </RadioGroup>
 
         </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/edit_bar"
+        android:layout_width="match_parent"
+        android:layout_height="693dp"
+        android:orientation="horizontal"
+        android:layout_below="@id/join_list_view"
+        android:layout_alignParentBottom="true"
+
+        android:visibility="gone">
+
+
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_weight="1"
+            android:text="取消"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/select_all"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_weight="1"
+            android:text="全选"
+            android:textSize="25sp" />
+    </LinearLayout>
 
 </RelativeLayout>
