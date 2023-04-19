@@ -32,7 +32,8 @@
                 android:text="@string/join_book"/>
         </LinearLayout>
 
-        <LinearLayout
+
+    <LinearLayout
             android:id="@+id/button_layout"
             android:layout_width="match_parent"
             android:layout_height="40dp">
@@ -70,8 +71,10 @@
     <LinearLayout
         android:id="@+id/edit_bar"
         android:layout_width="match_parent"
-        android:layout_height="693dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
         android:layout_below="@id/join_list_view"
+        android:translationZ="10dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:visibility="gone">
@@ -93,6 +96,13 @@
             android:gravity="center"
             android:text="全选"
             android:textSize="25sp" />
+        <TextView
+            android:id="@+id/confirm"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="确认"
+            android:textSize="25sp" />
     </LinearLayout>
-
 </RelativeLayout>
