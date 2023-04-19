@@ -12,10 +12,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:orientation="vertical">
+
         <LinearLayout
-            android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="50dp"
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/join_image_button"
@@ -25,24 +26,26 @@
                 android:src="@drawable/arrow_left2" />
 
             <TextView
-                android:gravity="center_vertical"
-                android:textSize="20sp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/join_book"/>
+                android:gravity="center_vertical"
+                android:text="@string/join_book"
+                android:textSize="20sp" />
         </LinearLayout>
 
 
-    <LinearLayout
+        <LinearLayout
             android:id="@+id/button_layout"
             android:layout_width="match_parent"
             android:layout_height="40dp">
+
             <RadioGroup
                 android:id="@+id/bottom_radio"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="horizontal">
+
                 <RadioButton
                     android:id="@+id/join_button"
                     style="@style/index_radio_style"
@@ -73,7 +76,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
-        android:layout_below="@id/join_list_view"
+        android:="@id/join_list_view"
         android:translationZ="10dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
