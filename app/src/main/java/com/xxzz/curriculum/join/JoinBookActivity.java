@@ -299,8 +299,8 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void GoHome() {
-        InitFileList(Environment.getExternalStorageDirectory().getPath());
-        adapter.notifyDataSetChanged();
+        List<File> list = InitFileList(Environment.getExternalStorageDirectory().getPath());
+        ReFresh(list);
     }
 
 
