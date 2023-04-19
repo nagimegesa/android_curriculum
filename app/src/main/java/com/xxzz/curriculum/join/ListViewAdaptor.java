@@ -26,15 +26,11 @@ import java.util.List;
 
 public class ListViewAdaptor extends BaseAdapter {
     private List<File> fileList;
-    private LayoutInflater inflater;
     private Context context;
     ViewHolder viewHolder = null;;
 
     public SparseBooleanArray stateCheckedMap = new SparseBooleanArray();
     public boolean isShowCheckBox = false;
-    public ListViewAdaptor(LayoutInflater inflater) {
-        this.inflater = inflater;
-    }
 
     public ListViewAdaptor(Context context, List<File> listView,SparseBooleanArray sparseBooleanArray) {
         this.context = context;
