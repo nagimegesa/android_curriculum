@@ -86,7 +86,7 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_join_book);
-        accesspermisson();//获取 权限
+        Accesspermisson();//获取 权限
         init_view();
 
         InitFileList(Environment.getExternalStorageDirectory().getPath());
@@ -113,8 +113,17 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
                     //adapter.notifyDataSetChanged();
                 }
                 else if(IsJbk(file)){
-                    updateCheckBoxStatus(view,i);
-                    Unzip_Copy(file);
+                    try {
+                        if(Is_Book(file)){
+                            updateCheckBoxStatus(view,i);
+                            //Unzip_Copy(file);
+                        }
+                        else makeToast(JoinBookActivity.this,"所选文件不符合格式",100);
+
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
                 }
                 else{
                     //updateCheckBoxStatus(view,i);
@@ -133,15 +142,22 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 mLlEditBar.setVisibility(View.VISIBLE);//显示下方布局
                 adapter.setShowCheckBox(true);//CheckBox的那个方框显示
-                adapter.isShowCheckBox = true;
-                updateCheckBoxStatus(view, position);
+                //adapter.isShowCheckBox = true;
+                try {
+                    if(Is_Book(FileList.get(position))){
+                        updateCheckBoxStatus(view, position);
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                adapter.notifyDataSetChanged();
                 //adapter.notifyDataSetChanged();
                 return true;
             }
 
         });
     }
-    private void updateCheckBoxStatus(View view, int position) {
+    private void updateCheckBoxStatus(View view, int position)  {
         ListViewAdaptor.ViewHolder holder = (ListViewAdaptor.ViewHolder) view.getTag();
         holder.FileCheckBox.toggle();//反转CheckBox的选中状态
         listView.setItemChecked(position, holder.FileCheckBox.isChecked());//长按ListView时选中按的那一项
@@ -188,6 +204,7 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
         mLlEditBar = findViewById(R.id.edit_bar);
         findViewById(R.id.cancel).setOnClickListener(this);
         findViewById(R.id.select_all).setOnClickListener(this);
+        findViewById(R.id.confirm).setOnClickListener(this);
         button_join.setOnClickListener(this);
         button_auto.setOnClickListener(this);
         imageButton.setOnClickListener(this);
@@ -215,7 +232,7 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
         adapter.notifyDataSetChanged();
     }
 
-    public void accesspermisson(){
+    public void Accesspermisson(){
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R ||
                 Environment.isExternalStorageManager()) {
@@ -264,23 +281,37 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
             case R.id.select_all:
                 selectAll();
                 break;
-
+            case R.id.confirm:
+                Add_Book();
+                break;
         }
     }
-    public  void Unzip_Copy(File file){
-        try {
-            File tmpPath = getCacheDir();
-            unzipFile(file.getPath(), tmpPath.getAbsolutePath());
-            if(CheckFile(tmpPath)){
-                copyDir(tmpPath.getAbsolutePath(),BookPath);
-                makeToast(JoinBookActivity.this,"加入成功",100);
-            }
-            else
-                makeToast(JoinBookActivity.this,"所选文件不符合格式",100);
-            deleteDFile(tmpPath);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+
+    private void Add_Book() {
+        for(File f :mCheckedData){
+            Unzip_Copy(f);
         }
+
+
+
+    }
+
+    public  void Unzip_Copy(File file){
+            File tmpPath = getCacheDir();
+            copyDir(tmpPath.getAbsolutePath(),BookPath);
+            makeToast(JoinBookActivity.this,"加入成功",100);
+            deleteDFile(tmpPath);
+
+    }
+
+    public boolean Is_Book(File file) throws IOException {
+        File tmpPath = getCacheDir();
+        unzipFile(file.getPath(), tmpPath.getAbsolutePath());
+        if(CheckFile(tmpPath)){
+            return true;
+        }
+        deleteDFile(tmpPath);
+        return false;
     }
     public void GoPrevious (){
         if(FileTep==Environment.getExternalStorageDirectory()){
@@ -329,9 +360,6 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
         adapter.setStateCheckedMap(stateCheckedMap);
     listView.setAdapter(adapter);
 }
-public void testFresh(){
-        adapter.setFileList(FileList);
-        adapter.setStateCheckedMap(stateCheckedMap);
-}
+
 
 }
