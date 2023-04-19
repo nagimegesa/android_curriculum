@@ -31,7 +31,7 @@ public class ListViewAdaptor extends BaseAdapter {
     ViewHolder viewHolder = null;;
 
     public SparseBooleanArray stateCheckedMap = new SparseBooleanArray();
-    private boolean isShowCheckBox = false;
+    public boolean isShowCheckBox = false;
     public ListViewAdaptor(LayoutInflater inflater) {
         this.inflater = inflater;
     }
@@ -40,6 +40,14 @@ public class ListViewAdaptor extends BaseAdapter {
         this.context = context;
         this.fileList = listView;
         this.stateCheckedMap = sparseBooleanArray;
+    }
+
+    public void setFileList(List<File> fileList) {
+        this.fileList = fileList;
+    }
+
+    public void setStateCheckedMap(SparseBooleanArray stateCheckedMap) {
+        this.stateCheckedMap = stateCheckedMap;
     }
 
     @Override
@@ -61,9 +69,6 @@ public class ListViewAdaptor extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = null;
-
-
-
         if(convertView == null){
             //加载布局文件，将布局文件转换成View对象
             view = LayoutInflater.from(context).inflate(R.layout.join_item,null);
@@ -72,7 +77,7 @@ public class ListViewAdaptor extends BaseAdapter {
             //实例化ViewHolder
             viewHolder.FileImage = view.findViewById(R.id.file_image);
             viewHolder.FileName = view.findViewById(R.id.file_name);
-            viewHolder.FilecheckBox = view.findViewById(R.id.checkBox);
+            viewHolder.FileCheckBox = view.findViewById(R.id.checkBox);
             //将viewHolder的对象存储到View中
             view.setTag(viewHolder);
         }else{
@@ -85,9 +90,10 @@ public class ListViewAdaptor extends BaseAdapter {
         if(f.isDirectory()) {
             viewHolder.FileName.setText(f.getName());
             viewHolder.FileImage.setImageResource(R.drawable.folder_open);
-            viewHolder.FilecheckBox.setVisibility(View.GONE);
+            viewHolder.FileCheckBox.setVisibility(View.GONE);
         }
         else if(IsJbk(f)){
+            showAndHideCheckBox();
             File tmpPath = context.getCacheDir();
             try {
                 unzipFile(f.getPath(), tmpPath.getAbsolutePath());
@@ -103,28 +109,30 @@ public class ListViewAdaptor extends BaseAdapter {
             } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
         }
         else {
+            showAndHideCheckBox();
             viewHolder.FileName.setText(f.getName());
             viewHolder.FileImage.setImageResource(R.drawable.file_text2);
         }
 
-        showAndHideCheckBox();
-        viewHolder.FilecheckBox.setChecked(stateCheckedMap.get(position));
+
+        viewHolder.FileCheckBox.setChecked(stateCheckedMap.get(position));
         return view;
     }
 
    public class ViewHolder{
         ImageView FileImage;
         TextView FileName;
-        CheckBox FilecheckBox;
+        CheckBox FileCheckBox;
     }
 
     private void showAndHideCheckBox() {
         if (isShowCheckBox) {
-            viewHolder.FilecheckBox.setVisibility(View.VISIBLE);
+            viewHolder.FileCheckBox.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.FilecheckBox.setVisibility(View.GONE);
+            viewHolder.FileCheckBox.setVisibility(View.GONE);
         }
     }
 
@@ -134,7 +142,7 @@ public class ListViewAdaptor extends BaseAdapter {
     }
 
     public void setShowCheckBox(boolean showCheckBox) {
-        isShowCheckBox = showCheckBox;
+        this.isShowCheckBox = showCheckBox;
     }
 
 }

@@ -86,12 +86,11 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_join_book);
-
-        accesspermisson();
+        accesspermisson();//获取 权限
         init_view();
 
-        InitListView(Environment.getExternalStorageDirectory().getPath());
-        setStateCheckedMap(false);
+        InitFileList(Environment.getExternalStorageDirectory().getPath());
+        //setStateCheckedMap(false);
         adapter = new ListViewAdaptor(JoinBookActivity.this,FileList,stateCheckedMap);
         listView.setAdapter(adapter);
 
@@ -106,31 +105,19 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 File file =FileList.get(i);
-
                 FileTep = file;
                 //makeToast(JoinBookActivity.this,file.getName(),100);
                 if(file.isDirectory()){
-                    InitListView(file.getPath());
+                    InitFileList(file.getPath());
                     ReFresh();
+                    //adapter.notifyDataSetChanged();
                 }
                 else if(IsJbk(file)){
                     updateCheckBoxStatus(view,i);
-                    try {
-                        File tmpPath = getCacheDir();
-                        unzipFile(file.getPath(), tmpPath.getAbsolutePath());
-                        if(CheckFile(tmpPath)){
-                            copyDir(tmpPath.getAbsolutePath(),BookPath);
-                            makeToast(JoinBookActivity.this,"加入成功",100);
-                        }
-                        else
-                            makeToast(JoinBookActivity.this,"所选文件不符合格式",100);
-                        deleteDFile(tmpPath);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    Unzip_Copy(file);
                 }
                 else{
-                    updateCheckBoxStatus(view,i);
+                    //updateCheckBoxStatus(view,i);
                     makeToast(JoinBookActivity.this,"所选文件不符合格式",100);
                 }
 
@@ -146,15 +133,45 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 mLlEditBar.setVisibility(View.VISIBLE);//显示下方布局
                 adapter.setShowCheckBox(true);//CheckBox的那个方框显示
+                adapter.isShowCheckBox = true;
                 updateCheckBoxStatus(view, position);
+                //adapter.notifyDataSetChanged();
                 return true;
             }
 
         });
     }
+    private void updateCheckBoxStatus(View view, int position) {
+        ListViewAdaptor.ViewHolder holder = (ListViewAdaptor.ViewHolder) view.getTag();
+        holder.FileCheckBox.toggle();//反转CheckBox的选中状态
+        listView.setItemChecked(position, holder.FileCheckBox.isChecked());//长按ListView时选中按的那一项
+        stateCheckedMap.put(position, holder.FileCheckBox.isChecked());//存放CheckBox的选中状态
+        if (holder.FileCheckBox.isChecked()) {
+            mCheckedData.add(FileList.get(position));//CheckBox选中时，把这一项的数据加到选中数据列表
+        } else {
+            mCheckedData.remove(FileList.get(position));//CheckBox未选中时，把这一项的数据从选中数据列表移除
+        }
+        adapter.notifyDataSetChanged();
 
+    }
 
-    public  void InitListView(String path){
+    private void setStateCheckedMap(boolean isSelectedAll) {
+        for (int i = 0; i < FileList.size(); i++) {
+            stateCheckedMap.put(i, isSelectedAll);
+            listView.setItemChecked(i, isSelectedAll);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mLlEditBar.getVisibility() == View.VISIBLE) {
+            cancel();
+            return;
+        }
+        else GoPrevious();
+        //super.onBackPressed();
+    }
+    public  void InitFileList(String path){
 
         FileList = new ArrayList<File>();
         File file = new File(path);
@@ -185,38 +202,6 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
         adapter.notifyDataSetChanged();//更新ListView
     }
 
-
-
-    private void updateCheckBoxStatus(View view, int position) {
-        ListViewAdaptor.ViewHolder holder = (ListViewAdaptor.ViewHolder) view.getTag();
-        holder.FilecheckBox.toggle();//反转CheckBox的选中状态
-        listView.setItemChecked(position, holder.FilecheckBox.isChecked());//长按ListView时选中按的那一项
-        stateCheckedMap.put(position, holder.FilecheckBox.isChecked());//存放CheckBox的选中状态
-        if (holder.FilecheckBox.isChecked()) {
-            mCheckedData.add(FileList.get(position));//CheckBox选中时，把这一项的数据加到选中数据列表
-        } else {
-            mCheckedData.remove(FileList.get(position));//CheckBox未选中时，把这一项的数据从选中数据列表移除
-        }
-        adapter.notifyDataSetChanged();
-        ReFresh();
-    }
-
-    private void setStateCheckedMap(boolean isSelectedAll) {
-        for (int i = 0; i < FileList.size(); i++) {
-            stateCheckedMap.put(i, isSelectedAll);
-            listView.setItemChecked(i, isSelectedAll);
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mLlEditBar.getVisibility() == View.VISIBLE) {
-            cancel();
-            return;
-        }
-        super.onBackPressed();
-    }
-
     private void selectAll() {
         mCheckedData.clear();//清空之前选中数据
         if (isSelectedAll) {
@@ -228,7 +213,6 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
             isSelectedAll = true;
         }
         adapter.notifyDataSetChanged();
-        ReFresh();
     }
 
     public void accesspermisson(){
@@ -269,7 +253,7 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
                 try {
                     FileList = new ArrayList<File>();
                     GoSmart(Environment.getExternalStorageDirectory().getPath());
-                    ReFresh();
+                    adapter.notifyDataSetChanged();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -283,21 +267,38 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
 
         }
     }
-
+    public  void Unzip_Copy(File file){
+        try {
+            File tmpPath = getCacheDir();
+            unzipFile(file.getPath(), tmpPath.getAbsolutePath());
+            if(CheckFile(tmpPath)){
+                copyDir(tmpPath.getAbsolutePath(),BookPath);
+                makeToast(JoinBookActivity.this,"加入成功",100);
+            }
+            else
+                makeToast(JoinBookActivity.this,"所选文件不符合格式",100);
+            deleteDFile(tmpPath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public void GoPrevious (){
         if(FileTep==Environment.getExternalStorageDirectory()){
             Intent intent = new Intent(JoinBookActivity.this , IndexActivity.class);
             startActivity(intent);
             //finish();
         }
-        File file = FileTep.getParentFile();
-        InitListView(file.getPath());
-        ReFresh();
-        FileTep = FileTep.getParentFile();
+        else{
+            File file = FileTep.getParentFile();
+            InitFileList(file.getPath());
+            adapter.notifyDataSetChanged();
+            FileTep = FileTep.getParentFile();
+        }
+
     }
     public void GoHome(){
-        InitListView(Environment.getExternalStorageDirectory().getPath());
-        ReFresh();
+        InitFileList(Environment.getExternalStorageDirectory().getPath());
+        adapter.notifyDataSetChanged();
     }
     public void GoSmart(String path) throws IOException {
         File file = new File(path);
@@ -323,8 +324,14 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
 
     }
     public void ReFresh(){
-    adapter = new ListViewAdaptor(JoinBookActivity.this,FileList,stateCheckedMap);
+    //adapter = new ListViewAdaptor(JoinBookActivity.this,FileList,stateCheckedMap);
+        adapter.setFileList(FileList);
+        adapter.setStateCheckedMap(stateCheckedMap);
     listView.setAdapter(adapter);
+}
+public void testFresh(){
+        adapter.setFileList(FileList);
+        adapter.setStateCheckedMap(stateCheckedMap);
 }
 
 }
