@@ -84,10 +84,14 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
                 else if (IsJbk(file)) {
                     try {
                         if (Is_Book(file)) {
-                            updateCheckBoxStatus(view, i);
-                            //Unzip_Copy(file);
-                        } else makeToast(JoinBookActivity.this, "所选文件不符合格式", 100);
+                            if(mLlEditBar.getVisibility() == View.VISIBLE)
+                                updateCheckBoxStatus(view, i);
+                            else{
+                                Unzip_Copy(file);
+                            }
 
+                        }
+                        else makeToast(JoinBookActivity.this, "所选文件不符合格式", 100);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -137,9 +141,14 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-    private void setStateCheckedMap(boolean isSelectedAll) {
+    private void setStateCheckedMap(boolean isSelectedAll)  {
         for (int i = 0; i < adapter.getCount(); i++) {
-            stateCheckedMap.put(i, isSelectedAll);
+            try {
+                if(Is_Book((File) adapter.getItem(i)))
+                    stateCheckedMap.put(i, isSelectedAll);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             listView.setItemChecked(i, isSelectedAll);
         }
     }
@@ -189,6 +198,14 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
             isSelectedAll = false;
             // TODO : to fix a bug
 //            mCheckedData.addAll(h);//把所有的数据添加到选中列表中
+            for (int i = 0; i < adapter.getCount(); i++) {
+                try {
+                    if (Is_Book((File) adapter.getItem(i)))
+                        mCheckedData.add((File) adapter.getItem(i));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         } else {
             setStateCheckedMap(false);//将CheckBox的所有选中状态变成未选中
             isSelectedAll = true;
@@ -246,7 +263,7 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
                 selectAll();
                 break;
             case R.id.confirm:
-                // Add_Book();
+                 Add_Book();
                 break;
         }
     }
@@ -256,9 +273,10 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
             File tmpPath = getCacheDir();
             unzipFile(file.getPath(), tmpPath.getAbsolutePath());
             if (CheckFile(tmpPath)) {
-                copyDir(tmpPath.getAbsolutePath(), BookPath);
+                copyDir(tmpPath.getAbsolutePath(), BookPath+file.getName());
                 makeToast(JoinBookActivity.this, "加入成功", 100);
-            } else
+            }
+            else
                 makeToast(JoinBookActivity.this, "所选文件不符合格式", 100);
             deleteDFile(tmpPath);
         } catch (IOException e) {
@@ -266,16 +284,17 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-//    private void Add_Book() {
-//        for(File f :mCheckedData){
-//            Unzip_Copy(f);
-//        }
-//    }
+    private void Add_Book() {
+        for(File f :mCheckedData){
+            Unzip_Copy(f);
+        }
+    }
 
     public boolean Is_Book(File file) throws IOException {
         File tmpPath = getCacheDir();
         unzipFile(file.getPath(), tmpPath.getAbsolutePath());
         if(CheckFile(tmpPath)){
+            deleteDFile(tmpPath);
             return true;
         }
         deleteDFile(tmpPath);
@@ -299,8 +318,8 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void GoHome() {
-        InitFileList(Environment.getExternalStorageDirectory().getPath());
-        adapter.notifyDataSetChanged();
+        List<File> list = InitFileList(Environment.getExternalStorageDirectory().getPath());
+        ReFresh(list);
     }
 
 
