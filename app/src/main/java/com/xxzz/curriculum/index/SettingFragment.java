@@ -7,11 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.xxzz.curriculum.R;
 
-public class SettingFragment extends Fragment {
+public class SettingFragment extends Fragment   {
     static private SettingFragment fragment;
     public SettingFragment() {
     }
-
     /**
      * 单例模式, 写的时候只能用这个得到 SettingFragment 的实例, 不要直接调用 new
      *

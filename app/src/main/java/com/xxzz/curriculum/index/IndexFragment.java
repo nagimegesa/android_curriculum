@@ -1,6 +1,7 @@
 package com.xxzz.curriculum.index;
 
 import android.annotation.SuppressLint;
+import android.app.Person;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -15,6 +16,7 @@ import android.widget.GridView;
 
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.Utils;
+import com.xxzz.curriculum.read.Book;
 import com.xxzz.curriculum.read.ReadActivity;
 
 import org.json.JSONArray;
@@ -25,14 +27,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.EventListener;
 import java.util.List;
 
 public class IndexFragment extends Fragment{
     public GridView gridview;
     private IndexBookAdapter adapter;
-
-    private List<BooKInfo> list=new ArrayList<>();
+    private static List<BooKInfo> list=new ArrayList<>();
     private List<String> bookNameList=new ArrayList<String>();
     private static IndexFragment fragment;
 
@@ -63,6 +66,7 @@ public class IndexFragment extends Fragment{
         adapter.delData();
         adapter.notifyDataSetChanged();
     }
+
     @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,7 +76,6 @@ public class IndexFragment extends Fragment{
         ((Button)view.findViewById(R.id.index_add_button)).setOnClickListener(this::add);
         ((Button)view.findViewById(R.id.index_del_button)).setOnClickListener(this::del);
         adapter = new IndexBookAdapter(getActivity(), list);
-
         gridview.setAdapter(adapter);
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
@@ -105,7 +108,7 @@ public class IndexFragment extends Fragment{
             JSONArray array = context.getJSONArray("cover");
             for (int i=0;i<array.length();i++){
                 JSONObject object = array.getJSONObject(i);
-                BooKInfo bookinfo=new BooKInfo(object.getString("book_name"),object.getString("cover_path"));
+                BooKInfo bookinfo=new BooKInfo(object.getString("book_name"),object.getString("cover_path"),object.getString("last_read_time"));
                 list.add(bookinfo);
             }
         } catch (IOException e) {
@@ -114,11 +117,10 @@ public class IndexFragment extends Fragment{
             throw new RuntimeException(e);
         }
     }
-
     public List<BooKInfo> getList() {
         return list;
     }
-
+    public IndexBookAdapter getAdapter() {return adapter;}
     public List<String> getBookNameList() {
         return bookNameList;
     }

@@ -26,6 +26,7 @@ import com.hjq.permissions.XXPermissions;
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.Utils;
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
 public class IndexActivity extends AppCompatActivity {
@@ -101,6 +102,9 @@ public class IndexActivity extends AppCompatActivity {
             case R.id.dete_book:
                 deleteBook();
                 break;
+            case R.id.sort_book:
+                IndexFragment.getInstance().getAdapter().refreshData(IndexFragment.getInstance().getList());
+                break;
             default:
                 break;
         }
@@ -149,7 +153,6 @@ public class IndexActivity extends AppCompatActivity {
                 return false;
             }
         });
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -166,7 +169,6 @@ public class IndexActivity extends AppCompatActivity {
             default:
                 break;
         }
-
         if (fragment != null) {
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();

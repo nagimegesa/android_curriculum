@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.xxzz.curriculum.R;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class IndexBookAdapter extends BaseAdapter {
@@ -42,7 +44,15 @@ public class IndexBookAdapter extends BaseAdapter {
         }
         return datas.size();
     }
-
+    public void refreshData(List<BooKInfo> datas) {
+        Collections.sort(datas, new Comparator<BooKInfo>() {
+            @Override
+            public int compare(BooKInfo b1, BooKInfo b2) {
+                return Integer.valueOf(b2.getLastReadTime())-Integer.valueOf(b1.getLastReadTime());
+            }
+        });
+        notifyDataSetChanged();
+    }
     @Override
     public Object getItem(int position) {
         return datas.get(position);
