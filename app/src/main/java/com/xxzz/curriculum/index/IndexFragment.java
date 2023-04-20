@@ -111,9 +111,7 @@ public class IndexFragment extends Fragment{
                 BooKInfo bookinfo=new BooKInfo(object.getString("book_name"),object.getString("cover_path"),object.getString("last_read_time"));
                 list.add(bookinfo);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             throw new RuntimeException(e);
         }
     }
