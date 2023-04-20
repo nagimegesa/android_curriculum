@@ -24,7 +24,7 @@
         android:theme="@style/Theme.Curriculum"
         tools:targetApi="26">
         <activity
-            android:name=".BookMarkActivity"
+            android:name=".index.BookMarkActivity"
             android:exported="false" />
         <activity
             android:name=".read.ReadActivity"

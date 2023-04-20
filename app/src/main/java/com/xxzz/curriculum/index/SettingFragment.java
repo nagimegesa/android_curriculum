@@ -3,6 +3,9 @@ package com.xxzz.curriculum.index;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
@@ -24,7 +28,10 @@ public class SettingFragment extends Fragment {
     private View view;
     private Spinner readFontSize;
     private SwitchCompat nightStatus, musicStatus;
+    private TextView bookMark;
     private Context parent;
+    private DBHelper dbHelper;
+    private SQLiteDatabase db;
 
     public SettingFragment(Context parent) {
         this.parent = parent;
@@ -46,7 +53,8 @@ public class SettingFragment extends Fragment {
         super.onCreate(savedInstanceState);
         //
         Config.getInstance().saveSettingConfig(parent);
-
+        dbHelper = new DBHelper(parent);
+        db = dbHelper.getWritableDatabase();
     }
 
     @Override
@@ -56,6 +64,7 @@ public class SettingFragment extends Fragment {
         readFontSize = view.findViewById(R.id.sp_setFontSize);
         nightStatus = (SwitchCompat) view.findViewById(R.id.sc_night_switch);
         musicStatus = view.findViewById(R.id.sc_music_switch);
+        bookMark = view.findViewById(R.id.tv_click_bookmark);
         //
         Config.getInstance().readSettingConfig(parent);
         readFontSize.setSelection(flag); //设置默认选中项
@@ -73,7 +82,7 @@ public class SettingFragment extends Fragment {
         musicStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                Config.getInstance().setMusicStatus(isChecked,getActivity());
+                Config.getInstance().setMusicStatus(isChecked, getActivity());
             }
         });
 
@@ -81,7 +90,14 @@ public class SettingFragment extends Fragment {
         nightStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Config.getInstance().setNightStatus(isChecked,getActivity());
+                Config.getInstance().setNightStatus(isChecked, getActivity());
+            }
+        });
+        bookMark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), BookMarkActivity.class);
+                startActivity(intent);
             }
         });
         return view;
@@ -99,6 +115,7 @@ public class SettingFragment extends Fragment {
         }
         return null;
     }
+
 }
 
 

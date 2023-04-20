@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:padding="10dp"
-            android:text="设置"
+            android:text="@string/setting_toolBar"
             android:textColor="@color/white"
             android:textSize="15dp" />
     </RelativeLayout>
@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerInParent="true"
-                    android:text="阅读设置"
+                    android:text="@string/setting_readConfig"
                     android:textColor="@color/setting_textprimary" />
 
             </RelativeLayout>
@@ -94,7 +94,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="背景音乐"
+                    android:text="@string/setting_musicStatus"
                     android:textColor="@color/setting_textsecondary"
                     android:textSize="15dp" />
 
@@ -122,7 +122,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="夜间模式"
+                    android:text="@string/setting_nightStatus"
                     android:textColor="@color/setting_textsecondary"
                     android:textSize="15dp" />
 
@@ -164,7 +164,25 @@
                     android:longClickable="false" />
 
             </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/rl_bookmark"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/setting_common_bg"
+                android:gravity="center"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
 
+                <TextView
+                    android:id="@+id/tv_click_bookmark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="书签"
+                    android:clickable="true"
+                    android:textColor="@color/setting_textsecondary"
+                    android:textSize="15dp" />
+
+            </RelativeLayout>
             <!--          其他设置              -->
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -176,7 +194,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerInParent="true"
-                    android:text="其他设置"
+                    android:text="@string/setting_otherConfig"
                     android:textColor="@color/setting_textprimary" />
 
             </RelativeLayout>
