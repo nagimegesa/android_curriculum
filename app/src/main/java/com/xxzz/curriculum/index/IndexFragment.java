@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EventListener;
+import java.util.HashMap;
 import java.util.List;
 
 public class IndexFragment extends Fragment{
@@ -73,8 +74,8 @@ public class IndexFragment extends Fragment{
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_index,container,false);
         gridview=view.findViewById(R.id.list);
-        ((Button)view.findViewById(R.id.index_add_button)).setOnClickListener(this::add);
-        ((Button)view.findViewById(R.id.index_del_button)).setOnClickListener(this::del);
+//        ((Button)view.findViewById(R.id.index_add_button)).setOnClickListener(this::add);
+//        ((Button)view.findViewById(R.id.index_del_button)).setOnClickListener(this::del);
         adapter = new IndexBookAdapter(getActivity(), list);
         gridview.setAdapter(adapter);
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -108,6 +109,7 @@ public class IndexFragment extends Fragment{
             JSONArray array = context.getJSONArray("cover");
             for (int i=0;i<array.length();i++){
                 JSONObject object = array.getJSONObject(i);
+                bookNameList.add(object.getString("book_name"));
                 BooKInfo bookinfo=new BooKInfo(object.getString("book_name"),object.getString("cover_path"),object.getString("last_read_time"));
                 list.add(bookinfo);
             }

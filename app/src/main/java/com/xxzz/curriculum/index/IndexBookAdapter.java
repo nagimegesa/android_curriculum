@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+
 public class IndexBookAdapter extends BaseAdapter {
     private Context context;
     private List<BooKInfo> datas;
@@ -36,7 +37,6 @@ public class IndexBookAdapter extends BaseAdapter {
         if (datas != null && datas.size() > 0)
             datas.remove(datas.size() - 1);// 移除最后一条数据
     }
-
     @Override
     public int getCount() {
         if (datas == null) {
@@ -51,6 +51,10 @@ public class IndexBookAdapter extends BaseAdapter {
                 return Integer.valueOf(b2.getLastReadTime())-Integer.valueOf(b1.getLastReadTime());
             }
         });
+        notifyDataSetChanged();
+    }
+    public void searchData(List<BooKInfo> datas){
+        this.datas=datas;
         notifyDataSetChanged();
     }
     @Override

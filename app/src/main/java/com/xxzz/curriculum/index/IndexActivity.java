@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -26,8 +27,13 @@ import com.hjq.permissions.XXPermissions;
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.Utils;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class IndexActivity extends AppCompatActivity {
     @Override
@@ -129,27 +135,35 @@ public class IndexActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.layout.index_menu, menu);
         MenuItem searchViewItem = menu.findItem(R.id.read_bar_search);
-        GridView gridView=findViewById(R.id.index_search_list);
-        gridView.setVisibility(View.GONE);
-        List<String> s = IndexFragment.getInstance().getBookNameList();
-        ArrayAdapter<String> resultAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, s);
-        gridView.setAdapter(resultAdapter);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchViewItem);
+//        ListView lisview=findViewById(R.id.index_search_list);
+//        lisview.setVisibility(View.GONE);
+        List<BooKInfo> result = IndexFragment.getInstance().getList();
+//        ArrayAdapter<String> resultAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, s);
+//        lisview.setAdapter(resultAdapter);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchViewItem);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast t = Toast.makeText(IndexActivity.this, query, Toast.LENGTH_SHORT);
-                t.setGravity(Gravity.TOP,0,0);
-                t.show();
+                List<BooKInfo> searchresult=new ArrayList<>();
+                for (int i = 0; i < result.size(); i++) {
+                    if(result.get(i).getName().equals(query)){
+                        searchresult.add(new BooKInfo(result.get(i).getName(),result.get(i).getCoverPath(),result.get(i).getLastReadTime()));
+                    }
+                }
+                IndexFragment.getInstance().getAdapter().searchData(searchresult);
+//                Toast t = Toast.makeText(IndexActivity.this, query, Toast.LENGTH_SHORT);
+//                t.setGravity(Gravity.TOP,0,0);
+//                t.show();
                 searchView.clearFocus();
                 return false;
             }
             @Override
             public boolean onQueryTextChange(String newText) {
-                if(newText.isEmpty())
-                    return false;
-                gridView.setVisibility(View.VISIBLE);
-                resultAdapter.getFilter().filter(newText);
+                IndexFragment.getInstance().getAdapter().searchData(result);
+//                if(newText.isEmpty())
+//                    return false;
+//                lisview.setVisibility(View.VISIBLE);
+//                resultAdapter.getFilter().filter(newText);
                 return false;
             }
         });
