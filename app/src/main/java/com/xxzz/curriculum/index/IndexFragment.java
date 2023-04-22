@@ -1,7 +1,6 @@
 package com.xxzz.curriculum.index;
 
 import android.annotation.SuppressLint;
-import android.app.Person;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -11,12 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.GridView;
 
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.Utils;
-import com.xxzz.curriculum.read.Book;
 import com.xxzz.curriculum.read.ReadActivity;
 
 import org.json.JSONArray;
@@ -25,16 +21,12 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.EventListener;
-import java.util.HashMap;
 import java.util.List;
 
 public class IndexFragment extends Fragment{
-    public GridView gridview;
+    public  DragGridView gridview;
     private IndexBookAdapter adapter;
     private static List<BooKInfo> list=new ArrayList<>();
     private List<String> bookNameList=new ArrayList<String>();
@@ -57,23 +49,13 @@ public class IndexFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
     }
-    public void add(View view) {
-        adapter.addData("item");
-        adapter.notifyDataSetChanged();
-    }
-
-    /** 移除item */
-    public void del(View view) {
-        adapter.delData();
-        adapter.notifyDataSetChanged();
-    }
 
     @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_index,container,false);
-        gridview=view.findViewById(R.id.list);
+        gridview= (DragGridView) view.findViewById(R.id.list);
 //        ((Button)view.findViewById(R.id.index_add_button)).setOnClickListener(this::add);
 //        ((Button)view.findViewById(R.id.index_del_button)).setOnClickListener(this::del);
         adapter = new IndexBookAdapter(getActivity(), list);
@@ -94,6 +76,23 @@ public class IndexFragment extends Fragment{
 //                }
             }
         });
+        gridview.setOnChangeListener(new DragGridView.OnChanageListener() {
+            @Override
+            public void onChange(int from, int to) {
+                BooKInfo temp = list.get(from);
+                if(from < to){
+                    for(int i=from; i<to; i++){
+                        Collections.swap(list, i, i+1);
+                    }
+                }else if(from > to){
+                    for(int i=from; i>to; i--){
+                        Collections.swap(list, i, i-1);
+                    }
+                }
+                list.set(to, temp);
+                adapter.notifyDataSetChanged();
+            }
+        });
         readBookInfoFromFile();
         return view;
     }
@@ -109,9 +108,11 @@ public class IndexFragment extends Fragment{
             JSONArray array = context.getJSONArray("cover");
             for (int i=0;i<array.length();i++){
                 JSONObject object = array.getJSONObject(i);
-                bookNameList.add(object.getString("book_name"));
-                BooKInfo bookinfo=new BooKInfo(object.getString("book_name"),object.getString("cover_path"),object.getString("last_read_time"));
-                list.add(bookinfo);
+                    if(!bookNameList.contains(object.getString("book_name"))) {
+                        bookNameList.add(object.getString("book_name"));
+                        BooKInfo bookinfo = new BooKInfo(object.getString("book_name"), object.getString("cover_path"), object.getString("last_read_time"));
+                        list.add(bookinfo);
+                    }
             }
         } catch (IOException | JSONException e) {
             throw new RuntimeException(e);

@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".index.IndexFragment">
+    tools:context=".index.IndexFragment"
+    android:clipChildren="false"
+    android:clipToPadding="false">
     <!-- TODO: Update blank fragment layout -->
 <!--    <LinearLayout-->
 <!--        android:layout_width="match_parent"-->
@@ -22,11 +24,11 @@
 <!--            android:layout_height="wrap_content"-->
 <!--            android:text="减少" />-->
 <!--    </LinearLayout>-->
-    <LinearLayout
-        android:layout_marginTop="20dp"
-        android:layout_height="match_parent"
-        android:layout_width="wrap_content">
-    <GridView
+<!--    <LinearLayout-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_width="wrap_content">-->
+    <com.xxzz.curriculum.index.DragGridView
+        android:layout_marginTop="8dp"
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -36,5 +38,4 @@
         android:numColumns="2"
         android:stretchMode="columnWidth"
         android:verticalSpacing="10dp" />
-    </LinearLayout>
 </LinearLayout>

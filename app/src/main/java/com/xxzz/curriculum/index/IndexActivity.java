@@ -3,13 +3,8 @@ package com.xxzz.curriculum.index;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -28,12 +23,7 @@ import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.Utils;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class IndexActivity extends AppCompatActivity {
     @Override
@@ -144,13 +134,13 @@ public class IndexActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                List<BooKInfo> searchresult=new ArrayList<>();
-                for (int i = 0; i < result.size(); i++) {
-                    if(result.get(i).getName().equals(query)){
-                        searchresult.add(new BooKInfo(result.get(i).getName(),result.get(i).getCoverPath(),result.get(i).getLastReadTime()));
-                    }
-                }
-                IndexFragment.getInstance().getAdapter().searchData(searchresult);
+//                List<BooKInfo> searchresult=new ArrayList<>();
+//                for (int i = 0; i < result.size(); i++) {
+//                    if(equalsearch(result.get(i).getName(),query)){
+//                        searchresult.add(new BooKInfo(result.get(i).getName(),result.get(i).getCoverPath(),result.get(i).getLastReadTime()));
+//                    }
+//                }
+//                IndexFragment.getInstance().getAdapter().searchData(searchresult);
 //                Toast t = Toast.makeText(IndexActivity.this, query, Toast.LENGTH_SHORT);
 //                t.setGravity(Gravity.TOP,0,0);
 //                t.show();
@@ -159,7 +149,13 @@ public class IndexActivity extends AppCompatActivity {
             }
             @Override
             public boolean onQueryTextChange(String newText) {
-                IndexFragment.getInstance().getAdapter().searchData(result);
+                List<BooKInfo> searchresult=new ArrayList<>();
+                for (int i = 0; i < result.size(); i++) {
+                    if(equalSearch(result.get(i).getName(),newText)){
+                        searchresult.add(new BooKInfo(result.get(i).getName(),result.get(i).getCoverPath(),result.get(i).getLastReadTime()));
+                    }
+                }
+                IndexFragment.getInstance().getAdapter().searchData(searchresult);
 //                if(newText.isEmpty())
 //                    return false;
 //                lisview.setVisibility(View.VISIBLE);
@@ -169,7 +165,17 @@ public class IndexActivity extends AppCompatActivity {
         });
         return super.onCreateOptionsMenu(menu);
     }
-
+    public boolean equalSearch(String s1, String s2) {
+        StringBuilder str = new StringBuilder(s1);
+        for (char ch : s2.toCharArray()) {
+            int i = str.indexOf(String.valueOf(ch));
+            if (i < 0) {
+                return false;
+            }
+            str=str.deleteCharAt(i);
+        }
+        return true;
+    }
     @SuppressLint("NonConstantResourceId")
     private void change_fragment(int id) {
         Fragment fragment = null;
