@@ -11,11 +11,11 @@ import com.xxzz.curriculum.R;
 
 import java.util.List;
 
-public class bookMarkAdapter extends BaseAdapter {
+public class BookCollectionAdapter extends BaseAdapter {
     private Context context;
-    private List<BooKMark> list;
+    private List<BookCollection> list;
 
-    public bookMarkAdapter(Context context, List<BooKMark> list) {
+    public BookCollectionAdapter(Context context, List<BookCollection> list) {
         this.context = context;
         this.list = list;
     }
@@ -27,7 +27,7 @@ public class bookMarkAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
-        return list.get(i);
+        return null;
     }
 
     @Override
@@ -38,29 +38,24 @@ public class bookMarkAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View convertView, ViewGroup viewGroup) {
         View view = null;
-        ViewHolder viewHolder = null;
+        BookCollectionAdapter.ViewHolder viewHolder = null;
         if (convertView == null) {
             view = LayoutInflater.from(context).inflate(R.layout.setting_bookmark_listitem, null);
-            viewHolder = new ViewHolder();
-            viewHolder.bookName = view.findViewById(R.id.name);
-            viewHolder.page = view.findViewById(R.id.page);
-            viewHolder.text = view.findViewById(R.id.item_text);
+            viewHolder = new BookCollectionAdapter.ViewHolder();
+//            viewHolder.bookName = view.findViewById(R.id.name);
+//            viewHolder.page = view.findViewById(R.id.page);
             view.setTag(viewHolder);
         } else {
             view = convertView;
-            viewHolder = (ViewHolder) view.getTag();
+            viewHolder = (BookCollectionAdapter.ViewHolder) view.getTag();
         }
         viewHolder.bookName.setText(list.get(i).getBookName());
         viewHolder.page.setText(list.get(i).getPage() + "");
-        viewHolder.text.setText(list.get(i).getText());
-
-
         return view;
     }
 
     class ViewHolder {
         TextView bookName;
-        TextView text;
         TextView page;
     }
 }

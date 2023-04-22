@@ -15,11 +15,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE bookmark(ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,bookName VARCHAR(50) NOT NULL, page int NOT NULL,text varchar(100) not null)");
+        sqLiteDatabase.execSQL("CREATE TABLE bookmark(bookName VARCHAR(50) NOT NULL PRIMARY KEY, page int NOT NULL,text varchar(100) not null)");
+        sqLiteDatabase.execSQL("CREATE TABLE collection(bookName VARCHAR(50) NOT NULL PRIMARY KEY,page int NOT NULL)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
     }
 }

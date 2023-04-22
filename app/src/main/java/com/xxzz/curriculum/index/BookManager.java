@@ -1,25 +1,16 @@
 package com.xxzz.curriculum.index;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.xxzz.curriculum.read.Book;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class BookManager {
-    DBHelper DBHelper;
-    SQLiteDatabase db;
-//    private int count = 0;
 
-    public void addBookMark(Context context,String name, int page, String text) {
-        DBHelper = new DBHelper(context);
-        db = DBHelper.getWritableDatabase();
+    public void addBookMark(SQLiteDatabase db, String name, int page, String text) {
         ContentValues values = new ContentValues();
         values.put("bookName", name);
         values.put("page", page);
@@ -28,38 +19,51 @@ public class BookManager {
         db.close();
     }
 
-    public void deleteBookMark(Context context, String ID) {
-        DBHelper = new DBHelper(context);
-        db = DBHelper.getWritableDatabase();
-        //delete参数（要操作的表名，条件，参数）
-        db.delete("data", "ID=" + ID, new String[]{ID + ""});
+    public void deleteBookMark(SQLiteDatabase db, int position) {
+        BooKMark booKMark= findBookMark(db,position);
+        db.delete("bookmark","bookName=?",new String[]{booKMark.getBookName()});
         db.close();
     }
 
-    public void modifyBookMark(Context context, String name, int page, String text) {
-        DBHelper = new DBHelper(context);
-        db = DBHelper.getWritableDatabase();
+    public void modifyBookMark(SQLiteDatabase db, String name) {
         ContentValues values = new ContentValues();
-        //update参数（表名，条件，参数）
-        //db.update("data",values,"ID=?", new String[] {ID});
+        //db.update("data",,"bookName=?", new String[] {name});
         db.close();
     }
 
-    public int findBookMark(){
-        return 0;
+    @SuppressLint("Range")
+    public BooKMark findBookMark(SQLiteDatabase db, int position) {
+        BooKMark booKMark = null;
+        Cursor cursor = db.rawQuery("select * from bookmark", null);
+        if (cursor.getCount() != 0) {
+            while (cursor.moveToNext()) {
+                if (cursor.getCount() == position + 1) {
+                    booKMark = new BooKMark(
+                            cursor.getString(cursor.getColumnIndex("bookName")),
+                            cursor.getInt(cursor.getColumnIndex("page")),
+                            cursor.getString(cursor.getColumnIndex("text")));
+                }
+            }
+        }
+        cursor.close();
+        db.close();
+        return booKMark;
     }
-    public List<BooKMark> readBookMark(Context context) {
-        DBHelper = new DBHelper(context);
-        db = DBHelper.getWritableDatabase();
+
+    public List<BooKMark> readBookMark(SQLiteDatabase db) {
         List<BooKMark> list = new ArrayList<BooKMark>();
-        if(isTableExist("bookmark")) {
+        if (isTableExist(db, "bookmark")) {
             Cursor cursor = db.rawQuery("select * from bookmark", null);
             cursor.moveToFirst();
             if (cursor.getCount() != 0) {
-                while (cursor.moveToNext()) {
-                    BooKMark booKMark= new BooKMark(cursor.getString(0),Integer.parseInt(cursor.getString(1)),cursor.getString(2));
+                do {
+                    @SuppressLint("Range") BooKMark booKMark =
+                            new BooKMark(
+                                    cursor.getString(cursor.getColumnIndex("bookName")),
+                                    cursor.getInt(cursor.getColumnIndex("page")),
+                                    cursor.getString(cursor.getColumnIndex("text")));
                     list.add(booKMark);
-                }
+                } while (cursor.moveToNext());
                 cursor.close();
                 db.close();
                 return list;
@@ -71,7 +75,7 @@ public class BookManager {
         return list;
     }
 
-    public boolean isTableExist(String table) {
+    public boolean isTableExist(SQLiteDatabase db, String table) {
         Cursor c = db.rawQuery("select count(*) from sqlite_master where type='table' and name='" + table + "'", null);
         if (c != null) {
             while (c.moveToNext()) {
@@ -85,5 +89,13 @@ public class BookManager {
             c.close();
         }
         return false;
+    }
+
+    public void addBookCollection(SQLiteDatabase db,String name,int page){
+        ContentValues values = new ContentValues();
+        values.put("bookName", name);
+        values.put("page", page);
+        db.insert("collection", null, values);
+        db.close();
     }
 }
