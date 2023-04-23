@@ -98,4 +98,45 @@ public class BookManager {
         db.insert("collection", null, values);
         db.close();
     }
+    @SuppressLint("Range")
+    public BookCollection findBookCollection(SQLiteDatabase db, int position) {
+        BookCollection bookCollection = null;
+        Cursor cursor = db.rawQuery("select * from collection", null);
+        if (cursor.getCount() != 0) {
+            while (cursor.moveToNext()) {
+                if (cursor.getCount() == position + 1) {
+                    bookCollection = new BookCollection(
+                            cursor.getString(cursor.getColumnIndex("bookName")),
+                            cursor.getInt(cursor.getColumnIndex("page")));
+                }
+            }
+        }
+        cursor.close();
+        db.close();
+        return bookCollection;
+    }
+
+    public List<BookCollection> readBookCollection(SQLiteDatabase db) {
+        List<BookCollection> list = new ArrayList<BookCollection>();
+        if (isTableExist(db, "collection")) {
+            Cursor cursor = db.rawQuery("select * from collection", null);
+            cursor.moveToFirst();
+            if (cursor.getCount() != 0) {
+                do {
+                    @SuppressLint("Range") BookCollection bookCollection =
+                            new BookCollection(
+                                    cursor.getString(cursor.getColumnIndex("bookName")),
+                                    cursor.getInt(cursor.getColumnIndex("page")));
+                    list.add(bookCollection);
+                } while (cursor.moveToNext());
+                cursor.close();
+                db.close();
+                return list;
+            } else {
+                cursor.close();
+                db.close();
+            }
+        }
+        return list;
+    }
 }

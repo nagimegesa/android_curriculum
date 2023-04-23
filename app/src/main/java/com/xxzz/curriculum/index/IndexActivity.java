@@ -31,7 +31,7 @@ public class IndexActivity extends AppCompatActivity {
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(null);
         setContentView(R.layout.activity_index);
         @SuppressLint({"MissingInflatedId", "LocalSuppress"})
         RadioGroup group = (RadioGroup) findViewById(R.id.bottom_radio);

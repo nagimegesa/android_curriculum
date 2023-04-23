@@ -11,6 +11,7 @@
     <string name="setting_musicStatus">背景音乐</string>
     <string name="setting_otherConfig">其他设置</string>
 
+
     <!--        settingFragment spinner - default size:20   -->
     <string name="setting_fontSize_spinner">SpinnerTest</string>
     <string-array name="size_array">

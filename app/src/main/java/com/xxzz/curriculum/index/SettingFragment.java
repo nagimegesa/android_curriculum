@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +15,8 @@ import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
@@ -51,8 +52,7 @@ public class SettingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //
-        Config.getInstance().saveSettingConfig(parent);
+        Config.getInstance().readSettingConfig(parent);
         dbHelper = new DBHelper(parent);
         db = dbHelper.getWritableDatabase();
     }
@@ -61,13 +61,8 @@ public class SettingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_setting, container, false);
-        readFontSize = view.findViewById(R.id.sp_setFontSize);
-        nightStatus = (SwitchCompat) view.findViewById(R.id.sc_night_switch);
-        musicStatus = view.findViewById(R.id.sc_music_switch);
-        bookMark = view.findViewById(R.id.tv_click_bookmark);
-        //
-        Config.getInstance().readSettingConfig(parent);
-        readFontSize.setSelection(flag); //设置默认选中项
+
+        initSettingFrag();
         readFontSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -91,6 +86,10 @@ public class SettingFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Config.getInstance().setNightStatus(isChecked, getActivity());
+                if(((AppCompatActivity)getActivity()).getDelegate().getLocalNightMode() == AppCompatDelegate.MODE_NIGHT_NO){
+                    ((AppCompatActivity)getActivity()).getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                //?????
+                }
             }
         });
         bookMark.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +115,16 @@ public class SettingFragment extends Fragment {
         return null;
     }
 
+    public void initSettingFrag(){
+        readFontSize = view.findViewById(R.id.sp_setFontSize);
+        nightStatus = view.findViewById(R.id.sc_night_switch);
+        musicStatus = view.findViewById(R.id.sc_music_switch);
+        bookMark = view.findViewById(R.id.tv_click_bookmark);
+        flag = Config.getInstance().getSpinnerPlace(readFontSize,getActivity());
+        readFontSize.setSelection(flag);
+        nightStatus.setChecked(Config.config.isNightStatus());
+        musicStatus.setChecked(Config.config.isMusicStatus());
+    }
 }
 
 
