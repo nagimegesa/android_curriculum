@@ -15,7 +15,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE bookmark(bookName VARCHAR(50) NOT NULL PRIMARY KEY, page int NOT NULL,text varchar(100) not null)");
+        sqLiteDatabase.execSQL("CREATE TABLE bookmark(bookName VARCHAR(50) NOT NULL, page int NOT NULL,text varchar(100) not null),PRIMARY KEY(bookName,page)");
         sqLiteDatabase.execSQL("CREATE TABLE collection(bookName VARCHAR(50) NOT NULL PRIMARY KEY,page int NOT NULL)");
     }
 

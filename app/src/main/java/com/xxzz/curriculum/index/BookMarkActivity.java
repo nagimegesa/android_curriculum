@@ -31,7 +31,7 @@ public class BookMarkActivity extends AppCompatActivity {
         //bookManager.addBookMark(dbHelper.getWritableDatabase(), "你好", 1, "哈哈");
         adapter = new bookMarkAdapter(BookMarkActivity.this, readBookMarkDB());
         listView.setAdapter(adapter);
-        bookManager.findBookMark(dbHelper.getReadableDatabase(),0);
+        //bookManager.findBookMark(dbHelper.getReadableDatabase(),0);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

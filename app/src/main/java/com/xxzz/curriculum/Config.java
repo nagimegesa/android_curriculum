@@ -155,9 +155,9 @@ public class Config {
     }
 
     //获取当前屏幕的亮度
-    public float getAppScreenBrightness(Activity activity) {
+    public float getAppScreenBrightness(Context context) {
         float nowBrightnessValue = 0;
-        ContentResolver resolver = activity.getContentResolver();
+        ContentResolver resolver = context.getContentResolver();
         try {
             nowBrightnessValue = Settings.System.getInt(
                     resolver, Settings.System.SCREEN_BRIGHTNESS);
@@ -167,23 +167,23 @@ public class Config {
         return nowBrightnessValue;
     }
 
-    //获取系统默认屏幕亮度值,屏幕亮度值范围（0-255）
-    public int getSysScreenBrightness(Context context) {
-        ContentResolver contentResolver = context.getContentResolver();
-        int defVal = 125;
-        return Settings.System.getInt(contentResolver,
-                Settings.System.SCREEN_BRIGHTNESS, defVal);
-    }
+//    //获取系统默认屏幕亮度值,屏幕亮度值范围（0-255）
+//    public int getSysScreenBrightness(Context context) {
+//        ContentResolver contentResolver = context.getContentResolver();
+//        int defVal = 125;
+//        return Settings.System.getInt(contentResolver,
+//                Settings.System.SCREEN_BRIGHTNESS, defVal);
+//    }
 
-    public static void saveBrightness(Context context, int brightness) {
-        ContentResolver resolver = context.getContentResolver();
-        //  需要权限android.permission.WRITE_SETTINGS
-        startHandBrightness(context);
-        //保存到系统中
-        Uri uri = android.provider.Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS);
-        android.provider.Settings.System.putInt(resolver, Settings.System.SCREEN_BRIGHTNESS, brightness);
-        resolver.notifyChange(uri, null);
-    }
+//    public static void saveBrightness(Context context, int brightness) {
+//        ContentResolver resolver = context.getContentResolver();
+//        //  需要权限android.permission.WRITE_SETTINGS
+//        startHandBrightness(context);
+//        //保存到系统中
+//        Uri uri = android.provider.Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS);
+//        android.provider.Settings.System.putInt(resolver, Settings.System.SCREEN_BRIGHTNESS, brightness);
+//        resolver.notifyChange(uri, null);
+//    }
     //设置app亮度
     public void setAppScreenBrightness(Context context, int brightness) {
         Window window = ((Activity) context).getWindow();

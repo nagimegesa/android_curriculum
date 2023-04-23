@@ -169,19 +169,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@color/setting_common_bg"
-                android:gravity="center"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp">
 
-                <TextView
-                    android:id="@+id/tv_click_bookmark"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="书签"
-                    android:clickable="true"
-                    android:textColor="@color/setting_textsecondary"
-                    android:textSize="15dp" />
+                <Button
+                    android:id="@+id/bt_bookmark"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignLeft="@+id/bt_collection"
+                    android:background="@android:color/darker_gray"
+                    android:layout_alignParentLeft="true"
+                    android:layout_weight="1"
+                    android:text="书签" />
 
+                <Button
+                    android:id="@+id/bt_collection"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:background="@android:color/darker_gray"
+                    android:layout_weight="1"
+                    android:text="收藏" />
             </RelativeLayout>
             <!--          其他设置              -->
             <RelativeLayout

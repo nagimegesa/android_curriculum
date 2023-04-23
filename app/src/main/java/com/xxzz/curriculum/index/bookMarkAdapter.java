@@ -42,9 +42,9 @@ public class bookMarkAdapter extends BaseAdapter {
         if (convertView == null) {
             view = LayoutInflater.from(context).inflate(R.layout.setting_bookmark_listitem, null);
             viewHolder = new ViewHolder();
-            viewHolder.bookName = view.findViewById(R.id.name);
+            viewHolder.bookName = view.findViewById(R.id.bookmark_name);
             viewHolder.page = view.findViewById(R.id.page);
-            viewHolder.text = view.findViewById(R.id.item_text);
+            viewHolder.text = view.findViewById(R.id.bookmark_text);
             view.setTag(viewHolder);
         } else {
             view = convertView;
@@ -53,8 +53,6 @@ public class bookMarkAdapter extends BaseAdapter {
         viewHolder.bookName.setText(list.get(i).getBookName());
         viewHolder.page.setText(list.get(i).getPage() + "");
         viewHolder.text.setText(list.get(i).getText());
-
-
         return view;
     }
 

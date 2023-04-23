@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -29,10 +30,8 @@ public class SettingFragment extends Fragment {
     private View view;
     private Spinner readFontSize;
     private SwitchCompat nightStatus, musicStatus;
-    private TextView bookMark;
+    private Button bookMark,collection;
     private Context parent;
-    private DBHelper dbHelper;
-    private SQLiteDatabase db;
 
     public SettingFragment(Context parent) {
         this.parent = parent;
@@ -53,8 +52,6 @@ public class SettingFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Config.getInstance().readSettingConfig(parent);
-        dbHelper = new DBHelper(parent);
-        db = dbHelper.getWritableDatabase();
     }
 
     @Override
@@ -88,7 +85,6 @@ public class SettingFragment extends Fragment {
                 Config.getInstance().setNightStatus(isChecked, getActivity());
                 if(((AppCompatActivity)getActivity()).getDelegate().getLocalNightMode() == AppCompatDelegate.MODE_NIGHT_NO){
                     ((AppCompatActivity)getActivity()).getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                //?????
                 }
             }
         });
@@ -96,6 +92,13 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), BookMarkActivity.class);
+                startActivity(intent);
+            }
+        });
+        collection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), CollectionActivity.class);
                 startActivity(intent);
             }
         });
@@ -119,7 +122,8 @@ public class SettingFragment extends Fragment {
         readFontSize = view.findViewById(R.id.sp_setFontSize);
         nightStatus = view.findViewById(R.id.sc_night_switch);
         musicStatus = view.findViewById(R.id.sc_music_switch);
-        bookMark = view.findViewById(R.id.tv_click_bookmark);
+        bookMark = view.findViewById(R.id.bt_bookmark);
+        collection = view.findViewById(R.id.bt_collection);
         flag = Config.getInstance().getSpinnerPlace(readFontSize,getActivity());
         readFontSize.setSelection(flag);
         nightStatus.setChecked(Config.config.isNightStatus());
