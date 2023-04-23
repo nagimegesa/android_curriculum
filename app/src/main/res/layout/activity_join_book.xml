@@ -76,14 +76,9 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-
         android:orientation="horizontal"
-
         android:background="@color/my_gray"
-        android:visibility="gone"
-        >
-
-
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/cancel"
@@ -115,7 +110,4 @@
             android:textColor="@color/white"
             android:textSize="25sp" />
     </LinearLayout>
-
-
-
 </RelativeLayout>

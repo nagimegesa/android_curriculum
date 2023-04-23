@@ -75,14 +75,6 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
         }
     };
 
-//<<<<<<< HEAD
-//    public class ReturnData implements Serializable {
-//        ArrayList<String> PathData= new ArrayList<>();
-//        ArrayList<String> FileName = new ArrayList<>();
-//    }
-//    ReturnData data;
-//=======
-//>>>>>>> main
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -214,7 +206,6 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
         button_auto.setOnClickListener(this);
         imageButton.setOnClickListener(this);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-
     }
 
     private void cancel() {

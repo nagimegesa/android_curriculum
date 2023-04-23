@@ -5,14 +5,28 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import java.io.Serializable;
-
 public class BooKInfo implements Parcelable {
+    public static final Creator<?> CREATOR = new Creator<BooKInfo>() {
+        @Override
+        public BooKInfo createFromParcel(Parcel source) {
+            BooKInfo info = new BooKInfo();
+            info.name = source.readString();
+            info.coverPath = source.readString();
+            info.lastReadTime = source.readString();
+            return info;
+        }
+
+        @Override
+        public BooKInfo[] newArray(int size) {
+            return new BooKInfo[size];
+        }
+    };
     private String name;
     private String coverPath;
     private String lastReadTime;
 
-    private BooKInfo() {}
+    private BooKInfo() {
+    }
 
     public BooKInfo(String name, String coverPath, String lastReadTime) {
         this.name = name;
@@ -43,20 +57,4 @@ public class BooKInfo implements Parcelable {
         dest.writeString(coverPath);
         dest.writeString(lastReadTime);
     }
-
-    public static final Creator<?> CREATOR=new Creator<BooKInfo>() {
-        @Override
-        public BooKInfo createFromParcel(Parcel source) {
-            BooKInfo info = new BooKInfo();
-            info.name = source.readString();
-            info.coverPath = source.readString();
-            info.lastReadTime = source.readString();
-            return info;
-        }
-
-        @Override
-        public BooKInfo[] newArray(int size) {
-            return new BooKInfo[size];
-        }
-    };
 }

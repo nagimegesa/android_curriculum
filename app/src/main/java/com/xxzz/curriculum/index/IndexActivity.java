@@ -1,7 +1,6 @@
 package com.xxzz.curriculum.index;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,10 +9,7 @@ import android.widget.RadioGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,12 +25,16 @@ import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.Utils;
 import com.xxzz.curriculum.join.JoinBookActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class IndexActivity extends AppCompatActivity {
-
     ActivityResultLauncher<Intent> launcher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +72,6 @@ public class IndexActivity extends AppCompatActivity {
                         }
                     });
         }
-//        Intent intent = new Intent(IndexActivity.this, ReadActivity.class);
-//        intent.putExtra("book_name", "aili_book");
-//        startActivity(intent);
         launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult()
                 , (res)-> {
                     Intent data = res.getData();
@@ -122,7 +119,13 @@ public class IndexActivity extends AppCompatActivity {
                 startAddBook();
                 break;
             case R.id.dete_book:
-                deleteBook();
+                try {
+                    deleteBook();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
             case R.id.sort_book:
                 IndexFragment.getInstance().getAdapter().refreshData(IndexFragment.getInstance().getList());
@@ -133,19 +136,47 @@ public class IndexActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void deleteBook() {
-
+    private void deleteBook() throws IOException, JSONException {
+        List<BooKInfo> infos=new ArrayList<>();
+        String res = Utils.readAllFile(getFilesDir().toPath().resolve("cover/test.json").toFile().toPath());
+        JSONObject context = new JSONObject(res);
+        JSONArray array = context.getJSONArray("cover");
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject object = array.getJSONObject(i);
+            BooKInfo bookinfo = new BooKInfo(object.getString("book_name"), object.getString("cover_path"), object.getString("last_read_time"));
+            infos.add(bookinfo);
+        }
+        addBookToJsonFile(infos);
+        IndexFragment.getInstance().readBookInfoFromFile();
+        IndexFragment.getInstance().getAdapter().notifyDataSetChanged();
     }
 
     private void startAddBook() {
         switchToAddBook();
         // TODO : do something for add book
     }
-
+    void addBookToJsonFile(List<BooKInfo> infos) {
+        try {
+            JSONObject cover = new JSONObject(Utils.readAllFile(getFilesDir().toPath().resolve("cover/text.json")));
+            JSONArray array = cover.getJSONArray("cover");
+            int count = cover.getInt("count");
+            for(BooKInfo i : infos) {
+                JSONObject object = new JSONObject();
+                object.put("book_name", i.getName());
+                object.put("cover_path", i.getCoverPath());
+                object.put("last_read_time", i.getLastReadTime());
+                array.put(object);
+            }
+            count+=infos.size();
+            cover.putOpt("count", count);
+            Utils.writeFile(getFilesDir().toPath().resolve("cover/text.json"), cover.toString());
+        } catch (IOException | JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
     private void switchToAddBook() {
         // TODO : switch to the Read Activity with result back;
         Intent intent = new Intent(this, JoinBookActivity.class);
-
         launcher.launch(intent);
     }
 
