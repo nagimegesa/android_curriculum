@@ -1,14 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".index.IndexFragment">
-
+    android:orientation="vertical"
+    tools:context=".index.IndexFragment"
+    android:clipChildren="false"
+    android:clipToPadding="false">
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:gravity="center"-->
+<!--        android:orientation="horizontal" >-->
+<!--        <Button-->
+<!--            android:id="@+id/index_add_button"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="增加" />-->
+<!--        <Button-->
+<!--            android:id="@+id/index_del_button"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="减少" />-->
+<!--    </LinearLayout>-->
+<!--    <LinearLayout-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_width="wrap_content">-->
+    <com.xxzz.curriculum.index.DragGridView
+        android:layout_marginTop="8dp"
+        android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="this is index fragment" />
-
-</FrameLayout>
+        android:columnWidth="60dp"
+        android:gravity="center"
+        android:horizontalSpacing="20dp"
+        android:numColumns="2"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="10dp" />
+</LinearLayout>

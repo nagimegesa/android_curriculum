@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RadioGroup;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -23,6 +25,7 @@ import com.xxzz.curriculum.join.JoinBookActivity;
 import com.xxzz.curriculum.read.ReadActivity;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class IndexActivity extends AppCompatActivity {
@@ -31,8 +34,7 @@ public class IndexActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
         @SuppressLint({"MissingInflatedId", "LocalSuppress"})
-        RadioGroup group = findViewById(R.id.bottom_radio);
-
+        RadioGroup group = (RadioGroup) findViewById(R.id.bottom_radio);
         group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -49,7 +51,6 @@ public class IndexActivity extends AppCompatActivity {
         } else {
             XXPermissions.with(this)
                     .permission(Permission.WRITE_EXTERNAL_STORAGE)
-                    // .permission(Permission.READ_EXTERNAL_STORAGE)
                     .permission(Permission.READ_MEDIA_AUDIO)
                     .permission(Permission.READ_MEDIA_IMAGES)
                     .permission(Permission.READ_MEDIA_VIDEO)
@@ -64,9 +65,6 @@ public class IndexActivity extends AppCompatActivity {
                         }
                     });
         }
-//        Intent intent = new Intent(IndexActivity.this, ReadActivity.class);
-//        intent.putExtra("book_name", "aili_book");
-//        startActivity(intent);
     }
 
     @Override
@@ -94,20 +92,28 @@ public class IndexActivity extends AppCompatActivity {
             res &= coverPath.mkdir();
         return res;
     }
-
-    @SuppressLint("NonConstantResourceId")
+    
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add_book:
                 startAddBook();
                 break;
+            case R.id.dete_book:
+                deleteBook();
+                break;
+            case R.id.sort_book:
+                IndexFragment.getInstance().getAdapter().refreshData(IndexFragment.getInstance().getList());
+                break;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
+    
+    private void deleteBook(){
 
+    }
     private void startAddBook() {
         String s = switchToAddBook();
         // TODO : do something for add book
@@ -122,11 +128,60 @@ public class IndexActivity extends AppCompatActivity {
 
     @SuppressLint("ResourceType")
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.layout.index_menu, menu);
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.index_menu, menu);
+        MenuItem searchViewItem = menu.findItem(R.id.read_bar_search);
+//        ListView lisview=findViewById(R.id.index_search_list);
+//        lisview.setVisibility(View.GONE);
+        List<BooKInfo> result = IndexFragment.getInstance().getList();
+//        ArrayAdapter<String> resultAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, s);
+//        lisview.setAdapter(resultAdapter);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchViewItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+//                List<BooKInfo> searchresult=new ArrayList<>();
+//                for (int i = 0; i < result.size(); i++) {
+//                    if(equalsearch(result.get(i).getName(),query)){
+//                        searchresult.add(new BooKInfo(result.get(i).getName(),result.get(i).getCoverPath(),result.get(i).getLastReadTime()));
+//                    }
+//                }
+//                IndexFragment.getInstance().getAdapter().searchData(searchresult);
+//                Toast t = Toast.makeText(IndexActivity.this, query, Toast.LENGTH_SHORT);
+//                t.setGravity(Gravity.TOP,0,0);
+//                t.show();
+                searchView.clearFocus();
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                List<BooKInfo> searchresult=new ArrayList<>();
+                for (int i = 0; i < result.size(); i++) {
+                    if(equalSearch(result.get(i).getName(),newText)){
+                        searchresult.add(new BooKInfo(result.get(i).getName(),result.get(i).getCoverPath(),result.get(i).getLastReadTime()));
+                    }
+                }
+                IndexFragment.getInstance().getAdapter().searchData(searchresult);
+//                if(newText.isEmpty())
+//                    return false;
+//                lisview.setVisibility(View.VISIBLE);
+//                resultAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
-
+    public boolean equalSearch(String s1, String s2) {
+        StringBuilder str = new StringBuilder(s1);
+        for (char ch : s2.toCharArray()) {
+            int i = str.indexOf(String.valueOf(ch));
+            if (i < 0) {
+                return false;
+            }
+            str=str.deleteCharAt(i);
+        }
+        return true;
+    }
     @SuppressLint("NonConstantResourceId")
     private void change_fragment(int id) {
         Fragment fragment = null;
@@ -140,7 +195,6 @@ public class IndexActivity extends AppCompatActivity {
             default:
                 break;
         }
-
         if (fragment != null) {
             FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();

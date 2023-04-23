@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".read.ReadActivity">
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -13,13 +12,13 @@
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/read_viewpager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
         <FrameLayout
             android:id="@+id/read_center_frame"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"/>
 
         <LinearLayout
             android:id="@+id/read_top_menu"

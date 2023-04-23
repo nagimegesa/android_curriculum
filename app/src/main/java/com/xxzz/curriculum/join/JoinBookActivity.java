@@ -30,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.index.IndexActivity;
 
+<<<<<<< HEAD
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,11 +53,15 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
     private LinearLayout mLlEditBar;//控制下方那一行的显示与隐藏
 
     @SuppressLint("MissingInflatedId")
+=======
+public class JoinBookActivity extends AppCompatActivity {
+>>>>>>> xxy
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_join_book);
+<<<<<<< HEAD
         accessPermission();//获取 权限
 
         init_view();
@@ -338,5 +343,8 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
         adapter.setFileList(list);
         adapter.setStateCheckedMap(stateCheckedMap);
         listView.setAdapter(adapter);
+=======
+        getLayoutInflater();
+>>>>>>> xxy
     }
 }
