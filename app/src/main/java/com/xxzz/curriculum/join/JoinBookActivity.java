@@ -8,10 +8,14 @@ import static com.xxzz.curriculum.join.FileOperation.deleteDFile;
 import static com.xxzz.curriculum.join.UnzipUtil.unzipFile;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.provider.Settings;
 import android.util.SparseBooleanArray;
 import android.view.View;
@@ -35,16 +39,31 @@ import java.util.Arrays;
 import java.util.List;
 
 public class JoinBookActivity extends AppCompatActivity implements View.OnClickListener {
-    private final int mTag = 1;
+    private static final int SMART_SELECT_BOOK_MSG = 1;
     private final int REQUEST_CODE = 7325;
-    private final SparseBooleanArray stateCheckedMap = new SparseBooleanArray();//用来存放CheckBox的选中状态，true为选中,false为没有选中
-    private final List<File> mCheckedData = new ArrayList<>();//将选中数据放入里面
-    String BookPath = "/data/data/com.xxzz.curriculum/files/Book";
+    private final String BookPath = "/data/data/com.xxzz.curriculum/files/Book/";
     File FileTep = Environment.getExternalStorageDirectory();
     private ListViewAdaptor adapter;
     private ListView listView;
+    private final SparseBooleanArray stateCheckedMap = new SparseBooleanArray();//用来存放CheckBox的选中状态，true为选中,false为没有选中
     private boolean isSelectedAll = true;//用来控制点击全选，全选和全不选相互切换
+    private final List<File> mCheckedData = new ArrayList<>();//将选中数据放入里面
     private LinearLayout mLlEditBar;//控制下方那一行的显示与隐藏
+
+    private ProgressDialog pd;
+
+    //定义Handler对象
+    private final Handler handler =new Handler(Looper.getMainLooper()){
+        @Override
+        //当有消息发送出来的时候就执行Handler的这个方法
+        public void handleMessage(Message msg){
+            super.handleMessage(msg);
+            if(msg.what != SMART_SELECT_BOOK_MSG) return;
+            //只要执行到这里就关闭对话框
+            ReFresh((List<File>) msg.obj);
+            pd.dismiss();
+        }
+    };
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -79,10 +98,14 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
                 } else if (IsJbk(file)) {
                     try {
                         if (Is_Book(file)) {
-                            updateCheckBoxStatus(view, i);
-                            //Unzip_Copy(file);
-                        } else makeToast(JoinBookActivity.this, "所选文件不符合格式", 100);
+                            if(mLlEditBar.getVisibility() == View.VISIBLE)
+                                updateCheckBoxStatus(view, i);
+                            else{
+                                Unzip_Copy(file);
+                            }
 
+                        }
+                        else makeToast(JoinBookActivity.this, "所选文件不符合格式", 100);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -132,9 +155,14 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-    private void setStateCheckedMap(boolean isSelectedAll) {
+    private void setStateCheckedMap(boolean isSelectedAll)  {
         for (int i = 0; i < adapter.getCount(); i++) {
-            stateCheckedMap.put(i, isSelectedAll);
+            try {
+                if(Is_Book((File) adapter.getItem(i)))
+                    stateCheckedMap.put(i, isSelectedAll);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             listView.setItemChecked(i, isSelectedAll);
         }
     }
@@ -184,6 +212,14 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
             isSelectedAll = false;
             // TODO : to fix a bug
 //            mCheckedData.addAll(h);//把所有的数据添加到选中列表中
+            for (int i = 0; i < adapter.getCount(); i++) {
+                try {
+                    if (Is_Book((File) adapter.getItem(i)))
+                        mCheckedData.add((File) adapter.getItem(i));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         } else {
             setStateCheckedMap(false);//将CheckBox的所有选中状态变成未选中
             isSelectedAll = true;
@@ -211,6 +247,24 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
             }
         }
     }
+    private void processThread(){
+        //构建一个下载进度条
+        pd= ProgressDialog.show(JoinBookActivity.this, "加载中", "正在加载…");
+        new Thread(() -> {
+            //在这里执行长耗时方法
+            List<File> list;
+            try {
+                list = GoSmart(Environment.getExternalStorageDirectory().getPath());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            //执行完毕后给handler发送一个消息
+            Message message = handler.obtainMessage();
+            message.what = SMART_SELECT_BOOK_MSG;
+            message.obj = list;
+            handler.sendMessage(message);
+        }).start();
+    }
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -223,13 +277,7 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
                 GoHome();
                 break;
             case R.id.smart_button:
-                try {
-                    List<File> list =
-                            GoSmart(Environment.getExternalStorageDirectory().getPath());
-                    ReFresh(list);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                processThread();
                 break;
             case R.id.cancel:
                 cancel();
@@ -238,12 +286,9 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
                 selectAll();
                 break;
             case R.id.confirm:
-                addBook();
+                Add_Book();
                 break;
         }
-    }
-
-    private void addBook() {
     }
 
     public void Unzip_Copy(File file) {
@@ -251,9 +296,11 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
             File tmpPath = getCacheDir();
             unzipFile(file.getPath(), tmpPath.getAbsolutePath());
             if (CheckFile(tmpPath)) {
-                copyDir(tmpPath.getAbsolutePath(), BookPath);
+                String s = file.getName();
+                copyDir(tmpPath.getAbsolutePath(), BookPath + file.getName().split("\\.")[0]);
                 makeToast(JoinBookActivity.this, "加入成功", 100);
-            } else
+            }
+            else
                 makeToast(JoinBookActivity.this, "所选文件不符合格式", 100);
             deleteDFile(tmpPath);
         } catch (IOException e) {
@@ -261,10 +308,17 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    private void Add_Book() {
+        for(File f :mCheckedData){
+            Unzip_Copy(f);
+        }
+    }
+
     public boolean Is_Book(File file) throws IOException {
         File tmpPath = getCacheDir();
         unzipFile(file.getPath(), tmpPath.getAbsolutePath());
-        if (CheckFile(tmpPath)) {
+        if(CheckFile(tmpPath)){
+            deleteDFile(tmpPath);
             return true;
         }
         deleteDFile(tmpPath);
@@ -279,6 +333,7 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
             //finish();
         } else {
             File file = FileTep.getParentFile();
+            assert file != null;
             List<File> list = InitFileList(file.getPath());
             adapter.setFileList(list);
             adapter.notifyDataSetChanged();
@@ -293,15 +348,19 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-    public void goSmartImpl(String path, List<File> list) throws IOException {
+    public void goSmartImpl(String path, List<File> list,int n) throws IOException {
         File file = new File(path);
         if (!file.exists())
             return;
+        if(n==3){
+            return;
+        }
+        n++;
         File[] files = file.listFiles();
         if (files != null && files.length > 0) {
             for (File f : files) {
                 if (f.isDirectory())
-                    goSmartImpl(f.getPath(), list);
+                    goSmartImpl(f.getPath(), list,n);
                 else {
                     if (IsJbk(f)) {
                         File tmpPath = getCacheDir();
@@ -316,9 +375,9 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public List<File> GoSmart(String path) throws IOException {
-        List<File> fileList = new ArrayList<>();
-        goSmartImpl(path, fileList);
-        return fileList;
+         List<File> fileList = new ArrayList<>();
+         goSmartImpl(path, fileList, 1);
+         return fileList;
     }
 
     public void ReFresh(List<File> list) {
