@@ -66,6 +66,21 @@ public class IndexFragment extends Fragment {
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                try {
+                    String res = Utils.readAllFile(getActivity().getFilesDir().toPath().resolve("cover/text.json").toFile().toPath());
+                    JSONObject context = new JSONObject(res);
+                    JSONArray array = context.getJSONArray("cover");
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject object = array.getJSONObject(i);
+                        if (object.getString("book_name").equals(bookNameList.get(position))) {
+                            String s= String.valueOf(System.currentTimeMillis());
+                            object.put("last_read_time",s);
+                            Utils.writeFile(getActivity().getFilesDir().toPath().resolve("cover/text.json"), context.toString());
+                        }
+                    }
+                } catch (IOException | JSONException e) {
+                    throw new RuntimeException(e);
+                }
                 Intent intent = new Intent();
                 intent.putExtra("book_name", bookNameList.get(position));
                 intent.setClass(getContext(), ReadActivity.class);
@@ -111,12 +126,12 @@ public class IndexFragment extends Fragment {
         }
     }
 
-    private void readBookInfoFromFile() {
+    void readBookInfoFromFile() {
 //        this.list = new ArrayList<>();
         String res = null;
         try {
             FragmentActivity activity = getActivity();
-            res = Utils.readAllFile(activity.getFilesDir().toPath().resolve("cover/test.json").toFile().toPath());
+            res = Utils.readAllFile(activity.getFilesDir().toPath().resolve("cover/text.json").toFile().toPath());
             JSONObject context = new JSONObject(res);
             JSONArray array = context.getJSONArray("cover");
             for (int i = 0; i < array.length(); i++) {

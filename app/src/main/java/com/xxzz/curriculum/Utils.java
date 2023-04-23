@@ -49,7 +49,6 @@ public class Utils {
         BufferedWriter reader = new BufferedWriter(inputReader);
 //        reader.write();
         reader.write(buf);
-
         reader.flush();
         reader.close();
         inputReader.close();
@@ -68,10 +67,8 @@ public class Utils {
             serializer.setOutput(fos, "utf-8");
             // 设置文件头
             serializer.startDocument("utf-8", true);
-
             //serializer.attribute(null, "id", String.valueOf(0));
             // TODO: Write something into setting config
-
             serializer.endDocument();
             fos.close();
             //Toast.makeText
@@ -90,7 +87,6 @@ public class Utils {
             XmlPullParser parser = Xml.newPullParser();// 获得pull解析器对象
             parser.setInput(fis, "utf-8");// 指定解析的文件和编码格式
             int eventType = parser.getEventType(); // 获得事件类型
-
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 String tagName = parser.getName(); // 获得当前节点的名称
                 switch (eventType) {

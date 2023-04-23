@@ -119,7 +119,13 @@ public class IndexActivity extends AppCompatActivity {
                 startAddBook();
                 break;
             case R.id.dete_book:
-                deleteBook();
+                try {
+                    deleteBook();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
                 break;
             case R.id.sort_book:
                 IndexFragment.getInstance().getAdapter().refreshData(IndexFragment.getInstance().getList());
@@ -130,8 +136,19 @@ public class IndexActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void deleteBook() {
-
+    private void deleteBook() throws IOException, JSONException {
+        List<BooKInfo> infos=new ArrayList<>();
+        String res = Utils.readAllFile(getFilesDir().toPath().resolve("cover/test.json").toFile().toPath());
+        JSONObject context = new JSONObject(res);
+        JSONArray array = context.getJSONArray("cover");
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject object = array.getJSONObject(i);
+            BooKInfo bookinfo = new BooKInfo(object.getString("book_name"), object.getString("cover_path"), object.getString("last_read_time"));
+            infos.add(bookinfo);
+        }
+        addBookToJsonFile(infos);
+        IndexFragment.getInstance().readBookInfoFromFile();
+        IndexFragment.getInstance().getAdapter().notifyDataSetChanged();
     }
 
     private void startAddBook() {
@@ -140,8 +157,9 @@ public class IndexActivity extends AppCompatActivity {
     }
     void addBookToJsonFile(List<BooKInfo> infos) {
         try {
-            JSONObject cover = new JSONObject(Utils.readAllFile(getFilesDir().toPath().resolve("Cover/text.josn")));
+            JSONObject cover = new JSONObject(Utils.readAllFile(getFilesDir().toPath().resolve("cover/text.json")));
             JSONArray array = cover.getJSONArray("cover");
+            int count = cover.getInt("count");
             for(BooKInfo i : infos) {
                 JSONObject object = new JSONObject();
                 object.put("book_name", i.getName());
@@ -149,6 +167,8 @@ public class IndexActivity extends AppCompatActivity {
                 object.put("last_read_time", i.getLastReadTime());
                 array.put(object);
             }
+            count+=infos.size();
+            cover.putOpt("count", count);
             Utils.writeFile(getFilesDir().toPath().resolve("cover/text.json"), cover.toString());
         } catch (IOException | JSONException e) {
             throw new RuntimeException(e);
