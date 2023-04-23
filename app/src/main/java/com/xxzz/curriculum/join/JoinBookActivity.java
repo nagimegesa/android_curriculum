@@ -308,10 +308,10 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
             if (CheckFile(tmpPath)) {
                 String s = file.getName();
                 String savePath = BookPath + file.getName().split("\\.")[0];
-                copyDir(tmpPath.getAbsolutePath(), savePath);
                 String[] res = getBookNameAndCover(savePath + '/' + "jbk_config.json");
+                copyDir(tmpPath.getAbsolutePath(), BookPath + res[0]);
                 makeToast(JoinBookActivity.this, "加入成功", 100);
-                booKInfoList.add(new BooKInfo(res[0],BookPath + res[1],"0"));
+                booKInfoList.add(new BooKInfo(res[0],savePath + "/main/" + res[1],"0"));
             }
             else
                 makeToast(JoinBookActivity.this, "所选文件不符合格式", 100);

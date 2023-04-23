@@ -61,7 +61,6 @@ public class IndexActivity extends AppCompatActivity {
                     .permission(Permission.READ_MEDIA_AUDIO)
                     .permission(Permission.READ_MEDIA_IMAGES)
                     .permission(Permission.READ_MEDIA_VIDEO)
-                    // .permission(Permission.MANAGE_EXTERNAL_STORAGE)
                     .request(new OnPermissionCallback() {
                         @Override
                         public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
@@ -78,10 +77,7 @@ public class IndexActivity extends AppCompatActivity {
                     if(data == null) return;
                     if(res.getResultCode() != JoinBookActivity.REQUEST_OK) return;
                     ArrayList <BooKInfo> info = data.getParcelableArrayListExtra("book_info");
-                    if(info.isEmpty()) {
-
-                    }
-
+                    addBookToJsonFile(info);
                 });
     }
 
@@ -153,7 +149,6 @@ public class IndexActivity extends AppCompatActivity {
 
     private void startAddBook() {
         switchToAddBook();
-        // TODO : do something for add book
     }
     void addBookToJsonFile(List<BooKInfo> infos) {
         try {

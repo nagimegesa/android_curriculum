@@ -27,7 +27,7 @@ import java.util.List;
 
 public class IndexFragment extends Fragment {
 
-    private static List<BooKInfo> list = new ArrayList<>();
+    private List<BooKInfo> list = new ArrayList<>();
     private static IndexFragment fragment;
     public DragGridView gridview;
     private IndexBookAdapter adapter;
@@ -109,7 +109,6 @@ public class IndexFragment extends Fragment {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        readBookInfoFromFile();
         return view;
     }
 
@@ -126,8 +125,17 @@ public class IndexFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        readBookInfoFromFile();
+        adapter.setDatas(list);
+        gridview.setAdapter(adapter);
+    }
+
     void readBookInfoFromFile() {
-//        this.list = new ArrayList<>();
+        list.clear();
+        bookNameList.clear();
         String res = null;
         try {
             FragmentActivity activity = getActivity();
@@ -138,6 +146,7 @@ public class IndexFragment extends Fragment {
                 JSONObject object = array.getJSONObject(i);
                 if (!bookNameList.contains(object.getString("book_name"))) {
                     bookNameList.add(object.getString("book_name"));
+                    String path = object.getString("cover_path");
                     BooKInfo bookinfo = new BooKInfo(object.getString("book_name"), object.getString("cover_path"), object.getString("last_read_time"));
                     list.add(bookinfo);
                 }

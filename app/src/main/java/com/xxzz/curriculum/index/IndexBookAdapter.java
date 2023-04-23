@@ -24,7 +24,9 @@ public class IndexBookAdapter extends BaseAdapter {
         this.context = context;
         this.datas = datas;
     }
-
+    public void setDatas(List<BooKInfo> infos) {
+        this.datas = infos;
+    }
     /**
      * 添加item数据
      */
