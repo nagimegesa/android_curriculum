@@ -19,6 +19,8 @@ import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.Utils;
+import com.xxzz.curriculum.join.JoinBookActivity;
+import com.xxzz.curriculum.read.ReadActivity;
 
 import java.io.File;
 import java.util.List;
@@ -51,6 +53,7 @@ public class IndexActivity extends AppCompatActivity {
                     .permission(Permission.READ_MEDIA_AUDIO)
                     .permission(Permission.READ_MEDIA_IMAGES)
                     .permission(Permission.READ_MEDIA_VIDEO)
+                    // .permission(Permission.MANAGE_EXTERNAL_STORAGE)
                     .request(new OnPermissionCallback() {
                         @Override
                         public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
@@ -112,6 +115,8 @@ public class IndexActivity extends AppCompatActivity {
 
     private String switchToAddBook() {
         // TODO : switch to the Read Activity with result back;
+        Intent intent = new Intent(this, JoinBookActivity.class);
+        startActivity(intent);
         return null;
     }
 
