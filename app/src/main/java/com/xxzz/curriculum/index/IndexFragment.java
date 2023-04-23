@@ -27,9 +27,9 @@ import java.util.List;
 
 public class IndexFragment extends Fragment {
 
-    private List<BooKInfo> list = new ArrayList<>();
     private static IndexFragment fragment;
     public DragGridView gridview;
+    private List<BooKInfo> list = new ArrayList<>();
     private IndexBookAdapter adapter;
     private List<String> bookNameList = new ArrayList<String>();
 
@@ -73,8 +73,8 @@ public class IndexFragment extends Fragment {
                     for (int i = 0; i < array.length(); i++) {
                         JSONObject object = array.getJSONObject(i);
                         if (object.getString("book_name").equals(bookNameList.get(position))) {
-                            String s= String.valueOf(System.currentTimeMillis());
-                            object.put("last_read_time",s);
+                            String s = String.valueOf(System.currentTimeMillis());
+                            object.put("last_read_time", s);
                             Utils.writeFile(getActivity().getFilesDir().toPath().resolve("cover/text.json"), context.toString());
                         }
                     }

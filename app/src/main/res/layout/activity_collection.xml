@@ -6,7 +6,7 @@
     tools:context=".index.BookMarkActivity">
 
     <ListView
-        android:id="@+id/setting_bookmark_listview"
+        android:id="@+id/setting_collection_listview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"></ListView>
 </LinearLayout>

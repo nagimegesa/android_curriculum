@@ -272,6 +272,17 @@ public class DragGridView extends GridView {
             getChildAt(mDragPosition - getFirstVisiblePosition()).setVisibility(View.VISIBLE);//之前的item显示出来
             mDragPosition = tempPosition;
         }
+    }
+
+    /**
+     * 停止拖拽我们将之前隐藏的item显示出来，并将镜像移除
+     */
+    private void onStopDrag() {
+        View view = getChildAt(mDragPosition - getFirstVisiblePosition());
+        if (view != null) {
+            view.setVisibility(View.VISIBLE);
+        }
+        removeDragImage();
     }    /**
      * 当moveY的值大于向上滚动的边界值，触发GridView自动向上滚动
      * 当moveY的值小于向下滚动的边界值，触犯GridView自动向下滚动
@@ -297,17 +308,6 @@ public class DragGridView extends GridView {
             smoothScrollBy(scrollY, 10);
         }
     };
-
-    /**
-     * 停止拖拽我们将之前隐藏的item显示出来，并将镜像移除
-     */
-    private void onStopDrag() {
-        View view = getChildAt(mDragPosition - getFirstVisiblePosition());
-        if (view != null) {
-            view.setVisibility(View.VISIBLE);
-        }
-        removeDragImage();
-    }
 
     public interface OnChanageListener {
         /**

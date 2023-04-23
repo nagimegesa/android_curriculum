@@ -8,7 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-
     <!--     setting - 标题等  -->
     <color name="setting_textprimary">#212121</color>
     <color name="setting_textsecondary">#757575</color>
@@ -17,4 +16,8 @@
     <color name="setting_common_bg">#F5F5F5</color>
 
     <color name="my_gray">#292929</color>
+
+
+    <!--    night mode color      -->
+
 </resources>
