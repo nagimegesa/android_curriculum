@@ -1,12 +1,5 @@
 package com.xxzz.curriculum.read;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-
-import java.util.List;
-
 //public class LeftFrameListViewAdaptor extends BaseAdapter {
 ////    private List<MarkInfo> list;
 //    private LayoutInflater inflater;

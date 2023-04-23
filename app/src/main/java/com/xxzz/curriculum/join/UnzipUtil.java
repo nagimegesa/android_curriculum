@@ -1,7 +1,5 @@
 package com.xxzz.curriculum.join;
 
-import static com.xxzz.curriculum.Utils.makeToast;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

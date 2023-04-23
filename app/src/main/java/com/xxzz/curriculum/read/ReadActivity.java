@@ -40,7 +40,7 @@ public class ReadActivity extends AppCompatActivity {
     private boolean isBottomSettingMenuShow = false;
     private boolean isNightMode = true;
 
-   // private final ArrayList<View> views = new ArrayList<>();
+    // private final ArrayList<View> views = new ArrayList<>();
 
     public ReadActivity() {
     }
@@ -50,8 +50,7 @@ public class ReadActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read);
-
-        if(getSupportActionBar() != null) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
         initBook();
@@ -66,7 +65,7 @@ public class ReadActivity extends AppCompatActivity {
         try {
             book = getBook(name);
         } catch (IOException | JSONException e) {
-            Utils.makeToast(getApplicationContext(),"IO出错", Toast.LENGTH_LONG);
+            Utils.makeToast(getApplicationContext(), "IO出错", Toast.LENGTH_LONG);
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -88,7 +87,7 @@ public class ReadActivity extends AppCompatActivity {
         frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isBasicShowAble) {
+                if (!isBasicShowAble) {
                     Animator top = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_show_top_layout);
                     Animator bottom = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_show_bottom_menu);
                     top.setTarget(findViewById(R.id.read_top_layout));
@@ -122,13 +121,13 @@ public class ReadActivity extends AppCompatActivity {
 
         lastPageButton.setOnClickListener(v -> {
             int process = seekBar.getProgress();
-            if(process > 0)
+            if (process > 0)
                 seekBar.setProgress(process - 1);
         });
 
         nextPageButton.setOnClickListener(v -> {
             int process = seekBar.getProgress();
-            if(process < seekBar.getMax())
+            if (process < seekBar.getMax())
                 seekBar.setProgress(process + 1);
         });
 
@@ -140,7 +139,7 @@ public class ReadActivity extends AppCompatActivity {
             changeNightLightMode((Button) v);
         });
 
-        setting.setOnClickListener((v)->{
+        setting.setOnClickListener((v) -> {
             // TODO : set setting menu
             Animator animator = AnimatorInflater.loadAnimator(this, R.animator.read_show_bottom_setting_menu);
             animator.setTarget(findViewById(R.id.read_bottom_setting_menu));
@@ -148,7 +147,7 @@ public class ReadActivity extends AppCompatActivity {
             isBottomSettingMenuShow = true;
         });
 
-        content.setOnClickListener((v)-> {
+        content.setOnClickListener((v) -> {
             Animator animator = AnimatorInflater.loadAnimator(this, R.animator.read_show_left_fram_animation);
             animator.setTarget(findViewById(R.id.read_left_frame));
             animator.start();
@@ -156,7 +155,7 @@ public class ReadActivity extends AppCompatActivity {
         });
 
         Button back = findViewById(R.id.read_back_button);
-        back.setOnClickListener((v)-> {
+        back.setOnClickListener((v) -> {
             ReadActivity.this.finish();
         });
 
@@ -164,8 +163,8 @@ public class ReadActivity extends AppCompatActivity {
         view.setText(reader.getBook().getName());
 
         Button topMenu = findViewById(R.id.read_top_menu_button);
-        topMenu.setOnClickListener((v)-> {
-            if(!isTopMenuShow) {
+        topMenu.setOnClickListener((v) -> {
+            if (!isTopMenuShow) {
                 Animator animator = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_show_top_menu);
                 animator.setTarget(findViewById(R.id.read_top_menu));
                 animator.start();
@@ -176,11 +175,11 @@ public class ReadActivity extends AppCompatActivity {
         });
 
         Button addLoves = findViewById(R.id.read_add_love);
-        addLoves.setOnClickListener((v)-> {
+        addLoves.setOnClickListener((v) -> {
             // TODO : add lovers
         });
         Button addMark = findViewById(R.id.read_add_mark);
-        addMark.setOnClickListener((v)-> {
+        addMark.setOnClickListener((v) -> {
             //TODO : add mark
         });
 
@@ -201,7 +200,7 @@ public class ReadActivity extends AppCompatActivity {
         }));
 
         Button moreSetting = findViewById(R.id.read_more_setting);
-        moreSetting.setOnClickListener((v)-> {
+        moreSetting.setOnClickListener((v) -> {
             Intent intent = new Intent(this, IndexActivity.class);
             intent.putExtra("which", IndexActivity.FragmentPage.SETTING_FRAGMENT.ordinal());
             startActivity(intent);
@@ -216,7 +215,7 @@ public class ReadActivity extends AppCompatActivity {
             RadioButton up_button = findViewById(R.id.read_up_down);
             RadioButton left_button = findViewById(R.id.read_left_right);
             Drawable up = null, down = null;
-            if(id == R.id.read_up_down) {
+            if (id == R.id.read_up_down) {
                 up = getDrawable(R.drawable.read_up_forward_down);
                 down = getDrawable(R.drawable.read_left_forward_up);
             } else {
@@ -238,9 +237,9 @@ public class ReadActivity extends AppCompatActivity {
         Animator bottom = AnimatorInflater.loadAnimator(ReadActivity.this, R.animator.read_close_bottom_menu);
         top.setTarget(findViewById(R.id.read_top_layout));
         bottom.setTarget(findViewById(R.id.read_bottom_menu));
-        if(isLeftFragmentShow) closeLeftFragment();
-        if(isTopMenuShow) closeTopMenu();
-        if(isBottomSettingMenuShow) closeBottomSettingMenu();
+        if (isLeftFragmentShow) closeLeftFragment();
+        if (isTopMenuShow) closeTopMenu();
+        if (isBottomSettingMenuShow) closeBottomSettingMenu();
         top.start();
         bottom.start();
     }
@@ -260,10 +259,10 @@ public class ReadActivity extends AppCompatActivity {
     }
 
     private void closeLeftFragment() {
-         Animator animator = AnimatorInflater.loadAnimator(this, R.animator.read_close_left_fram_animation);
-         animator.setTarget(findViewById(R.id.read_left_frame));
-         animator.start();
-         isLeftFragmentShow = false;
+        Animator animator = AnimatorInflater.loadAnimator(this, R.animator.read_close_left_fram_animation);
+        animator.setTarget(findViewById(R.id.read_left_frame));
+        animator.start();
+        isLeftFragmentShow = false;
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -282,7 +281,7 @@ public class ReadActivity extends AppCompatActivity {
         Path p = baseFile.toPath().resolve("Book").resolve(name);
         File bookFile = p.toFile();
         File configFile = p.resolve("jbk_config.json").toFile();
-        if(!bookFile.exists()) {
+        if (!bookFile.exists()) {
             Utils.makeToast(getApplicationContext(), "图书不存在", Toast.LENGTH_LONG);
             return null;
         }
@@ -298,7 +297,7 @@ public class ReadActivity extends AppCompatActivity {
         JSONArray array = context.getJSONArray("pages");
         HashMap<Integer, String> pages2img = new HashMap<>();
         HashMap<Integer, String> pages2text = new HashMap<>();
-        for(int i = 0; i < array.length(); ++i) {
+        for (int i = 0; i < array.length(); ++i) {
             JSONObject object = array.getJSONObject(i);
             int page = object.getInt("pages");
             String img = object.getString("image");

@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="650dp"
-        tools:ignore="MissingConstraints"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints">
 
         <ImageView
             android:id="@+id/read_main_img"
             android:layout_width="match_parent"
             android:layout_height="600dp" />
+
         <TextView
             android:id="@+id/read_main_text"
             android:layout_width="match_parent"
             android:layout_height="100dp" />
     </LinearLayout>
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
-    </LinearLayout>
+        android:layout_height="50dp"
+        android:orientation="horizontal"></LinearLayout>
 </LinearLayout>

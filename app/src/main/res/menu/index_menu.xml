@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/read_bar_search"
+        android:icon="@drawable/read_searchbar"
+        android:title="Search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="ifRoom|withText"></item>
+    <item
+        android:id="@+id/add_book"
+        android:title="添加书籍"></item>
+    <item
+        android:id="@+id/dete_book"
+        android:title="删除书籍"></item>
+    <item
+        android:id="@+id/sort_book"
+        android:title="最近阅读"></item>
+</menu>

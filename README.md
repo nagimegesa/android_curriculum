@@ -120,14 +120,14 @@ Util类为工具类, 主要写一些比较常用但是又不是很好归类的�
             "text" : "/text2.txt"
         }]
     }
-    ```
 
-   以上各字段解释如下：
-   + book_name 图书名
-   + cover 以main为相对路径的图书封面
-   + path 图书以某个专用目录(未定)为相对路径的路径
-   + pages_count 图书页数
-   + page 每一页的信息, 其中pages, image和text 分别表示那一页, 这一页以 main为相对路径的图片和以text为路径的文本
+以上各字段解释如下：
++ book_name 图书名
++ cover 以main为相对路径的图书封面
++ path 图书以某个专用目录(未定)为相对路径的路径
++ pages_count 图书页数
++ page 每一页的信息, 其中pages, image和text 分别表示那一页, 这一页以 main为相对路径的图片和以text为路径的文本
+
 ### 模块一保存图书简要格式的json
 ```json
 {

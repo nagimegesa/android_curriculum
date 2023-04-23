@@ -1,30 +1,29 @@
 package com.xxzz.curriculum.join;
-import static com.xxzz.curriculum.Utils.makeToast;
 
-import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.Scanner;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 public class FileOperation {
 
 
     private static void scanDir(File rootFile, String toDeleteDir) throws IOException {
         File[] files = rootFile.listFiles();
         //判断目录是否为空
-        if (files == null){
+        if (files == null) {
             return;
         }
         for (File f : files) {
             //先判断是否是文件
-            if (f.isFile()){
+            if (f.isFile()) {
                 //包含文件名就删除, 不包含继续递归
-                if (f.getName().contains(toDeleteDir)){
+                if (f.getName().contains(toDeleteDir)) {
                     deleteDir(f);
                 }
-            }else if (f.isDirectory()){//如果是目录就递归
+            } else if (f.isDirectory()) {//如果是目录就递归
                 scanDir(f, toDeleteDir);
             }
         }
@@ -36,15 +35,16 @@ public class FileOperation {
         //Scanner scanner = new Scanner(System.in);
         //String choice = scanner.next();
         //if (choice.equals("Y") || choice.equals("y")) {
-            f.delete();
-            //System.out.println("文件删除成功!");
-       // } else {
-          //  System.out.println("文件取消删除!");
-       // }
+        f.delete();
+        //System.out.println("文件删除成功!");
+        // } else {
+        //  System.out.println("文件取消删除!");
+        // }
     }
+
     static void copyFileUsingStream(String sourcepath, String destpath) throws IOException {
         File source = new File(sourcepath);
-        File dest = new File(destpath) ;
+        File dest = new File(destpath);
         InputStream is = null;
         OutputStream os = null;
         try {
@@ -60,7 +60,8 @@ public class FileOperation {
             os.close();
         }
     }
-    public static void copyDir(String sourcePath,String newPath) {
+
+    public static void copyDir(String sourcePath, String newPath) {
         try {
             (new File(newPath)).mkdirs();
             // 与mkdir()都创建文件夹 ，mkdirs()如果父文件夹不存在也会创建
@@ -78,7 +79,7 @@ public class FileOperation {
                     // 如果游标遇到文件
                     FileInputStream in = new FileInputStream(temp);
                     // 复制且改名
-                    File file = new File(newPath + "/" + temp.getName().toString());
+                    File file = new File(newPath + "/" + temp.getName());
                     FileOutputStream out = new FileOutputStream(file);
                     byte[] buffer = new byte[1024 * 8];
                     int length;
@@ -99,31 +100,29 @@ public class FileOperation {
             System.out.println("文件夹复制失败!");
         }
     }
-    public static boolean CheckFile(File file  ){
+
+    public static boolean CheckFile(File file) {
         File[] files = file.listFiles();
-        String [] filename = {"main","text","jbk_config.json"};
-        int count=0;
+        String[] filename = {"main", "text", "jbk_config.json"};
+        int count = 0;
         //判断目录是否为空
-        if (files == null){
-            return false ;
+        if (files == null) {
+            return false;
         }
         for (File f : files) {
-            if (f.isFile()){ //包含文件名
+            if (f.isFile()) { //包含文件名
                 if (f.getName().contains(filename[2]))
-                    count ++;
-            }
-            else if (f.isDirectory()&&(f.getName().contains(filename[0])||f.getName().contains(filename[1]))){//如果是目录
-                count ++;
+                    count++;
+            } else if (f.isDirectory() && (f.getName().contains(filename[0]) || f.getName().contains(filename[1]))) {//如果是目录
+                count++;
             }
         }
-        if(count == 3)
-            return true;
-
-        return false;
+        return count == 3;
     }
-    public static boolean deleteDFile(File file){//删除目录下的所有子文件
+
+    public static boolean deleteDFile(File file) {//删除目录下的所有子文件
         //判断文件不为null或文件目录存在
-        if (file == null || !file.exists()){
+        if (file == null || !file.exists()) {
             //System.out.println("文件删除失败,请检查文件路径是否正确");
             //makeToast(this,"文件删除失败,请检查文件路径是否正确",100);
             return false;
@@ -131,14 +130,14 @@ public class FileOperation {
         //取得这个目录下的所有子文件对象
         File[] files = file.listFiles();
         //遍历该目录下的文件对象
-        for (File f: files){
+        for (File f : files) {
             //打印文件名
             String name = file.getName();
             System.out.println(name);
             //判断子目录是否存在子目录,如果是文件则删除
-            if (f.isDirectory()){
+            if (f.isDirectory()) {
                 deleteDFile(f);
-            }else {
+            } else {
                 f.delete();
                 file.delete();
             }
@@ -148,7 +147,8 @@ public class FileOperation {
         //
         return true;
     }
-    public static boolean IsJbk(File file){
+
+    public static boolean IsJbk(File file) {
         String houzui = file.getName();
         return houzui.endsWith(".jbk") || houzui.endsWith(".7z") || houzui.endsWith(".zip") || houzui.endsWith(".rar");
     }

@@ -1,6 +1,5 @@
 package com.xxzz.curriculum.join;
 
-
 import static com.xxzz.curriculum.Utils.makeToast;
 import static com.xxzz.curriculum.join.FileOperation.CheckFile;
 import static com.xxzz.curriculum.join.FileOperation.IsJbk;
@@ -15,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
 import android.util.SparseBooleanArray;
@@ -30,50 +30,59 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.xxzz.curriculum.R;
+import com.xxzz.curriculum.Utils;
+import com.xxzz.curriculum.index.BooKInfo;
 import com.xxzz.curriculum.index.IndexActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class JoinBookActivity extends AppCompatActivity implements View.OnClickListener {
-    String BookPath = "/data/data/com.xxzz.curriculum/files/Book";
+    private static final int SMART_SELECT_BOOK_MSG = 1;
+    private final int REQUEST_CODE = 7325;
+    public static final int REQUEST_OK = 520;
+    private final String BookPath = "/data/data/com.xxzz.curriculum/files/Book/";
     File FileTep = Environment.getExternalStorageDirectory();
-    ImageView imageButton;
-    Button button_join;
-    Button button_auto;
-    private int mTag = 1;
-    private int REQUEST_CODE = 7325;
     private ListViewAdaptor adapter;
     private ListView listView;
-    private SparseBooleanArray stateCheckedMap = new SparseBooleanArray();//用来存放CheckBox的选中状态，true为选中,false为没有选中
+    private final SparseBooleanArray stateCheckedMap = new SparseBooleanArray();//用来存放CheckBox的选中状态，true为选中,false为没有选中
     private boolean isSelectedAll = true;//用来控制点击全选，全选和全不选相互切换
-    private List<File> mCheckedData = new ArrayList<>();//将选中数据放入里面
+    private final List<File> mCheckedData = new ArrayList<>();//将选中数据放入里面
     private LinearLayout mLlEditBar;//控制下方那一行的显示与隐藏
 
-
-    Bundle bundle = new Bundle();
+    ArrayList<BooKInfo> booKInfoList = new ArrayList<>();
+    BooKInfo booKInfo ;
     private ProgressDialog pd;
+
     //定义Handler对象
-    private Handler handler =new Handler(){
+    private final Handler handler =new Handler(Looper.getMainLooper()){
         @Override
         //当有消息发送出来的时候就执行Handler的这个方法
         public void handleMessage(Message msg){
             super.handleMessage(msg);
+            if(msg.what != SMART_SELECT_BOOK_MSG) return;
             //只要执行到这里就关闭对话框
             ReFresh((List<File>) msg.obj);
             pd.dismiss();
         }
     };
 
-    public class ReturnData implements Serializable {
-        ArrayList<String> PathData= new ArrayList<>();
-        ArrayList<String> FileName = new ArrayList<>();
-    }
-    ReturnData data;
+//<<<<<<< HEAD
+//    public class ReturnData implements Serializable {
+//        ArrayList<String> PathData= new ArrayList<>();
+//        ArrayList<String> FileName = new ArrayList<>();
+//    }
+//    ReturnData data;
+//=======
+//>>>>>>> main
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,8 +113,7 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
                     List<File> list = InitFileList(file.getPath());
                     ReFresh(list);
                     //adapter.notifyDataSetChanged();
-                }
-                else if (IsJbk(file)) {
+                } else if (IsJbk(file)) {
                     try {
                         if (Is_Book(file)) {
                             if(mLlEditBar.getVisibility() == View.VISIBLE)
@@ -194,10 +202,10 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void init_view() {
-        imageButton = (ImageView) findViewById(R.id.join_image_button);
-        button_join = findViewById(R.id.join_button);
-        button_auto = findViewById(R.id.smart_button);
-        listView = (ListView) findViewById(R.id.join_list_view);
+        ImageView imageButton = findViewById(R.id.join_image_button);
+        Button button_join = findViewById(R.id.join_button);
+        Button button_auto = findViewById(R.id.smart_button);
+        listView = findViewById(R.id.join_list_view);
         mLlEditBar = findViewById(R.id.edit_bar);
         findViewById(R.id.cancel).setOnClickListener(this);
         findViewById(R.id.select_all).setOnClickListener(this);
@@ -246,8 +254,6 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
             Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
             startActivityForResult(intent, REQUEST_CODE);
         }
-
-
     }
 
     @Override
@@ -258,34 +264,28 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
                 Toast.makeText(this, "没有访问所有文件的权限", Toast.LENGTH_SHORT).show();
                 finish();
             }
-
         }
-
     }
     private void processThread(){
         //构建一个下载进度条
         pd= ProgressDialog.show(JoinBookActivity.this, "加载中", "正在加载…");
-        new Thread(){
-            public void run() {
-                //在这里执行长耗时方法
-                List<File> list;
-                try {
-                    //LoadingDialog.getInstance(JoinBookActivity.this).show();
-                    list = GoSmart(Environment.getExternalStorageDirectory().getPath());
-                    //ReFresh(list);
-
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                //执行完毕后给handler发送一个消息
-                Bundle bundle = new Bundle();
-
-                Message message = Message.obtain();
-                message.obj = list;
-                handler.sendMessage(message);
+        new Thread(() -> {
+            //在这里执行长耗时方法
+            List<File> list;
+            try {
+                list = GoSmart(Environment.getExternalStorageDirectory().getPath());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        }.start();
+            //执行完毕后给handler发送一个消息
+            Message message = handler.obtainMessage();
+            message.what = SMART_SELECT_BOOK_MSG;
+            message.obj = list;
+            handler.sendMessage(message);
+        }).start();
     }
+
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -305,7 +305,7 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
                 selectAll();
                 break;
             case R.id.confirm:
-                 Add_Book();
+                Add_Book();
                 break;
         }
     }
@@ -315,25 +315,36 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
             File tmpPath = getCacheDir();
             unzipFile(file.getPath(), tmpPath.getAbsolutePath());
             if (CheckFile(tmpPath)) {
-                String s = BookPath+"/"+file.getName().split("\\.")[0];
-                copyDir(tmpPath.getAbsolutePath(), s);
+                String s = file.getName();
+                String savePath = BookPath + file.getName().split("\\.")[0];
+                copyDir(tmpPath.getAbsolutePath(), savePath);
+                String[] res = getBookNameAndCover(savePath + '/' + "jbk_config.json");
                 makeToast(JoinBookActivity.this, "加入成功", 100);
-
-                data.PathData.add(s);
-                data.FileName.add(file.getName().split("\\.")[0]);
+                booKInfoList.add(new BooKInfo(res[0],BookPath + res[1],"0"));
             }
             else
                 makeToast(JoinBookActivity.this, "所选文件不符合格式", 100);
             deleteDFile(tmpPath);
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             throw new RuntimeException(e);
         }
     }
+
+    private String[] getBookNameAndCover(String savePath) throws IOException, JSONException {
+        String buf = Utils.readAllFile(new File(savePath).toPath());
+
+        JSONObject object = new JSONObject(buf);
+        String[] res = new String[2];
+        res[0] = object.getString("book_name");
+        res[1] = object.getString("cover");
+        return res;
+    }
+
     public void TransmitData(){
-        bundle.putSerializable("DATA",data);
-        Intent intent = new Intent(JoinBookActivity.this,IndexActivity.class);
-        intent.putExtras(bundle);
-        startActivity(intent);
+        Intent intent =new Intent();
+        intent.putParcelableArrayListExtra("book_info", booKInfoList);
+        setResult(REQUEST_OK,intent);
+        finish();
     }
 
     private void Add_Book() {
@@ -357,12 +368,13 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
 
     public void GoPrevious() {
         File root = Environment.getExternalStorageDirectory();
-        if(root.toPath().toString().equals(FileTep.toPath().toString())) {
+        if (root.toPath().toString().equals(FileTep.toPath().toString())) {
             Intent intent = new Intent(JoinBookActivity.this, IndexActivity.class);
             startActivity(intent);
             //finish();
         } else {
             File file = FileTep.getParentFile();
+            assert file != null;
             List<File> list = InitFileList(file.getPath());
             adapter.setFileList(list);
             adapter.notifyDataSetChanged();
@@ -406,12 +418,10 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
     public List<File> GoSmart(String path) throws IOException {
          List<File> fileList = new ArrayList<>();
          goSmartImpl(path, fileList, 1);
-
          return fileList;
     }
 
     public void ReFresh(List<File> list) {
-        //adapter = new ListViewAdaptor(JoinBookActivity.this,FileList,stateCheckedMap);
         adapter.setFileList(list);
         adapter.setStateCheckedMap(stateCheckedMap);
         listView.setAdapter(adapter);
