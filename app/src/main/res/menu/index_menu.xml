@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/read_bar_search"
-        android:title="Search"
         android:icon="@drawable/read_searchbar"
-        app:showAsAction="ifRoom|withText"
-        app:actionViewClass="android.widget.SearchView"></item>
+        android:title="Search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="ifRoom|withText"></item>
     <item
         android:id="@+id/add_book"
         android:title="添加书籍"></item>

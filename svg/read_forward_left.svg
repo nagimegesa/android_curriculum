@@ -1,8 +1,10 @@
-<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg" version="1.1">
- <title>forward</title>
+<svg height="32" version="1.1" width="32" xmlns="http://www.w3.org/2000/svg">
+    <title>forward</title>
 
- <g>
-  <title>Layer 1</title>
-  <path d="m15,22l-15,0l0,8l30,0l0,-8l-15,0zm13,4l-4,0l0,-2l4,0l0,2zm-21,-16l8,-8l8,8l-5,0l0,10l-6,0l0,-10l-5,0z" id="svg_1" transform="rotate(-90 15 16)"/>
- </g>
+    <g>
+        <title>Layer 1</title>
+        <path
+            d="m15,22l-15,0l0,8l30,0l0,-8l-15,0zm13,4l-4,0l0,-2l4,0l0,2zm-21,-16l8,-8l8,8l-5,0l0,10l-6,0l0,-10l-5,0z"
+            id="svg_1" transform="rotate(-90 15 16)" />
+    </g>
 </svg>

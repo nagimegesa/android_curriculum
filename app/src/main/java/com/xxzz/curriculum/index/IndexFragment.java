@@ -1,19 +1,15 @@
 package com.xxzz.curriculum.index;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.icu.text.IDNA;
-import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.Utils;
@@ -23,22 +19,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class IndexFragment extends Fragment {
+
+    private static List<BooKInfo> list = new ArrayList<>();
+    private static IndexFragment fragment;
     public DragGridView gridview;
     private IndexBookAdapter adapter;
-    private static List<BooKInfo> list = new ArrayList<>();
     private List<String> bookNameList = new ArrayList<String>();
-    private static IndexFragment fragment;
 
     public IndexFragment() {
 
@@ -65,25 +58,18 @@ public class IndexFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_index, container, false);
-        gridview = (DragGridView) view.findViewById(R.id.list);
-//        ((Button)view.findViewById(R.id.index_add_button)).setOnClickListener(this::add);
-//        ((Button)view.findViewById(R.id.index_del_button)).setOnClickListener(this::del);
+
+        gridview = view.findViewById(R.id.list);
+
         adapter = new IndexBookAdapter(getActivity(), list);
         gridview.setAdapter(adapter);
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Bundle bundle = new Bundle();
-//                bundle.putString("book_name", adapter.datas.get(position));
                 Intent intent = new Intent();
                 intent.putExtra("book_name", bookNameList.get(position));
                 intent.setClass(getContext(), ReadActivity.class);
                 startActivity(intent);
-//                switch (position) {
-//                    default:
-//                        Toast.makeText(getContext(),"这是一本电子书",Toast.LENGTH_LONG).show();
-//                        break;
-//                }
             }
         });
         gridview.setOnChangeListener(new DragGridView.OnChanageListener() {
@@ -115,10 +101,15 @@ public class IndexFragment extends Fragment {
     private void creatBookInfoFile() throws IOException {
         String path = getActivity().getFilesDir() + "/cover";
         File file = new File(path, "text.json");
-        if (!file.exists())
+        if (!file.exists()) {
             file.createNewFile();
+            String sp = System.lineSeparator();
+            Utils.writeFile(file.toPath(), "{" + sp +
+                    "   \"count\": 0," + sp +
+                    "   \"cover\": []" + sp +
+                    "}");
+        }
     }
-
 
     private void readBookInfoFromFile() {
 //        this.list = new ArrayList<>();
