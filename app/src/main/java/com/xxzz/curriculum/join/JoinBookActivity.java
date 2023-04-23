@@ -34,6 +34,7 @@ import com.xxzz.curriculum.index.IndexActivity;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -53,6 +54,8 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
     private List<File> mCheckedData = new ArrayList<>();//将选中数据放入里面
     private LinearLayout mLlEditBar;//控制下方那一行的显示与隐藏
 
+
+    Bundle bundle = new Bundle();
     private ProgressDialog pd;
     //定义Handler对象
     private Handler handler =new Handler(){
@@ -66,8 +69,11 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
         }
     };
 
-    //LoadingDialog loadingDialog ;
-
+    public class ReturnData implements Serializable {
+        ArrayList<String> PathData= new ArrayList<>();
+        ArrayList<String> FileName = new ArrayList<>();
+    }
+    ReturnData data;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +112,7 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
                                 updateCheckBoxStatus(view, i);
                             else{
                                 Unzip_Copy(file);
+                                TransmitData();
                             }
 
                         }
@@ -308,8 +315,12 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
             File tmpPath = getCacheDir();
             unzipFile(file.getPath(), tmpPath.getAbsolutePath());
             if (CheckFile(tmpPath)) {
-                copyDir(tmpPath.getAbsolutePath(), BookPath+file.getName().split(".")[0]);
+                String s = BookPath+"/"+file.getName().split("\\.")[0];
+                copyDir(tmpPath.getAbsolutePath(), s);
                 makeToast(JoinBookActivity.this, "加入成功", 100);
+
+                data.PathData.add(s);
+                data.FileName.add(file.getName().split("\\.")[0]);
             }
             else
                 makeToast(JoinBookActivity.this, "所选文件不符合格式", 100);
@@ -318,11 +329,19 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
             throw new RuntimeException(e);
         }
     }
+    public void TransmitData(){
+        bundle.putSerializable("DATA",data);
+        Intent intent = new Intent(JoinBookActivity.this,IndexActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
 
     private void Add_Book() {
         for(File f :mCheckedData){
             Unzip_Copy(f);
         }
+        TransmitData();
+        cancel();
     }
 
     public boolean Is_Book(File file) throws IOException {
