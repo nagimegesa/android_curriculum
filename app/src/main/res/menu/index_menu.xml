@@ -16,4 +16,7 @@
     <item
         android:id="@+id/sort_book"
         android:title="最近阅读"></item>
+    <item
+        android:id="@+id/test_book"
+        android:title="测试图书"></item>
 </menu>

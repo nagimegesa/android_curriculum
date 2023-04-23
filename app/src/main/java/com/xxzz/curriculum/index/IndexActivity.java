@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.RadioGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -24,6 +26,7 @@ import com.hjq.permissions.XXPermissions;
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.Utils;
 import com.xxzz.curriculum.join.JoinBookActivity;
+import com.xxzz.curriculum.read.ReadActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -119,24 +122,54 @@ public class IndexActivity extends AppCompatActivity {
                 startAddBook();
                 break;
             case R.id.dete_book:
+                deteleBook();
+                break;
+            case R.id.sort_book:
+                IndexFragment.getInstance().getAdapter().refreshData(IndexFragment.getInstance().getList());
+                break;
+            case R.id.test_book:
                 try {
-                    deleteBook();
+                    testBook();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
                 break;
-            case R.id.sort_book:
-                IndexFragment.getInstance().getAdapter().refreshData(IndexFragment.getInstance().getList());
-                break;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
-
-    private void deleteBook() throws IOException, JSONException {
+    private void deteleBook(){
+        IndexFragment.getInstance().gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                try {
+                    JSONObject cover = new JSONObject(Utils.readAllFile(getFilesDir().toPath().resolve("cover/text.json")));
+                    JSONArray array = cover.getJSONArray("cover");
+                    int count = cover.getInt("count");
+                    for( int i=0 ;i<array.length();i++) {
+                        JSONObject object = new JSONObject();
+                        object= (JSONObject) array.get(i);
+                        if(object.getString("book_name").equals(IndexFragment.getInstance().getBookNameList().get(position))) {
+                            object.put("book_name", null);
+                            object.put("cover_path", null);
+                            object.put("last_read_time", null);
+                        }
+                    }
+                    count-=1;
+                    cover.putOpt("count", count);
+                    Utils.writeFile(getFilesDir().toPath().resolve("cover/text.json"), cover.toString());
+                } catch (IOException | JSONException e) {
+                    throw new RuntimeException(e);
+                }
+                IndexFragment.getInstance().readBookInfoFromFile();
+                IndexFragment.getInstance().getAdapter().notifyDataSetChanged();
+            }
+        });
+    }
+    private void testBook() throws IOException, JSONException {
         List<BooKInfo> infos=new ArrayList<>();
         String res = Utils.readAllFile(getFilesDir().toPath().resolve("cover/test.json").toFile().toPath());
         JSONObject context = new JSONObject(res);
