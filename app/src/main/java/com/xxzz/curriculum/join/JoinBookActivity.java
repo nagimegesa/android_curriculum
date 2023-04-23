@@ -1,7 +1,5 @@
 package com.xxzz.curriculum.join;
 
-import android.os.Bundle;
-
 import static com.xxzz.curriculum.Utils.makeToast;
 import static com.xxzz.curriculum.join.FileOperation.CheckFile;
 import static com.xxzz.curriculum.join.FileOperation.IsJbk;
@@ -30,7 +28,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.index.IndexActivity;
 
-<<<<<<< HEAD
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,30 +35,23 @@ import java.util.Arrays;
 import java.util.List;
 
 public class JoinBookActivity extends AppCompatActivity implements View.OnClickListener {
+    private final int mTag = 1;
+    private final int REQUEST_CODE = 7325;
+    private final SparseBooleanArray stateCheckedMap = new SparseBooleanArray();//用来存放CheckBox的选中状态，true为选中,false为没有选中
+    private final List<File> mCheckedData = new ArrayList<>();//将选中数据放入里面
     String BookPath = "/data/data/com.xxzz.curriculum/files/Book";
     File FileTep = Environment.getExternalStorageDirectory();
-    ImageView imageButton;
-    Button button_join;
-    Button button_auto;
-    private int mTag = 1;
-    private int REQUEST_CODE = 7325;
     private ListViewAdaptor adapter;
     private ListView listView;
-    private SparseBooleanArray stateCheckedMap = new SparseBooleanArray();//用来存放CheckBox的选中状态，true为选中,false为没有选中
     private boolean isSelectedAll = true;//用来控制点击全选，全选和全不选相互切换
-    private List<File> mCheckedData = new ArrayList<>();//将选中数据放入里面
     private LinearLayout mLlEditBar;//控制下方那一行的显示与隐藏
 
     @SuppressLint("MissingInflatedId")
-=======
-public class JoinBookActivity extends AppCompatActivity {
->>>>>>> xxy
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_join_book);
-<<<<<<< HEAD
         accessPermission();//获取 权限
 
         init_view();
@@ -86,8 +76,7 @@ public class JoinBookActivity extends AppCompatActivity {
                     List<File> list = InitFileList(file.getPath());
                     ReFresh(list);
                     //adapter.notifyDataSetChanged();
-                }
-                else if (IsJbk(file)) {
+                } else if (IsJbk(file)) {
                     try {
                         if (Is_Book(file)) {
                             updateCheckBoxStatus(view, i);
@@ -166,10 +155,10 @@ public class JoinBookActivity extends AppCompatActivity {
     }
 
     public void init_view() {
-        imageButton = (ImageView) findViewById(R.id.join_image_button);
-        button_join = findViewById(R.id.join_button);
-        button_auto = findViewById(R.id.smart_button);
-        listView = (ListView) findViewById(R.id.join_list_view);
+        ImageView imageButton = findViewById(R.id.join_image_button);
+        Button button_join = findViewById(R.id.join_button);
+        Button button_auto = findViewById(R.id.smart_button);
+        listView = findViewById(R.id.join_list_view);
         mLlEditBar = findViewById(R.id.edit_bar);
         findViewById(R.id.cancel).setOnClickListener(this);
         findViewById(R.id.select_all).setOnClickListener(this);
@@ -210,8 +199,6 @@ public class JoinBookActivity extends AppCompatActivity {
             Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
             startActivityForResult(intent, REQUEST_CODE);
         }
-
-
     }
 
     @Override
@@ -222,11 +209,10 @@ public class JoinBookActivity extends AppCompatActivity {
                 Toast.makeText(this, "没有访问所有文件的权限", Toast.LENGTH_SHORT).show();
                 finish();
             }
-
         }
-
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -252,9 +238,12 @@ public class JoinBookActivity extends AppCompatActivity {
                 selectAll();
                 break;
             case R.id.confirm:
-                // Add_Book();
+                addBook();
                 break;
         }
+    }
+
+    private void addBook() {
     }
 
     public void Unzip_Copy(File file) {
@@ -272,16 +261,10 @@ public class JoinBookActivity extends AppCompatActivity {
         }
     }
 
-//    private void Add_Book() {
-//        for(File f :mCheckedData){
-//            Unzip_Copy(f);
-//        }
-//    }
-
     public boolean Is_Book(File file) throws IOException {
         File tmpPath = getCacheDir();
         unzipFile(file.getPath(), tmpPath.getAbsolutePath());
-        if(CheckFile(tmpPath)){
+        if (CheckFile(tmpPath)) {
             return true;
         }
         deleteDFile(tmpPath);
@@ -290,7 +273,7 @@ public class JoinBookActivity extends AppCompatActivity {
 
     public void GoPrevious() {
         File root = Environment.getExternalStorageDirectory();
-        if(root.toPath().toString().equals(FileTep.toPath().toString())) {
+        if (root.toPath().toString().equals(FileTep.toPath().toString())) {
             Intent intent = new Intent(JoinBookActivity.this, IndexActivity.class);
             startActivity(intent);
             //finish();
@@ -333,18 +316,14 @@ public class JoinBookActivity extends AppCompatActivity {
     }
 
     public List<File> GoSmart(String path) throws IOException {
-         List<File> fileList = new ArrayList<>();
-         goSmartImpl(path, fileList);
-         return fileList;
+        List<File> fileList = new ArrayList<>();
+        goSmartImpl(path, fileList);
+        return fileList;
     }
 
     public void ReFresh(List<File> list) {
-        //adapter = new ListViewAdaptor(JoinBookActivity.this,FileList,stateCheckedMap);
         adapter.setFileList(list);
         adapter.setStateCheckedMap(stateCheckedMap);
         listView.setAdapter(adapter);
-=======
-        getLayoutInflater();
->>>>>>> xxy
     }
 }

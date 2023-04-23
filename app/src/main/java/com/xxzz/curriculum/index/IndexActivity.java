@@ -1,6 +1,7 @@
 package com.xxzz.curriculum.index;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,6 +10,11 @@ import android.widget.RadioGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuItemCompat;
@@ -22,19 +28,19 @@ import com.hjq.permissions.XXPermissions;
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.Utils;
 import com.xxzz.curriculum.join.JoinBookActivity;
-import com.xxzz.curriculum.read.ReadActivity;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class IndexActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
         @SuppressLint({"MissingInflatedId", "LocalSuppress"})
-        RadioGroup group = (RadioGroup) findViewById(R.id.bottom_radio);
+        RadioGroup group = findViewById(R.id.bottom_radio);
         group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -65,6 +71,9 @@ public class IndexActivity extends AppCompatActivity {
                         }
                     });
         }
+//        Intent intent = new Intent(IndexActivity.this, ReadActivity.class);
+//        intent.putExtra("book_name", "aili_book");
+//        startActivity(intent);
     }
 
     @Override
@@ -92,7 +101,8 @@ public class IndexActivity extends AppCompatActivity {
             res &= coverPath.mkdir();
         return res;
     }
-    
+
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -110,67 +120,59 @@ public class IndexActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    
-    private void deleteBook(){
+
+    private void deleteBook() {
 
     }
+
     private void startAddBook() {
-        String s = switchToAddBook();
+        switchToAddBook();
         // TODO : do something for add book
     }
 
-    private String switchToAddBook() {
+    private void switchToAddBook() {
         // TODO : switch to the Read Activity with result back;
         Intent intent = new Intent(this, JoinBookActivity.class);
-        startActivity(intent);
-        return null;
+        ActivityResultLauncher<Intent> launcher
+                = registerForActivityResult(new ActivityResultContracts.StartActivityForResult()
+                , (res)-> {
+                    Intent data = res.getData();
+                    if(data == null) return;
+                    if(res.getResultCode() != RESULT_OK) return;
+                    ArrayList <BooKInfo> info = data.getParcelableArrayListExtra("book_info");
+                });
+        launcher.launch(intent);
     }
 
     @SuppressLint("ResourceType")
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.index_menu, menu);
         MenuItem searchViewItem = menu.findItem(R.id.read_bar_search);
-//        ListView lisview=findViewById(R.id.index_search_list);
-//        lisview.setVisibility(View.GONE);
         List<BooKInfo> result = IndexFragment.getInstance().getList();
-//        ArrayAdapter<String> resultAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, s);
-//        lisview.setAdapter(resultAdapter);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchViewItem);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-//                List<BooKInfo> searchresult=new ArrayList<>();
-//                for (int i = 0; i < result.size(); i++) {
-//                    if(equalsearch(result.get(i).getName(),query)){
-//                        searchresult.add(new BooKInfo(result.get(i).getName(),result.get(i).getCoverPath(),result.get(i).getLastReadTime()));
-//                    }
-//                }
-//                IndexFragment.getInstance().getAdapter().searchData(searchresult);
-//                Toast t = Toast.makeText(IndexActivity.this, query, Toast.LENGTH_SHORT);
-//                t.setGravity(Gravity.TOP,0,0);
-//                t.show();
                 searchView.clearFocus();
                 return false;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
-                List<BooKInfo> searchresult=new ArrayList<>();
+                List<BooKInfo> searchresult = new ArrayList<>();
                 for (int i = 0; i < result.size(); i++) {
-                    if(equalSearch(result.get(i).getName(),newText)){
-                        searchresult.add(new BooKInfo(result.get(i).getName(),result.get(i).getCoverPath(),result.get(i).getLastReadTime()));
+                    if (equalSearch(result.get(i).getName(), newText)) {
+                        searchresult.add(new BooKInfo(result.get(i).getName(), result.get(i).getCoverPath(), result.get(i).getLastReadTime()));
                     }
                 }
                 IndexFragment.getInstance().getAdapter().searchData(searchresult);
-//                if(newText.isEmpty())
-//                    return false;
-//                lisview.setVisibility(View.VISIBLE);
-//                resultAdapter.getFilter().filter(newText);
                 return false;
             }
         });
         return super.onCreateOptionsMenu(menu);
     }
+
     public boolean equalSearch(String s1, String s2) {
         StringBuilder str = new StringBuilder(s1);
         for (char ch : s2.toCharArray()) {
@@ -178,10 +180,11 @@ public class IndexActivity extends AppCompatActivity {
             if (i < 0) {
                 return false;
             }
-            str=str.deleteCharAt(i);
+            str = str.deleteCharAt(i);
         }
         return true;
     }
+
     @SuppressLint("NonConstantResourceId")
     private void change_fragment(int id) {
         Fragment fragment = null;
@@ -190,7 +193,7 @@ public class IndexActivity extends AppCompatActivity {
                 fragment = IndexFragment.getInstance();
                 break;
             case R.id.setting_button:
-                fragment = SettingFragment.getInstance();
+                fragment = SettingFragment.getInstance(this);
                 break;
             default:
                 break;

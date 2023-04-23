@@ -7,4 +7,24 @@
     <string name="smart_import">智能导入</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--       setting        -->
+    <string name="setting_readConfig">阅读设置</string>
+    <string name="setting_fontSize">调整字体大小</string>
+    <string name="setting_nightStatus">夜间模式</string>
+    <string name="setting_musicStatus">背景音乐</string>
+    <string name="setting_otherConfig">其他设置</string>
+
+    <!--        settingFragment spinner - default size:20   -->
+    <string name="setting_fontSize_spinner">SpinnerTest</string>
+    <string-array name="size_array">
+        <item>8</item>
+        <item>12</item>
+        <item>16</item>
+        <item>20</item>
+        <item>24</item>
+        <item>28</item>
+        <item>32</item>
+    </string-array>
+
 </resources>

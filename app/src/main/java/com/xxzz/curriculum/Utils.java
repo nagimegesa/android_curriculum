@@ -1,10 +1,18 @@
 package com.xxzz.curriculum;
 
 import android.content.Context;
+import android.os.Environment;
+import android.util.Xml;
 import android.widget.Toast;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlSerializer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -30,5 +38,59 @@ public class Utils {
         inputReader.close();
         inputStream.close();
         return builder.toString();
+    }
+
+    /**
+     * 保存配置文件到本地xml
+     */
+    public void setConfig() {
+        try {
+            File file = new File(Environment.getExternalStorageDirectory() + File.separator + "Settings", "setting.xml");
+            FileOutputStream fos = new FileOutputStream(file);
+            // 获得一个序列化工具
+            XmlSerializer serializer = Xml.newSerializer();
+            serializer.setOutput(fos, "utf-8");
+            // 设置文件头
+            serializer.startDocument("utf-8", true);
+
+            //serializer.attribute(null, "id", String.valueOf(0));
+            // TODO: Write something into setting config
+
+            serializer.endDocument();
+            fos.close();
+            //Toast.makeText
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 读取本地配置文件
+     */
+    public void getConfig() {
+        try {
+            File path = new File(Environment.getExternalStorageDirectory() + File.separator + "Settings", "Setting.xml");
+            FileInputStream fis = new FileInputStream(path);
+            XmlPullParser parser = Xml.newPullParser();// 获得pull解析器对象
+            parser.setInput(fis, "utf-8");// 指定解析的文件和编码格式
+            int eventType = parser.getEventType(); // 获得事件类型
+
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                String tagName = parser.getName(); // 获得当前节点的名称
+                switch (eventType) {
+                    case XmlPullParser.START_TAG:
+                        // TODO: read setting Config
+                        break;
+//                    case XmlPullParser.END_TAG:
+//                        break;
+                    default:
+                        break;
+                }
+                eventType = parser.next(); // 获得下一个事件类型
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+        }
     }
 }

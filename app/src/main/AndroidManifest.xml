@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-<<<<<<< HEAD
     xmlns:tools="http://schemas.android.com/tools"
     package="com.xxzz.curriculum">
 
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEM"/>
-
-=======
-    xmlns:tools="http://schemas.android.com/tools">
->>>>>>> xxy
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission
@@ -19,6 +13,7 @@
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -29,6 +24,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Curriculum"
         tools:targetApi="26">
+        <activity
+            android:name=".BookMarkActivity"
+            android:exported="false" />
         <activity
             android:name=".read.ReadActivity"
             android:exported="false" />
