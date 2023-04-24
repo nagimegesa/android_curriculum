@@ -1,8 +1,8 @@
 package com.xxzz.curriculum.index;
 
 public class BookCollection {
-    private String bookName;
-    private int page;
+    private final String bookName;
+    private final int page;
 
     public BookCollection(String bookName, int page) {
         this.bookName = bookName;

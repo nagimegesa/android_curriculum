@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.hjq.permissions.OnPermissionCallback;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
+import com.xxzz.curriculum.Config;
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.Utils;
 import com.xxzz.curriculum.join.JoinBookActivity;
@@ -52,7 +53,6 @@ public class IndexActivity extends AppCompatActivity {
         change_fragment(R.id.index_button);
         boolean canWrite = XXPermissions.isGranted(getApplicationContext(), Permission.WRITE_EXTERNAL_STORAGE);
         if (canWrite) {
-            Utils.makeToast(getApplicationContext(), "创建文件夹", Toast.LENGTH_SHORT);
             createBaseDir();
         } else {
             XXPermissions.with(this).permission(Permission.WRITE_EXTERNAL_STORAGE).permission(Permission.READ_MEDIA_AUDIO).permission(Permission.READ_MEDIA_IMAGES).permission(Permission.READ_MEDIA_VIDEO).request(new OnPermissionCallback() {
@@ -65,6 +65,9 @@ public class IndexActivity extends AppCompatActivity {
                 }
             });
         }
+        Config config = Config.getInstance();
+        config.readSettingConfig(getApplicationContext());
+        config.switchNightMode(this, config.isNightStatus());
         launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), (res) -> {
             Intent data = res.getData();
             if (data == null) return;
@@ -105,15 +108,6 @@ public class IndexActivity extends AppCompatActivity {
             case R.id.add_book:
                 startAddBook();
                 break;
-            case R.id.dete_book:
-                try {
-                    deleteBook();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
-                break;
             case R.id.sort_book:
                 IndexFragment.getInstance().getAdapter().refreshData(IndexFragment.getInstance().getList());
                 break;
@@ -121,21 +115,6 @@ public class IndexActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void deleteBook() throws IOException, JSONException {
-        List<BooKInfo> infos = new ArrayList<>();
-        String res = Utils.readAllFile(getFilesDir().toPath().resolve("cover/test.json").toFile().toPath());
-        JSONObject context = new JSONObject(res);
-        JSONArray array = context.getJSONArray("cover");
-        for (int i = 0; i < array.length(); i++) {
-            JSONObject object = array.getJSONObject(i);
-            BooKInfo bookinfo = new BooKInfo(object.getString("book_name"), object.getString("cover_path"), object.getString("last_read_time"));
-            infos.add(bookinfo);
-        }
-        addBookToJsonFile(infos);
-        IndexFragment.getInstance().readBookInfoFromFile();
-        IndexFragment.getInstance().getAdapter().notifyDataSetChanged();
     }
 
     private void startAddBook() {

@@ -236,7 +236,6 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
     public void accessPermission() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R ||
                 Environment.isExternalStorageManager()) {
-            Toast.makeText(this, "已获得访问所有文件的权限", Toast.LENGTH_SHORT).show();
         } else {
             Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
             startActivityForResult(intent, REQUEST_CODE);
@@ -308,13 +307,25 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
                 String[] res = getBookNameAndCover(savePath + '/' + "jbk_config.json");
                 copyDir(tmpPath.getAbsolutePath(), BookPath + res[0]);
                 makeToast(JoinBookActivity.this, "加入成功", 100);
-                booKInfoList.add(new BooKInfo(res[0], savePath + "/main/" + res[1], "0"));
+
+                if(!isExistBook(res[0]))
+                    booKInfoList.add(new BooKInfo(res[0], savePath + "/main/" + res[1], "0"));
             } else
                 makeToast(JoinBookActivity.this, "所选文件不符合格式", 100);
             deleteDFile(tmpPath);
         } catch (IOException | JSONException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private boolean isExistBook(String re) {
+        File[] files = new File(BookPath).listFiles();
+        assert files != null;
+        for (File file : files) {
+            if (file.getName().equals(re))
+                return false;
+        }
+        return true;
     }
 
     private String[] getBookNameAndCover(String savePath) throws IOException, JSONException {

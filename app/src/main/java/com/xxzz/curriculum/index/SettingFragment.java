@@ -14,8 +14,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
@@ -29,7 +27,7 @@ public class SettingFragment extends Fragment {
     int flag = 3;   // spinner -- 默认字号为20 flag=3
     private View view;
     private Spinner readFontSize;
-    private SwitchCompat nightStatus, musicStatus;
+    private SwitchCompat nightStatus, musicStatus, readDirection;
     private Button bookMark, collection;
 
     public SettingFragment(Context parent) {
@@ -50,7 +48,21 @@ public class SettingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         Config.getInstance().readSettingConfig(parent);
+        setUI();
+    }
+
+    private void setUI() {
+        flag = Config.getInstance().getSpinnerPlace(readFontSize, getActivity());
+        readFontSize.setSelection(flag);
+        nightStatus.setChecked(Config.config.isNightStatus());
+        musicStatus.setChecked(Config.config.isMusicStatus());
+        readDirection.setChecked(Config.getInstance().isVerticalRead());
     }
 
     @Override
@@ -79,10 +91,7 @@ public class SettingFragment extends Fragment {
         nightStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Config.getInstance().setNightStatus(isChecked, getActivity());
-                if (((AppCompatActivity) getActivity()).getDelegate().getLocalNightMode() == AppCompatDelegate.MODE_NIGHT_NO) {
-                    ((AppCompatActivity) getActivity()).getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                }
+                Config.getInstance().switchNightMode(getActivityFromView(), isChecked);
             }
         });
         bookMark.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +107,10 @@ public class SettingFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), CollectionActivity.class);
                 startActivity(intent);
             }
+        });
+
+        readDirection.setOnCheckedChangeListener((b, checked) -> {
+            Config.getInstance().setVerticalRead(checked, getActivity());
         });
         return view;
     }
@@ -121,10 +134,7 @@ public class SettingFragment extends Fragment {
         musicStatus = view.findViewById(R.id.sc_music_switch);
         bookMark = view.findViewById(R.id.bt_bookmark);
         collection = view.findViewById(R.id.bt_collection);
-        flag = Config.getInstance().getSpinnerPlace(readFontSize, getActivity());
-        readFontSize.setSelection(flag);
-        nightStatus.setChecked(Config.config.isNightStatus());
-        musicStatus.setChecked(Config.config.isMusicStatus());
+        readDirection = view.findViewById(R.id.sc_swipe_mode);
     }
 }
 

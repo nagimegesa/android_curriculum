@@ -23,8 +23,8 @@ public class CollectionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_collection);
         listView = findViewById(R.id.setting_collection_listview);
         dbHelper = new DBHelper(getApplicationContext());
-
-        adapter = new BookCollectionAdapter(CollectionActivity.this, readCollectionDB());
+        List<BookCollection> list = readCollectionDB();
+        adapter = new BookCollectionAdapter(CollectionActivity.this, list);
         listView.setAdapter(adapter);
     }
 

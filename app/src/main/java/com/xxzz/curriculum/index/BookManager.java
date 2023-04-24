@@ -82,8 +82,8 @@ public class BookManager {
     }
 
     @SuppressLint("Range")
-    public List<BooKMark> readBookMark(SQLiteDatabase db, String name) {
-        List<BooKMark> list = new ArrayList<BooKMark>();
+    public List<BookCollection> readBookMark(SQLiteDatabase db, String name) {
+        List<BookCollection> list = new ArrayList<>();
         if (isTableExist(db, "bookmark")) {
             Cursor cursor = db.rawQuery("select * from bookmark where bookName = ?", new String[]{name});
             if (cursor.getCount() != 0) {
