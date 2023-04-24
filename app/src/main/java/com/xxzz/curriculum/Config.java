@@ -50,7 +50,7 @@ public class Config {
         if (fontSize >= minFontSize && fontSize <= maxFontSize) {
             readFontSize = fontSize;
             editor.putFloat("readFontSize", fontSize);
-            editor.apply();
+            editor.commit();
         }
     }
 
@@ -62,7 +62,7 @@ public class Config {
         sharedPreferences = parent.getSharedPreferences("setting", parent.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         editor.putBoolean("musicStatus", musicStatus);
-        editor.apply();
+        editor.commit();
         this.musicStatus = musicStatus;
     }
 
@@ -74,15 +74,15 @@ public class Config {
         sharedPreferences = parent.getSharedPreferences("setting", parent.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         editor.putBoolean("nightStatus", musicStatus);
-        editor.apply();
+        editor.commit();
         this.nightStatus = nightStatus;
     }
 
-    public void initConfig() {
-        this.readFontSize = 20;
-        this.musicStatus = false;
-        this.nightStatus = false;
-    }
+//    public void initConfig() {
+//        this.readFontSize = 20;
+//        this.musicStatus = false;
+//        this.nightStatus = false;
+//    }
 
     public int getSpinnerPlace(Spinner readFontSize, Context parent) {
         sharedPreferences = parent.getSharedPreferences("setting", parent.MODE_PRIVATE);
@@ -98,14 +98,14 @@ public class Config {
         return flag;
     }
 
-    public void saveSettingConfig(Context context) {
-        sharedPreferences = context.getSharedPreferences("setting", context.MODE_PRIVATE);
-        editor = sharedPreferences.edit();
-        editor.putFloat("readFontSize", this.getReadFontSize());
-        editor.putBoolean("musicStatus", this.isMusicStatus());
-        editor.putBoolean("nightStatus", this.isNightStatus());
-        editor.commit();
-    }
+//    public void saveSettingConfig(Context context) {
+//        sharedPreferences = context.getSharedPreferences("setting", context.MODE_PRIVATE);
+//        editor = sharedPreferences.edit();
+//        editor.putFloat("readFontSize", this.getReadFontSize());
+//        editor.putBoolean("musicStatus", this.isMusicStatus());
+//        editor.putBoolean("nightStatus", this.isNightStatus());
+//        editor.commit();
+//    }
 
     public void readSettingConfig(Context parent) {
         //  读取设置
