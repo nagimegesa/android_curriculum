@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
     android:propertyName="translationY"
-    android:valueFrom="-150dp"
+    android:valueFrom="-130dp"
     android:valueTo="0dp"
     android:valueType="floatType" />

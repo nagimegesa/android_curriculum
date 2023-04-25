@@ -1,7 +1,6 @@
 package com.xxzz.curriculum.read;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class Book {
     private String name;
@@ -19,12 +18,12 @@ public class Book {
         return name;
     }
 
-    public int getPages() {
-        return pages;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getPages() {
+        return pages;
     }
 
     public void setPages(int pages) {
@@ -39,10 +38,6 @@ public class Book {
         this.textPath = textPath;
     }
 
-    public void setReadPage(int readPage) {
-        this.readPage = readPage;
-    }
-
     public String getIndexText(int index) {
         return textPath.get(index);
     }
@@ -53,6 +48,10 @@ public class Book {
 
     public int getReadPage() {
         return readPage;
+    }
+
+    public void setReadPage(int readPage) {
+        this.readPage = readPage;
     }
 
     public int getReadTime() {

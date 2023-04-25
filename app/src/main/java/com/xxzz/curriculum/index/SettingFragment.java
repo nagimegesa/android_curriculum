@@ -14,22 +14,21 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import com.xxzz.curriculum.Config;
 import com.xxzz.curriculum.R;
 
+
 public class SettingFragment extends Fragment {
     static private SettingFragment fragment;
+    private final Context parent;
     int flag = 3;   // spinner -- 默认字号为20 flag=3
     private View view;
     private Spinner readFontSize;
-    private SwitchCompat nightStatus, musicStatus;
-    private Button bookMark,collection;
-    private Context parent;
+    private SwitchCompat nightStatus, musicStatus, readDirection;
+    private Button bookMark, collection;
 
     public SettingFragment(Context parent) {
         this.parent = parent;
@@ -49,14 +48,27 @@ public class SettingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         Config.getInstance().readSettingConfig(parent);
+        setUI();
+    }
+
+    private void setUI() {
+        flag = Config.getInstance().getSpinnerPlace(readFontSize, getActivity());
+        readFontSize.setSelection(flag);
+        nightStatus.setChecked(Config.config.isNightStatus());
+        musicStatus.setChecked(Config.config.isMusicStatus());
+        readDirection.setChecked(Config.getInstance().isVerticalRead());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_setting, container, false);
-
         initSettingFrag();
         readFontSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -76,14 +88,10 @@ public class SettingFragment extends Fragment {
             }
         });
 
-        //
         nightStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Config.getInstance().setNightStatus(isChecked, getActivity());
-                if(((AppCompatActivity)getActivity()).getDelegate().getLocalNightMode() == AppCompatDelegate.MODE_NIGHT_NO){
-                    ((AppCompatActivity)getActivity()).getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                }
+                Config.getInstance().switchNightMode(getActivityFromView(), isChecked);
             }
         });
         bookMark.setOnClickListener(new View.OnClickListener() {
@@ -96,9 +104,13 @@ public class SettingFragment extends Fragment {
         collection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), CollectionActivity.class);
+                Intent intent = new Intent(getActivity(), BookCollectionActivity.class);
                 startActivity(intent);
             }
+        });
+
+        readDirection.setOnCheckedChangeListener((b, checked) -> {
+            Config.getInstance().setVerticalRead(checked, getActivity());
         });
         return view;
     }
@@ -116,16 +128,13 @@ public class SettingFragment extends Fragment {
         return null;
     }
 
-    public void initSettingFrag(){
+    public void initSettingFrag() {
         readFontSize = view.findViewById(R.id.sp_setFontSize);
         nightStatus = view.findViewById(R.id.sc_night_switch);
         musicStatus = view.findViewById(R.id.sc_music_switch);
         bookMark = view.findViewById(R.id.bt_bookmark);
         collection = view.findViewById(R.id.bt_collection);
-        flag = Config.getInstance().getSpinnerPlace(readFontSize,getActivity());
-        readFontSize.setSelection(flag);
-        nightStatus.setChecked(Config.config.isNightStatus());
-        musicStatus.setChecked(Config.config.isMusicStatus());
+        readDirection = view.findViewById(R.id.sc_swipe_mode);
     }
 
 }

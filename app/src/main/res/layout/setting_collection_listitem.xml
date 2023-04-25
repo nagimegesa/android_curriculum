@@ -7,26 +7,26 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="80dp"
-        android:background="@color/teal_200">
+        android:layout_height="70dp"
+        android:background="@color/theme_color">
 
         <TextView
             android:id="@+id/collection_name"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
             android:text="bookName"
-            android:textColor="@color/black"
-            android:textSize="25dp" />
+            android:textColor="@color/font_color"
+            android:textSize="25sp" />
 
         <TextView
+            android:textColor="@color/font_color"
             android:id="@+id/collection_page"
             android:layout_width="match_parent"
             android:layout_height="20dp"
             android:layout_below="@id/collection_name"
-            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
             android:text="页数"
-            android:textSize="14dp" />
-
+            android:textSize="14sp" />
     </RelativeLayout>
 </LinearLayout>
