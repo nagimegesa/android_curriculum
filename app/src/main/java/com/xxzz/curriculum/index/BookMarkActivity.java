@@ -1,11 +1,14 @@
 package com.xxzz.curriculum.index;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,16 +25,22 @@ public class BookMarkActivity extends AppCompatActivity {
     BookManager bookManager = new BookManager();
     private ListView listView;
     private BookMarkAdapter adapter;
-    private DBHelper dbHelper;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_mark);
         listView = findViewById(R.id.setting_bookmark_listview);
-        dbHelper = DBHelper.getInstance();
         adapter = new BookMarkAdapter(BookMarkActivity.this, readBookMarkDB());
+
+        @SuppressLint({"WrongViewCast", "MissingInflatedId", "LocalSuppress"})
+        ImageButton button = findViewById(R.id.bookmark_back);
+        button.setOnClickListener((v)-> {
+            finish();
+        });
+
+        if(getSupportActionBar() != null)
+            getSupportActionBar().hide();
 
         listView.setAdapter(adapter);
 

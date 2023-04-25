@@ -36,16 +36,28 @@ public class BookCollectionAdapter extends BaseAdapter {
         return i;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View getView(int i, View convertView, ViewGroup viewGroup) {
-        @SuppressLint("ViewHolder")
-        View view = LayoutInflater.from(context).inflate(R.layout.setting_bookmark_listitem, null);
-        TextView bookName = view.findViewById(R.id.bookmark_name);
-        TextView page = view.findViewById(R.id.bookmark_page);
-        TextView text = view.findViewById(R.id.bookmark_text);
-        text.setVisibility(View.GONE);
-        bookName.setText(list.get(i).getBookName());
-        page.setText(String.valueOf(list.get(i).getPage()));
+        View view = null;
+        ViewHolder viewHolder = null;
+        if (convertView == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.setting_collection_listitem, null);
+            viewHolder = new ViewHolder();
+            viewHolder.bookName = view.findViewById(R.id.collection_name);
+            viewHolder.page = view.findViewById(R.id.collection_page);
+            view.setTag(viewHolder);
+        } else {
+            view = convertView;
+            viewHolder = (ViewHolder) view.getTag();
+        }
+        viewHolder.bookName.setText(list.get(i).getBookName());
+        viewHolder.page.setText(list.get(i).getPage() + "");
         return view;
+    }
+
+    public class ViewHolder {
+        TextView bookName;
+        TextView page;
     }
 }

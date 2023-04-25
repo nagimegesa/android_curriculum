@@ -3,10 +3,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".index.BookMarkActivity">
+    <RelativeLayout
+        android:background="@color/theme_color"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <ImageButton
+            android:id="@+id/book_collection_back"
+            android:background="@color/theme_color"
+            android:src="@drawable/add_book_left"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+        </ImageButton>
+        <TextView
+            android:gravity="center_vertical"
+            android:layout_centerInParent="true"
+            android:textSize="20sp"
+            android:text="我的收藏"
+            android:textColor="@color/font_color"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+        </TextView>
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/setting_collection_listview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

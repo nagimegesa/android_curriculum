@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -58,7 +59,9 @@ public class IndexBookAdapter extends BaseAdapter {
         datas.sort(new Comparator<BooKInfo>() {
             @Override
             public int compare(BooKInfo b1, BooKInfo b2) {
-                return Integer.parseInt(b2.getLastReadTime()) - Integer.parseInt(b1.getLastReadTime());
+                long lhs = Long.parseLong(b1.getLastReadTime());
+                long rhs = Long.parseLong(b2.getLastReadTime());
+                return -Long.compare(lhs, rhs);
             }
         });
         notifyDataSetChanged();

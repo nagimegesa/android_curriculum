@@ -34,7 +34,7 @@
         android:layout_marginTop="8dp"
         android:columnWidth="60dp"
         android:gravity="center"
-        android:horizontalSpacing="20dp"
+        android:horizontalSpacing="10dp"
         android:numColumns="2"
         android:stretchMode="columnWidth"
         android:verticalSpacing="10dp" />

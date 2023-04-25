@@ -1,10 +1,13 @@
 package com.xxzz.curriculum.index;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -16,7 +19,6 @@ import com.xxzz.curriculum.read.ReadActivity;
 
 import java.util.List;
 
-;
 
 public class BookCollectionActivity extends AppCompatActivity {
     BookManager bookManager = new BookManager();
@@ -28,10 +30,16 @@ public class BookCollectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection);
         listView = findViewById(R.id.setting_collection_listview);
-        List<BookCollection> list = readCollectionDB();
-        adapter = new BookCollectionAdapter(BookCollectionActivity.this, list);
+        adapter = new BookCollectionAdapter(BookCollectionActivity.this, readCollectionDB());
         listView.setAdapter(adapter);
+        @SuppressLint({"WrongViewCast", "MissingInflatedId", "LocalSuppress"})
+        ImageButton button = findViewById(R.id.book_collection_back);
+        button.setOnClickListener((v)-> {
+            finish();
+        });
 
+        if(getSupportActionBar() != null)
+            getSupportActionBar().hide();
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
