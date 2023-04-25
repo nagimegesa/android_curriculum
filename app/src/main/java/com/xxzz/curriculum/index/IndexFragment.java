@@ -90,25 +90,24 @@ public class IndexFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
-        gridview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(IndexFragment.this.getContext());
-                builder.setTitle("确认删除?");
-                builder.setNegativeButton("取消", (d, w)-> d.dismiss());
-                builder.setPositiveButton("确定", (d, w) -> {
-                    TextView name = view.findViewById(R.id.book_name);
-                    try {
-                        deleteBook(name.getText().toString());
-                    } catch (IOException | JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-                builder.show();
-                return true;
-            }
-        });
+//        gridview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                AlertDialog.Builder builder = new AlertDialog.Builder(IndexFragment.this.getContext());
+//                builder.setTitle("确认删除?");
+//                builder.setNegativeButton("取消", (d, w)-> d.dismiss());
+//                builder.setPositiveButton("确定", (d, w) -> {
+//                    TextView name = view.findViewById(R.id.book_name);
+//                    try {
+//                        deleteBook(name.getText().toString());
+//                    } catch (IOException | JSONException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                });
+//                builder.show();
+//                return true;
+//            }
+//        });
         gridview.setOnChangeListener(new DragGridView.OnChanageListener() {
             @Override
             public void onChange(int from, int to) {
@@ -134,7 +133,7 @@ public class IndexFragment extends Fragment {
         return view;
     }
 
-    private void deleteBook(String bookName) throws IOException, JSONException {
+    void deleteBook(String bookName) throws IOException, JSONException {
         BookManager manager = new BookManager();
         manager.deleteBookInfo(bookName);
         deleteBookContentFile(bookName);
