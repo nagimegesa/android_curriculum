@@ -20,7 +20,7 @@ public class BookManager {
     }
 
     public void deleteBookMark(SQLiteDatabase db, String name, int page) {
-        db.delete("bookmark", "bookName=?" + "and" + "page=?", new String[]{name, String.valueOf(page)});
+        db.delete("bookmark", "bookName=" +name+ " and " + "page=" + String.valueOf(page), null);
         db.close();
     }
 

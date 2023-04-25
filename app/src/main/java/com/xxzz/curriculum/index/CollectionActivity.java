@@ -3,6 +3,7 @@ package com.xxzz.curriculum.index;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ListView;;
 
 import com.xxzz.curriculum.R;
@@ -18,6 +19,7 @@ public class CollectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//
         listView = findViewById(R.id.setting_collection_listview);
         dbHelper = new DBHelper(getApplicationContext());
 
@@ -26,5 +28,13 @@ public class CollectionActivity extends AppCompatActivity {
     }
     public List<BookCollection> readCollectionDB() {
         return bookManager.readBookCollection(dbHelper.getReadableDatabase());
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

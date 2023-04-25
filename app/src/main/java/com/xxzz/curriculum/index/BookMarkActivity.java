@@ -1,8 +1,9 @@
 package com.xxzz.curriculum.index;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.MotionEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.xxzz.curriculum.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BookMarkActivity extends AppCompatActivity {
@@ -21,13 +23,16 @@ public class BookMarkActivity extends AppCompatActivity {
     private bookMarkAdapter adapter;
     private DBHelper dbHelper;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_mark);
-        listView = findViewById(R.id.setting_bookmark_listview);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        listView = findViewById(R.id.setting_bookmark_listview);
         dbHelper = new DBHelper(getApplicationContext());
+
         //bookManager.addBookMark(dbHelper.getWritableDatabase(), "你好", 1, "哈哈");
         adapter = new bookMarkAdapter(BookMarkActivity.this, readBookMarkDB());
         listView.setAdapter(adapter);
@@ -47,9 +52,11 @@ public class BookMarkActivity extends AppCompatActivity {
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        bookManager.deleteBookMark(dbHelper.getWritableDatabase(),i);
-//                        adapter.notifyDataSetChanged();
-//                        recreate();
+                        BooKMark booKMark = bookManager.findBookMark(dbHelper.getReadableDatabase(),which);
+                        bookManager.deleteBookMark(dbHelper.getWritableDatabase(),booKMark.getBookName(),booKMark.getPage());
+                        List<BooKMark> list = new ArrayList<BooKMark>();
+                        list = readBookMarkDB();
+                        adapter.notifyDataSetChanged();
                     }
                 });
                 builder.show();
@@ -60,5 +67,13 @@ public class BookMarkActivity extends AppCompatActivity {
 
     public List<BooKMark> readBookMarkDB() {
         return bookManager.readBookMark(dbHelper.getReadableDatabase());
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
