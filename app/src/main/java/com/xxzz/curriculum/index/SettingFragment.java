@@ -136,6 +136,7 @@ public class SettingFragment extends Fragment {
         collection = view.findViewById(R.id.bt_collection);
         readDirection = view.findViewById(R.id.sc_swipe_mode);
     }
+
 }
 
 

@@ -3,6 +3,7 @@ package com.xxzz.curriculum.index;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.read.ReadActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BookMarkActivity extends AppCompatActivity {
@@ -22,6 +24,7 @@ public class BookMarkActivity extends AppCompatActivity {
     private BookMarkAdapter adapter;
     private DBHelper dbHelper;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +32,7 @@ public class BookMarkActivity extends AppCompatActivity {
         listView = findViewById(R.id.setting_bookmark_listview);
         dbHelper = DBHelper.getInstance();
         adapter = new BookMarkAdapter(BookMarkActivity.this, readBookMarkDB());
+
         listView.setAdapter(adapter);
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -65,5 +69,13 @@ public class BookMarkActivity extends AppCompatActivity {
 
     public List<BooKMark> readBookMarkDB() {
         return bookManager.readBookMark();
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

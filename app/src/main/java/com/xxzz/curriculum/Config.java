@@ -63,7 +63,7 @@ public class Config {
         if (fontSize >= minFontSize && fontSize <= maxFontSize) {
             readFontSize = fontSize;
             editor.putFloat("readFontSize", fontSize);
-            editor.apply();
+            editor.commit();
         }
     }
 
@@ -75,7 +75,7 @@ public class Config {
         sharedPreferences = parent.getSharedPreferences("setting", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         editor.putBoolean("musicStatus", musicStatus);
-        editor.apply();
+        editor.commit();
         this.musicStatus = musicStatus;
     }
 
