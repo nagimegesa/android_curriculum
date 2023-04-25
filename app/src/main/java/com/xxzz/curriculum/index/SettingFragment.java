@@ -104,7 +104,7 @@ public class SettingFragment extends Fragment {
         collection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), CollectionActivity.class);
+                Intent intent = new Intent(getActivity(), BookCollectionActivity.class);
                 startActivity(intent);
             }
         });

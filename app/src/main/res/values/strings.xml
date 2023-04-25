@@ -14,7 +14,7 @@
     <string name="setting_fontSize">调整字体大小</string>
     <string name="setting_nightStatus">夜间模式</string>
     <string name="setting_musicStatus">背景音乐</string>
-    <string name="setting_otherConfig">其他设置</string>
+    <string name="setting_otherConfig">其他</string>
 
 
     <!--        settingFragment spinner - default size:20   -->

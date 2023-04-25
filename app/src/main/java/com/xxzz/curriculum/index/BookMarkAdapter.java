@@ -11,11 +11,11 @@ import com.xxzz.curriculum.R;
 
 import java.util.List;
 
-public class bookMarkAdapter extends BaseAdapter {
+public class BookMarkAdapter extends BaseAdapter {
     private Context context;
     private List<BooKMark> list;
 
-    public bookMarkAdapter(Context context, List<BooKMark> list) {
+    public BookMarkAdapter(Context context, List<BooKMark> list) {
         this.context = context;
         this.list = list;
     }
@@ -26,7 +26,7 @@ public class bookMarkAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int i) {
+    public BooKMark getItem(int i) {
         return list.get(i);
     }
 
@@ -43,7 +43,7 @@ public class bookMarkAdapter extends BaseAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.setting_bookmark_listitem, null);
             viewHolder = new ViewHolder();
             viewHolder.bookName = view.findViewById(R.id.bookmark_name);
-            viewHolder.page = view.findViewById(R.id.page);
+            viewHolder.page = view.findViewById(R.id.bookmark_page);
             viewHolder.text = view.findViewById(R.id.bookmark_text);
             view.setTag(viewHolder);
         } else {

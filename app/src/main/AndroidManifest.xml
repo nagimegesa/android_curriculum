@@ -25,7 +25,7 @@
         android:theme="@style/Theme.Curriculum"
         tools:targetApi="26">
         <activity
-            android:name=".index.CollectionActivity"
+            android:name=".index.BookCollectionActivity"
             android:exported="false" />
         <activity
             android:name=".index.BookMarkActivity"

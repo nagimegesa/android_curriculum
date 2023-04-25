@@ -2,8 +2,11 @@ package com.xxzz.curriculum;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 import android.util.Xml;
 import android.widget.Toast;
+
+import com.xxzz.curriculum.join.FileOperation;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
@@ -53,6 +56,10 @@ public class Utils {
         reader.close();
         inputReader.close();
         inputStream.close();
+    }
+
+    public static void removeFiles(Path path) {
+        FileOperation.deleteDFile(path.toFile());
     }
 
     /**

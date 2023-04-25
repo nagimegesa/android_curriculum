@@ -10,7 +10,8 @@ import java.util.List;
 
 public class BookManager {
 
-    public void addBookMark(SQLiteDatabase db, String name, int page, String text) {
+    public void addBookMark(String name, int page, String text) {
+        SQLiteDatabase db = DBHelper.getInstance().getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("bookName", name);
         values.put("page", page);
@@ -19,20 +20,29 @@ public class BookManager {
         db.close();
     }
 
-    public void deleteBookMark(SQLiteDatabase db, String name, int page) {
-        db.delete("bookmark", "bookName=?" + "and" + "page=?", new String[]{name, String.valueOf(page)});
+    public void deleteBookMark(String name, int page) {
+        SQLiteDatabase db = DBHelper.getInstance().getWritableDatabase();
+        db.delete("bookmark", "bookname=?" + " and " + "page=?", new String[]{name, String.valueOf(page)});
         db.close();
     }
 
-    public void modifyBookMark(SQLiteDatabase db, String name, int page, String text) {
+    public void deleteBookCollection(String name, int page) {
+        SQLiteDatabase db = DBHelper.getInstance().getWritableDatabase();
+        db.delete("collection", "bookName=?" + " and " + "page=?", new String[]{name, String.valueOf(page)});
+        db.close();
+    }
+
+    public void modifyBookMark(String name, int page, String text) {
+        SQLiteDatabase db = DBHelper.getInstance().getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("text", text);
-        db.update("bookmark", values, "bookName=?" + "and" + "page=?", new String[]{name, String.valueOf(page)});
+        db.update("bookmark", values, "bookName=?" + " and " + "page=?", new String[]{name, String.valueOf(page)});
         db.close();
     }
 
     @SuppressLint("Range")
-    public BooKMark findBookMark(SQLiteDatabase db, int position) {
+    public BooKMark findBookMark(int position) {
+        SQLiteDatabase db = DBHelper.getInstance().getReadableDatabase();
         BooKMark booKMark = null;
         Cursor cursor = db.rawQuery("select * from bookmark", null);
         if (cursor.getCount() != 0) {
@@ -50,16 +60,18 @@ public class BookManager {
         return booKMark;
     }
 
-    public int findBookMark(SQLiteDatabase db, String name, int page) {
+    public int findBookMark(String name, int page) {
+        SQLiteDatabase db = DBHelper.getInstance().getReadableDatabase();
         Cursor cursor = db.query("bookmark", new String[]{"bookName", "page", "text"}, "bookName=?" + "and" + "page=?",
                 new String[]{name, String.valueOf(page)}, null, null, null);
         //
         return 0;
     }
 
-    public List<BooKMark> readBookMark(SQLiteDatabase db) {
+    public List<BooKMark> readBookMark() {
+        SQLiteDatabase db = DBHelper.getInstance().getReadableDatabase();
         List<BooKMark> list = new ArrayList<BooKMark>();
-        if (isTableExist(db, "bookmark")) {
+        if (isTableExist("bookmark")) {
             Cursor cursor = db.rawQuery("select * from bookmark", null);
             if (cursor.getCount() != 0) {
                 while (cursor.moveToNext()) {
@@ -82,9 +94,10 @@ public class BookManager {
     }
 
     @SuppressLint("Range")
-    public List<BookCollection> readBookMark(SQLiteDatabase db, String name) {
+    public List<BookCollection> readBookMark(String name) {
+        SQLiteDatabase db = DBHelper.getInstance().getReadableDatabase();
         List<BookCollection> list = new ArrayList<>();
-        if (isTableExist(db, "bookmark")) {
+        if (isTableExist("bookmark")) {
             Cursor cursor = db.rawQuery("select * from bookmark where bookName = ?", new String[]{name});
             if (cursor.getCount() != 0) {
                 while (cursor.moveToNext()) {
@@ -105,7 +118,8 @@ public class BookManager {
         return list;
     }
 
-    public boolean isTableExist(SQLiteDatabase db, String table) {
+    public boolean isTableExist(String table) {
+        SQLiteDatabase db = DBHelper.getInstance().getReadableDatabase();
         Cursor c = db.rawQuery("select count(*) from sqlite_master where type='table' and name='" + table + "'", null);
         if (c != null) {
             while (c.moveToNext()) {
@@ -121,7 +135,8 @@ public class BookManager {
         return false;
     }
 
-    public void addBookCollection(SQLiteDatabase db, String name, int page) {
+    public void addBookCollection(String name, int page) {
+        SQLiteDatabase db = DBHelper.getInstance().getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("bookName", name);
         values.put("page", page);
@@ -130,7 +145,8 @@ public class BookManager {
     }
 
     @SuppressLint("Range")
-    public BookCollection findBookCollection(SQLiteDatabase db, int position) {
+    public BookCollection findBookCollection(int position) {
+        SQLiteDatabase db = DBHelper.getInstance().getReadableDatabase();
         BookCollection bookCollection = null;
         Cursor cursor = db.rawQuery("select * from collection", null);
         if (cursor.getCount() != 0) {
@@ -148,7 +164,8 @@ public class BookManager {
     }
 
     @SuppressLint("Range")
-    public BookCollection findBookCollection(SQLiteDatabase db, String name) {
+    public BookCollection findBookCollection(String name) {
+        SQLiteDatabase db = DBHelper.getInstance().getReadableDatabase();
         BookCollection bookCollection = null;
         Cursor cursor = db.rawQuery("select * from collection where bookName = ?", new String[]{name});
         if (cursor.getCount() != 0) {
@@ -163,9 +180,10 @@ public class BookManager {
         return bookCollection;
     }
 
-    public List<BookCollection> readBookCollection(SQLiteDatabase db, String name) {
+    public List<BookCollection> readBookCollection(String name) {
+        SQLiteDatabase db = DBHelper.getInstance().getReadableDatabase();
         List<BookCollection> list = new ArrayList<BookCollection>();
-        if (isTableExist(db, "collection")) {
+        if (isTableExist("collection")) {
             Cursor cursor = db.rawQuery("select * from collection where bookName = ?", new String[]{name});
             if (cursor.getCount() != 0) {
                 while (cursor.moveToNext()) {
@@ -186,9 +204,10 @@ public class BookManager {
         return list;
     }
 
-    public List<BookCollection> readBookCollection(SQLiteDatabase db) {
+    public List<BookCollection> readBookCollection() {
+        SQLiteDatabase db = DBHelper.getInstance().getReadableDatabase();
         List<BookCollection> list = new ArrayList<BookCollection>();
-        if (isTableExist(db, "collection")) {
+        if (isTableExist("collection")) {
             Cursor cursor = db.rawQuery("select * from collection", null);
             if (cursor.getCount() != 0) {
                 while (cursor.moveToNext()) {
@@ -207,5 +226,13 @@ public class BookManager {
             }
         }
         return list;
+    }
+
+    public void deleteBookInfo(String bookName) {
+        SQLiteDatabase db = DBHelper.getInstance().getWritableDatabase();
+        db.delete("collection", "bookName=?", new String[]{bookName});
+        db.delete("bookmark", "bookName=?", new String[]{bookName});
+//        db.execSQL("delete from collection where bookName=" + bookName);
+//        db.execSQL("delete from bookMark where bookName=" + bookName);
     }
 }

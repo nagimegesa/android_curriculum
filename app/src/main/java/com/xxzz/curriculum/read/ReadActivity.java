@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -65,7 +66,7 @@ public class ReadActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        dbHelper = new DBHelper(getApplicationContext());
+        dbHelper = DBHelper.getInstance();
         initBook();
         initGUI();
     }
@@ -91,6 +92,10 @@ public class ReadActivity extends AppCompatActivity {
         }
         assert book != null;
         reader = new BookReader(getFilesDir().getAbsolutePath(), book);
+        if(intent.hasExtra("page")) {
+            int page = intent.getIntExtra("page", 0);
+            reader.setPageNow(page);
+        }
         ViewPager2 pager = this.findViewById(R.id.read_viewpager);
         pager.setAdapter(new ReadPageAdapter(reader));
         SeekBar bar = findViewById(R.id.read_seek_bar);
@@ -172,7 +177,8 @@ public class ReadActivity extends AppCompatActivity {
 
         content.setOnClickListener((v) -> {
             showLeftFragment();
-            fillLeftFrameWithBookCollection();
+            fillLeftFrameWithBookCollection((ListView)
+                    ReadActivity.this.findViewById(R.id.read_left_frame_listview));
         });
 
         Button back = findViewById(R.id.read_back_button);
@@ -198,7 +204,7 @@ public class ReadActivity extends AppCompatActivity {
         Button addLoves = findViewById(R.id.read_add_love);
         addLoves.setOnClickListener((v) -> {
             BookManager manager = new BookManager();
-            manager.addBookCollection(dbHelper.getWritableDatabase(), reader.getBook().getName(), reader.getPageNow());
+            manager.addBookCollection(reader.getBook().getName(), reader.getPageNow());
             Utils.makeToast(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT);
         });
 
@@ -212,9 +218,7 @@ public class ReadActivity extends AppCompatActivity {
             builder.setPositiveButton("确认", (d, w) -> {
                 String text = String.valueOf(editText.getText());
                 if (text.isEmpty()) d.dismiss();
-                manager.addBookMark(dbHelper.getWritableDatabase(),
-                        reader.getBook().getName(),
-                        reader.getPageNow(),
+                manager.addBookMark(reader.getBook().getName(), reader.getPageNow(),
                         String.valueOf(editText.getText()));
                 Utils.makeToast(ReadActivity.this, "添加成功", Toast.LENGTH_SHORT);
             });
@@ -265,18 +269,26 @@ public class ReadActivity extends AppCompatActivity {
 
         Button collection = findViewById(R.id.read_book_collection);
         Button mark = findViewById(R.id.read_book_mark);
+        ListView leftFrameListView = findViewById(R.id.read_left_frame_listview);
+
+        leftFrameListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                closeBasicMenu();
+                BookCollection c = (BookCollection) leftFrameListView.getAdapter().getItem(position);
+                seekBar.setProgress(c.getPage() - 1);
+            }
+        });
         collection.setOnClickListener((v) -> {
-            fillLeftFrameWithBookCollection();
+            fillLeftFrameWithBookCollection(leftFrameListView);
         });
 
         mark.setOnClickListener((v) -> {
             BookManager manager = new BookManager();
-            List<BookCollection> collectionList = manager.readBookMark(
-                    dbHelper.getReadableDatabase(),
-                    reader.getBook().getName());
+            List<BookCollection> collectionList =
+                    manager.readBookMark(reader.getBook().getName());
             LeftFrameListViewAdaptor adaptor = new LeftFrameListViewAdaptor(getLayoutInflater(), collectionList);
-            ListView listView = findViewById(R.id.read_left_frame_listview);
-            listView.setAdapter(adaptor);
+            leftFrameListView.setAdapter(adaptor);
         });
     }
 
@@ -303,13 +315,11 @@ public class ReadActivity extends AppCompatActivity {
         left_button.setCompoundDrawables(null, down, null, null);
     }
 
-    private void fillLeftFrameWithBookCollection() {
+    private void fillLeftFrameWithBookCollection(ListView listView) {
         BookManager manager = new BookManager();
-        List<BookCollection> collectionList = manager.readBookCollection(
-                dbHelper.getReadableDatabase(),
-                reader.getBook().getName());
+        List<BookCollection> collectionList =
+                manager.readBookCollection(reader.getBook().getName());
         LeftFrameListViewAdaptor adaptor = new LeftFrameListViewAdaptor(getLayoutInflater(), collectionList);
-        ListView listView = findViewById(R.id.read_left_frame_listview);
         listView.setAdapter(adaptor);
     }
 

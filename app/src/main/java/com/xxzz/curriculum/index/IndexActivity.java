@@ -2,6 +2,7 @@ package com.xxzz.curriculum.index;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -74,7 +75,9 @@ public class IndexActivity extends AppCompatActivity {
             if (res.getResultCode() != JoinBookActivity.REQUEST_OK) return;
             ArrayList<BooKInfo> info = data.getParcelableArrayListExtra("book_info");
             addBookToJsonFile(info);
+            IndexFragment.getInstance().updateBookList();
         });
+        DBHelper.initHelper(this);
     }
 
     @Override

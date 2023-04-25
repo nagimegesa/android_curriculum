@@ -47,7 +47,7 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
     public static final int REQUEST_OK = 520;
     private static final int SMART_SELECT_BOOK_MSG = 1;
     private final int REQUEST_CODE = 7325;
-    private final String BookPath = "/data/data/com.xxzz.curriculum/files/Book/";
+    private String BookPath;
     private final SparseBooleanArray stateCheckedMap = new SparseBooleanArray();//用来存放CheckBox的选中状态，true为选中,false为没有选中
     private final List<File> mCheckedData = new ArrayList<>();//将选中数据放入里面
     File FileTep = Environment.getExternalStorageDirectory();
@@ -79,6 +79,8 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_join_book);
         accessPermission();//获取 权限
+
+        BookPath = getFilesDir() + "/Book/";
 
         init_view();
         List<File> list
@@ -302,14 +304,15 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
             File tmpPath = getCacheDir();
             unzipFile(file.getPath(), tmpPath.getAbsolutePath());
             if (CheckFile(tmpPath)) {
-                String s = file.getName();
-                String savePath = BookPath + file.getName().split("\\.")[0];
-                String[] res = getBookNameAndCover(savePath + '/' + "jbk_config.json");
-                copyDir(tmpPath.getAbsolutePath(), BookPath + res[0]);
-                makeToast(JoinBookActivity.this, "加入成功", 100);
-
-                if(!isExistBook(res[0]))
+                String[] res = getBookNameAndCover(tmpPath.getAbsolutePath() + '/' + "jbk_config.json");
+                String savePath = BookPath + res[0];
+                if(!isExistBook(res[0])) {
+                    copyDir(tmpPath.getAbsolutePath(), BookPath + res[0]);
+                    makeToast(JoinBookActivity.this, "加入成功", 100);
                     booKInfoList.add(new BooKInfo(res[0], savePath + "/main/" + res[1], "0"));
+                } else {
+                    makeToast(JoinBookActivity.this, "书籍已存在", 100);
+                }
             } else
                 makeToast(JoinBookActivity.this, "所选文件不符合格式", 100);
             deleteDFile(tmpPath);
@@ -323,9 +326,9 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
         assert files != null;
         for (File file : files) {
             if (file.getName().equals(re))
-                return false;
+                return true;
         }
-        return true;
+        return false;
     }
 
     private String[] getBookNameAndCover(String savePath) throws IOException, JSONException {

@@ -1,12 +1,14 @@
 package com.xxzz.curriculum.index;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -21,6 +23,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -87,6 +90,25 @@ public class IndexFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        gridview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(IndexFragment.this.getContext());
+                builder.setTitle("确认删除?");
+                builder.setNegativeButton("取消", (d, w)-> d.dismiss());
+                builder.setPositiveButton("确定", (d, w) -> {
+                    TextView name = view.findViewById(R.id.book_name);
+                    try {
+                        deleteBook(name.getText().toString());
+                    } catch (IOException | JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                builder.show();
+                return true;
+            }
+        });
         gridview.setOnChangeListener(new DragGridView.OnChanageListener() {
             @Override
             public void onChange(int from, int to) {
@@ -112,6 +134,45 @@ public class IndexFragment extends Fragment {
         return view;
     }
 
+    private void deleteBook(String bookName) throws IOException, JSONException {
+        BookManager manager = new BookManager();
+        manager.deleteBookInfo(bookName);
+        deleteBookContentFile(bookName);
+        deleteBookCoverFile(bookName);
+        readBookInfoFromFile();
+        adapter.setDatas(list);
+        gridview.setAdapter(adapter);
+    }
+
+    private void deleteBookCoverFile(String bookName) throws IOException, JSONException {
+        String coverPath = getActivity().getFilesDir() + "/cover/text.json";
+        Path p = new File(coverPath).toPath();
+        String buf = Utils.readAllFile(p);
+        JSONObject object = new JSONObject(buf);
+        int count = object.getInt("count");
+        int removeIndex = -1;
+        JSONArray array = object.getJSONArray("cover");
+        for(int i = 0;i < array.length(); ++i) {
+            JSONObject o = (JSONObject) array.get(i);
+            if(o.getString("book_name").equals(bookName)) {
+                removeIndex = i;
+                break;
+            }
+        }
+
+        if(removeIndex != -1) {
+            array.remove(removeIndex);
+            object.put("count", count - 1);
+            object.put("cover", array);
+        }
+        Utils.writeFile(p, object.toString());
+    }
+
+    private void deleteBookContentFile(String bookName) {
+        String path = getActivity().getFilesDir() + "/Book/" + bookName;
+        Utils.removeFiles(new File(path).toPath());
+    }
+
     private void creatBookInfoFile() throws IOException {
         String path = getActivity().getFilesDir() + "/cover";
         File file = new File(path, "text.json");
@@ -133,6 +194,11 @@ public class IndexFragment extends Fragment {
         gridview.setAdapter(adapter);
     }
 
+    public void updateBookList() {
+        readBookInfoFromFile();
+        adapter.setDatas(list);
+        gridview.setAdapter(adapter);
+    }
     void readBookInfoFromFile() {
         list.clear();
         bookNameList.clear();
@@ -146,7 +212,6 @@ public class IndexFragment extends Fragment {
                 JSONObject object = array.getJSONObject(i);
                 if (!bookNameList.contains(object.getString("book_name"))) {
                     bookNameList.add(object.getString("book_name"));
-                    String path = object.getString("cover_path");
                     BooKInfo bookinfo = new BooKInfo(object.getString("book_name"), object.getString("cover_path"), object.getString("last_read_time"));
                     list.add(bookinfo);
                 }

@@ -6,22 +6,16 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <RelativeLayout
-        android:id="@+id/top_relative"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:background="@color/setting_toolbar_bg">
-
-        <TextView
-            android:id="@+id/titleText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:padding="10dp"
-            android:text="@string/setting_toolBar"
-            android:textColor="@color/white"
-            android:textSize="15dp" />
-    </RelativeLayout>
+    <TextView
+        android:gravity="center"
+        android:id="@+id/titleText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/setting_toolBar"
+        android:textColor="@color/white"
+        android:background="@color/setting_toolbar_bg"
+        android:textSize="15sp" />
 
     <ScrollView
         android:id="@+id/sv_content"
@@ -32,23 +26,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-            <!--   阅读设置  -->
-            <RelativeLayout
+            <TextView
+                android:paddingStart="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="25dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerInParent="true"
-                    android:text="@string/setting_readConfig"
-                    android:textColor="@color/setting_textprimary" />
-
-            </RelativeLayout>
+                android:layout_height="wrap_content"
+                android:text="@string/setting_readConfig"
+                android:textColor="@color/setting_textprimary" />
 
             <RelativeLayout
                 android:id="@+id/rl_reset_screen"
@@ -63,10 +46,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_gravity="left"
                     android:text="@string/setting_fontSize"
                     android:textColor="@color/setting_textsecondary"
-                    android:textSize="15dp" />
+                    android:textSize="15sp" />
 
                 <Spinner
                     android:id="@+id/sp_setFontSize"
@@ -96,7 +78,7 @@
                     android:layout_centerVertical="true"
                     android:text="@string/setting_musicStatus"
                     android:textColor="@color/setting_textsecondary"
-                    android:textSize="15dp" />
+                    android:textSize="15sp" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/sc_music_switch"
@@ -124,7 +106,7 @@
                     android:layout_centerVertical="true"
                     android:text="@string/setting_nightStatus"
                     android:textColor="@color/setting_textsecondary"
-                    android:textSize="15dp" />
+                    android:textSize="15sp" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/sc_night_switch"
@@ -152,7 +134,7 @@
                     android:layout_centerVertical="true"
                     android:text="上滑"
                     android:textColor="@color/setting_textsecondary"
-                    android:textSize="15dp" />
+                    android:textSize="15sp" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/sc_swipe_mode"
@@ -165,77 +147,37 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/rl_bookmark"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/setting_common_bg"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp">
-
-                <Button
-                    android:id="@+id/bt_bookmark"
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignLeft="@+id/bt_collection"
-                    android:layout_alignParentLeft="true"
-                    android:layout_weight="1"
-                    android:background="@android:color/darker_gray"
-                    android:text="书签" />
-
-                <Button
-                    android:id="@+id/bt_collection"
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:layout_weight="1"
-                    android:background="@android:color/darker_gray"
-                    android:text="收藏" />
-            </RelativeLayout>
             <!--          其他设置              -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="25dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp">
+            <TextView
+                android:paddingLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:text="@string/setting_otherConfig"
+                android:textColor="@color/setting_textprimary" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerInParent="true"
-                    android:text="@string/setting_otherConfig"
-                    android:textColor="@color/setting_textprimary" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/test_show_status"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/setting_common_bg"
-                android:gravity="center"
+            <Button
+                android:id="@+id/bt_bookmark"
                 android:paddingLeft="20dp"
-                android:paddingRight="20dp">
+                android:gravity="center_vertical | left"
+                android:text="我的书签"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="25dp"
+                android:drawableRight="@drawable/setting_right"
+                android:background="@color/setting_common_bg"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="测试功能"
-                    android:textColor="@color/setting_textsecondary"
-                    android:textSize="15dp" />
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/test_sc_volume2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:clickable="true"
-                    android:longClickable="false" />
-            </RelativeLayout>
-
+            <Button
+                android:id="@+id/bt_collection"
+                android:paddingLeft="20dp"
+                android:gravity="center_vertical | left"
+                android:text="我的收藏"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="25dp"
+                android:drawableRight="@drawable/setting_right"
+                android:background="@color/setting_common_bg"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -27,8 +27,8 @@ public class BookCollectionAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int i) {
-        return null;
+    public BookCollection getItem(int i) {
+        return list.get(i);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class BookCollectionAdapter extends BaseAdapter {
         @SuppressLint("ViewHolder")
         View view = LayoutInflater.from(context).inflate(R.layout.setting_bookmark_listitem, null);
         TextView bookName = view.findViewById(R.id.bookmark_name);
-        TextView page = view.findViewById(R.id.page);
+        TextView page = view.findViewById(R.id.bookmark_page);
         TextView text = view.findViewById(R.id.bookmark_text);
         text.setVisibility(View.GONE);
         bookName.setText(list.get(i).getBookName());

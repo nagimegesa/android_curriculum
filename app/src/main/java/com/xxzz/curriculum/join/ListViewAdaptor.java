@@ -82,7 +82,7 @@ public class ListViewAdaptor extends BaseAdapter {
 
         if (f.isDirectory()) {
             viewHolder.FileName.setText(f.getName());
-            viewHolder.FileImage.setImageResource(R.drawable.folder_open);
+            viewHolder.FileImage.setImageResource(R.drawable.add_book_folder_open);
             viewHolder.FileCheckBox.setVisibility(View.GONE);
         } else if (IsJbk(f)) {
             showAndHideCheckBox();
@@ -91,10 +91,10 @@ public class ListViewAdaptor extends BaseAdapter {
                 unzipFile(f.getPath(), tmpPath.getAbsolutePath());
                 if (CheckFile(tmpPath)) {
                     viewHolder.FileName.setText(f.getName());
-                    viewHolder.FileImage.setImageResource(R.drawable.book);
+                    viewHolder.FileImage.setImageResource(R.drawable.add_book_book);
                 } else {
                     viewHolder.FileName.setText(f.getName());
-                    viewHolder.FileImage.setImageResource(R.drawable.file_text2);
+                    viewHolder.FileImage.setImageResource(R.drawable.add_book_text_file);
                 }
                 deleteDFile(tmpPath);
             } catch (IOException e) {
@@ -104,7 +104,7 @@ public class ListViewAdaptor extends BaseAdapter {
         } else {
             showAndHideCheckBox();
             viewHolder.FileName.setText(f.getName());
-            viewHolder.FileImage.setImageResource(R.drawable.file_text2);
+            viewHolder.FileImage.setImageResource(R.drawable.add_book_text_file);
         }
 
 
