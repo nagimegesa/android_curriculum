@@ -10,6 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.xxzz.curriculum.R;
 
 import java.util.Comparator;
@@ -23,6 +25,10 @@ public class IndexBookAdapter extends BaseAdapter {
     public IndexBookAdapter(Context context, List<BooKInfo> datas) {
         this.context = context;
         this.datas = datas;
+    }
+
+    public void setDatas(List<BooKInfo> infos) {
+        this.datas = infos;
     }
 
     /**
@@ -73,6 +79,7 @@ public class IndexBookAdapter extends BaseAdapter {
         return position;
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         BooKHolder bookholder = new BooKHolder();
@@ -80,6 +87,7 @@ public class IndexBookAdapter extends BaseAdapter {
         bookholder.name = v.findViewById(R.id.book_name);
         bookholder.image = v.findViewById(R.id.book_image);
         bookholder.name.setText(datas.get(position).getName());
+        bookholder.name.setTextColor(ContextCompat.getColor(v.getContext(), R.color.font_color));
         Bitmap bitmap = BitmapFactory.decodeFile(datas.get(position).getCoverPath());
         bookholder.image.setImageBitmap(bitmap);
         return v;

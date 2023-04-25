@@ -16,33 +16,34 @@ import com.xxzz.curriculum.read.ReadActivity;
 
 import java.util.List;
 
-public class BookMarkActivity extends AppCompatActivity {
+;
+
+public class BookCollectionActivity extends AppCompatActivity {
     BookManager bookManager = new BookManager();
     private ListView listView;
-    private BookMarkAdapter adapter;
-    private DBHelper dbHelper;
+    private BookCollectionAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_book_mark);
-        listView = findViewById(R.id.setting_bookmark_listview);
-        dbHelper = DBHelper.getInstance();
-        adapter = new BookMarkAdapter(BookMarkActivity.this, readBookMarkDB());
+        setContentView(R.layout.activity_collection);
+        listView = findViewById(R.id.setting_collection_listview);
+        List<BookCollection> list = readCollectionDB();
+        adapter = new BookCollectionAdapter(BookCollectionActivity.this, list);
         listView.setAdapter(adapter);
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(BookMarkActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(BookCollectionActivity.this);
                 builder.setTitle("确认删除?");
                 builder.setNegativeButton("取消", (d, w)-> d.dismiss());
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        BooKMark mark = adapter.getItem(position);
-                        bookManager.deleteBookMark(mark.getBookName(), mark.getPage());
-                        adapter = new BookMarkAdapter(BookMarkActivity.this, readBookMarkDB());
+                        BookCollection collection = adapter.getItem(position);
+                        bookManager.deleteBookCollection(collection.getBookName(), collection.getPage());
+                        adapter = new BookCollectionAdapter(BookCollectionActivity.this, readCollectionDB());
                         listView.setAdapter(adapter);
                     }
                 });
@@ -50,10 +51,11 @@ public class BookMarkActivity extends AppCompatActivity {
                 return true;
             }
         });
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(BookMarkActivity.this, ReadActivity.class);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(BookCollectionActivity.this, ReadActivity.class);
                 TextView name = view.findViewById(R.id.bookmark_name);
                 TextView page = view.findViewById(R.id.bookmark_page);
                 intent.putExtra("book_name", name.getText().toString());
@@ -63,7 +65,7 @@ public class BookMarkActivity extends AppCompatActivity {
         });
     }
 
-    public List<BooKMark> readBookMarkDB() {
-        return bookManager.readBookMark();
+    public List<BookCollection> readCollectionDB() {
+        return bookManager.readBookCollection();
     }
 }

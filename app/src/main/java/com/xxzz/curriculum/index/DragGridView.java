@@ -272,7 +272,28 @@ public class DragGridView extends GridView {
             getChildAt(mDragPosition - getFirstVisiblePosition()).setVisibility(View.VISIBLE);//之前的item显示出来
             mDragPosition = tempPosition;
         }
-    }    /**
+    }
+
+    /**
+     * 停止拖拽我们将之前隐藏的item显示出来，并将镜像移除
+     */
+    private void onStopDrag() {
+        View view = getChildAt(mDragPosition - getFirstVisiblePosition());
+        if (view != null) {
+            view.setVisibility(View.VISIBLE);
+        }
+        removeDragImage();
+    }
+
+    public interface OnChanageListener {
+        /**
+         * 当item交换位置的时候回调的方法，只需要在该方法中实现数据的交换即可
+         * form开始的position to拖拽到的position
+         */
+        void onChange(int form, int to);
+    }
+
+    /**
      * 当moveY的值大于向上滚动的边界值，触发GridView自动向上滚动
      * 当moveY的值小于向下滚动的边界值，触犯GridView自动向下滚动
      * 否则不进行滚动
@@ -297,27 +318,4 @@ public class DragGridView extends GridView {
             smoothScrollBy(scrollY, 10);
         }
     };
-
-    /**
-     * 停止拖拽我们将之前隐藏的item显示出来，并将镜像移除
-     */
-    private void onStopDrag() {
-        View view = getChildAt(mDragPosition - getFirstVisiblePosition());
-        if (view != null) {
-            view.setVisibility(View.VISIBLE);
-        }
-        removeDragImage();
-    }
-
-    public interface OnChanageListener {
-        /**
-         * 当item交换位置的时候回调的方法，只需要在该方法中实现数据的交换即可
-         * form开始的position to拖拽到的position
-         */
-        void onChange(int form, int to);
-    }
-
-
-
-
 }

@@ -10,15 +10,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.xxzz.curriculum.Config;
 import com.xxzz.curriculum.R;
 
 import java.io.IOException;
 
 public class ReadPageAdapter extends RecyclerView.Adapter<ReadPageAdapter.Holder> {
     private final BookReader reader;
+    private final Config config;
 
     ReadPageAdapter(BookReader reader) {
         this.reader = reader;
+        this.config = Config.getInstance();
     }
 
     @NonNull
@@ -39,6 +42,7 @@ public class ReadPageAdapter extends RecyclerView.Adapter<ReadPageAdapter.Holder
             throw new RuntimeException(e);
         }
         imageView.setImageBitmap(pages.getMap());
+        textView.setTextSize(config.getReadFontSize());
         textView.setText(pages.getText());
     }
 

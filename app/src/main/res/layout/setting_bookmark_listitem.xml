@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/theme_color">
+
+        <TextView
+            android:textColor="@color/font_color"
+            android:id="@+id/bookmark_name"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:paddingStart="10dp"
+            android:text="bookName"
+            android:textSize="25sp" />
+
+        <TextView
+            android:textColor="@color/font_color"
+            android:id="@+id/bookmark_page"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bookmark_name"
+            android:paddingStart="10dp"
+            android:text="页数"
+            android:textSize="14sp" />
+
+        <TextView
+            android:textColor="@color/font_color"
+            android:id="@+id/bookmark_text"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_below="@id/bookmark_page"
+            android:paddingStart="10dp"
+            android:text="书签信息"
+            android:textSize="16sp" />
+    </RelativeLayout>
+</LinearLayout>

@@ -5,7 +5,12 @@ import android.graphics.BitmapFactory;
 
 import com.xxzz.curriculum.Utils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class BookReader {
@@ -47,7 +52,24 @@ public class BookReader {
         return new Pages(index, text, map);
     }
 
+    void saveBookPage() {
+        try {
+            Path p = new File(cachePath + book.getName() + "/jbk_config.json").toPath();
+            String buf = Utils.readAllFile(p);
+            JSONObject object = new JSONObject(buf);
+            object.putOpt("last_read_page", pageNow);
+            Utils.writeFile(p, object.toString());
+        } catch (IOException | JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     public int getPageNow() {
         return pageNow;
+    }
+
+    public void setPageNow(int pageNow) {
+        this.pageNow = pageNow;
     }
 }

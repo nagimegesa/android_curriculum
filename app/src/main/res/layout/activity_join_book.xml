@@ -23,7 +23,7 @@
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:src="@drawable/arrow_left2" />
+                android:src="@drawable/add_book_left" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -76,9 +76,10 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
         android:background="@color/my_gray"
+        android:orientation="horizontal"
         android:visibility="gone">
+
         <TextView
             android:id="@+id/cancel"
             android:layout_width="match_parent"
@@ -109,7 +110,4 @@
             android:textColor="@color/white"
             android:textSize="25sp" />
     </LinearLayout>
-
-
-
 </RelativeLayout>
