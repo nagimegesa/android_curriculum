@@ -60,6 +60,7 @@ public class Utils {
 
     public static void removeFiles(Path path) {
         FileOperation.deleteDFile(path.toFile());
+        path.toFile().delete();
     }
 
     /**
