@@ -176,6 +176,8 @@ public class IndexFragment extends Fragment {
         String path = getActivity().getFilesDir() + "/cover";
         File file = new File(path, "text.json");
         if (!file.exists()) {
+            File baseFile = new File(path);
+            baseFile.mkdir();
             file.createNewFile();
             String sp = System.lineSeparator();
             Utils.writeFile(file.toPath(), "{" + sp +

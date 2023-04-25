@@ -120,15 +120,6 @@ public class IndexActivity extends AppCompatActivity {
             case R.id.sort_book:
                 IndexFragment.getInstance().getAdapter().refreshData(IndexFragment.getInstance().getList());
                 break;
-            case R.id.test_book:
-                try {
-                    testBook();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
-                break;
             default:
                 break;
         }

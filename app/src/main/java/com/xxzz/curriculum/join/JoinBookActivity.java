@@ -10,6 +10,7 @@ import static com.xxzz.curriculum.join.UnzipUtil.unzipFile;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -27,8 +28,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.Utils;
 import com.xxzz.curriculum.index.BooKInfo;
@@ -42,6 +48,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 public class JoinBookActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int REQUEST_OK = 520;
@@ -78,19 +85,23 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_join_book);
-        accessPermission();//获取 权限
 
         BookPath = getFilesDir() + "/Book/";
 
+        accessPermission();//获取 权限
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         init_view();
+        setOnListViewItemClickListener();
+        setOnListViewItemLongClickListener();
         List<File> list
                 = InitFileList(Environment.getExternalStorageDirectory().getPath());
         //setStateCheckedMap(false);
         adapter = new ListViewAdaptor(JoinBookActivity.this, list, stateCheckedMap);
         listView.setAdapter(adapter);
-
-        setOnListViewItemClickListener();
-        setOnListViewItemLongClickListener();
     }
 
     private void setOnListViewItemClickListener() {
@@ -236,9 +247,19 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void accessPermission() {
+//        XXPermissions.with(this).permission(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION).request(new OnPermissionCallback() {
+//            @Override
+//            public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
+//                if(!allGranted) {
+//                    Toast.makeText(JoinBookActivity.this, "没有获得权限", Toast.LENGTH_LONG).show();
+//                    JoinBookActivity.this.finish();
+//                }
+//            }
+//        });
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R ||
                 Environment.isExternalStorageManager()) {
         } else {
+            Toast.makeText(this, "请授权访问所有文件", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
             startActivityForResult(intent, REQUEST_CODE);
         }
@@ -247,8 +268,8 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == REQUEST_CODE) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R || Environment.isExternalStorageManager()) {
+        if (requestCode == REQUEST_CODE) {
+            if (!Environment.isExternalStorageManager()) {
                 Toast.makeText(this, "没有访问所有文件的权限", Toast.LENGTH_SHORT).show();
                 finish();
             }
