@@ -363,14 +363,21 @@ public class JoinBookActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void Add_Book() {
-        for (File f : mCheckedData) {
-            Unzip_Copy(f);
+        if(mCheckedData.size() != 0){
+            for (File f : mCheckedData)
+                Unzip_Copy(f);
+            TransmitData();
         }
-        TransmitData();
+
+
+
         cancel();
     }
 
     public boolean Is_Book(File file) throws IOException {
+        if(!IsJbk(file)){
+            return false;
+        }
         File tmpPath = getCacheDir();
         unzipFile(file.getPath(), tmpPath.getAbsolutePath());
         if (CheckFile(tmpPath)) {
