@@ -2,6 +2,7 @@ package com.xxzz.curriculum.index;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 public class BooKInfo implements Parcelable {
     public static final Creator<?> CREATOR = new Creator<BooKInfo>() {

@@ -2,7 +2,6 @@ package com.xxzz.curriculum.index;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +27,6 @@ import com.xxzz.curriculum.Config;
 import com.xxzz.curriculum.R;
 import com.xxzz.curriculum.Utils;
 import com.xxzz.curriculum.join.JoinBookActivity;
-import com.xxzz.curriculum.read.ReadActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;

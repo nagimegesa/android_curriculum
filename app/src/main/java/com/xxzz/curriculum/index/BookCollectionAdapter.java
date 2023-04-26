@@ -13,8 +13,8 @@ import com.xxzz.curriculum.R;
 import java.util.List;
 
 public class BookCollectionAdapter extends BaseAdapter {
-    private Context context;
-    private List<BookCollection> list;
+    private final Context context;
+    private final List<BookCollection> list;
 
     public BookCollectionAdapter(Context context, List<BookCollection> list) {
         this.context = context;

@@ -2,7 +2,6 @@ package com.xxzz.curriculum;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 import android.util.Xml;
 import android.widget.Toast;
 

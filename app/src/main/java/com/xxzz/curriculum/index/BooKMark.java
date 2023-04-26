@@ -1,7 +1,7 @@
 package com.xxzz.curriculum.index;
 
 public class BooKMark extends BookCollection {
-    private String text;
+    private final String text;
 
     public BooKMark(String bookName, int page, String text) {
         super(bookName, page);

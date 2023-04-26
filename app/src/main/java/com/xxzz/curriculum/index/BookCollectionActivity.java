@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -64,8 +63,8 @@ public class BookCollectionActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(BookCollectionActivity.this, ReadActivity.class);
-                TextView name = view.findViewById(R.id.bookmark_name);
-                TextView page = view.findViewById(R.id.bookmark_page);
+                TextView name = view.findViewById(R.id.collection_name);
+                TextView page = view.findViewById(R.id.collection_page);
                 intent.putExtra("book_name", name.getText().toString());
                 intent.putExtra("page", Integer.valueOf(page.getText().toString()));
                 startActivity(intent);

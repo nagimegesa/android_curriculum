@@ -15,7 +15,7 @@ import java.util.List;
 
 public class LeftFrameListViewAdaptor extends BaseAdapter {
     private final LayoutInflater inflater;
-    private List<BookCollection> list;
+    private final List<BookCollection> list;
 
     public LeftFrameListViewAdaptor(LayoutInflater inflater, List<BookCollection> list) {
         this.list = list;
@@ -45,7 +45,7 @@ public class LeftFrameListViewAdaptor extends BaseAdapter {
         @SuppressLint({"MissingInflatedId", "LocalSuppress"})
         TextView page = view.findViewById(R.id.read_left_collection_page);
         BookCollection collection = list.get(position);
-        page.setText("第" + String.valueOf(collection.getPage()) + "页");
+        page.setText("第" + collection.getPage() + "页");
         @SuppressLint({"MissingInflatedId", "LocalSuppress"})
         TextView text = view.findViewById(R.id.read_left_mark_text);
         if (collection instanceof BooKMark) {

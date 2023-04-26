@@ -177,8 +177,7 @@ public class ReadActivity extends AppCompatActivity {
 
         content.setOnClickListener((v) -> {
             showLeftFragment();
-            fillLeftFrameWithBookCollection((ListView)
-                    ReadActivity.this.findViewById(R.id.read_left_frame_listview));
+            fillLeftFrameWithBookCollection(ReadActivity.this.findViewById(R.id.read_left_frame_listview));
         });
 
         Button back = findViewById(R.id.read_back_button);

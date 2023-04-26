@@ -1,10 +1,10 @@
 package com.xxzz.curriculum.index;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.ListView;;
+import android.widget.ListView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.xxzz.curriculum.R;
 

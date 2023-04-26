@@ -12,8 +12,8 @@ import com.xxzz.curriculum.R;
 import java.util.List;
 
 public class BookMarkAdapter extends BaseAdapter {
-    private Context context;
-    private List<BooKMark> list;
+    private final Context context;
+    private final List<BooKMark> list;
 
     public BookMarkAdapter(Context context, List<BooKMark> list) {
         this.context = context;

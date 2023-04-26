@@ -91,7 +91,7 @@ public class Config {
         sharedPreferences = parent.getSharedPreferences("setting", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         editor.putBoolean("verticalRead", w);
-        editor.apply();
+        editor.commit();
         this.verticalRead = w;
     }
 
@@ -99,7 +99,7 @@ public class Config {
         sharedPreferences = parent.getSharedPreferences("setting", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         editor.putBoolean("nightStatus", nightStatus);
-        editor.apply();
+        editor.commit();
         this.nightStatus = nightStatus;
     }
 
@@ -107,7 +107,7 @@ public class Config {
         sharedPreferences = parent.getSharedPreferences("setting", Context.MODE_PRIVATE);
         float fontSize = sharedPreferences.getFloat("readFontSize", 0);
         int flag = 0;
-        if (readFontSize.getSelectedItem().toString() != Float.toString(fontSize)) {
+        if (!readFontSize.getSelectedItem().toString().equals(Float.toString(fontSize))) {
             for (int i = 0; i < fontSizeArray.length; i++) {
                 if (fontSize == fontSizeArray[i]) flag = i;
             }
@@ -129,7 +129,7 @@ public class Config {
         //  读取设置
         SharedPreferences sharedPreferences = parent.getSharedPreferences("setting", Context.MODE_PRIVATE);
         this.readFontSize = sharedPreferences.getFloat("readFontSize", 0);
-        this.nightStatus = sharedPreferences.getBoolean("nightStatus", true);
+        this.nightStatus = sharedPreferences.getBoolean("nightStatus", false);
         this.musicStatus = sharedPreferences.getBoolean("musicStatus", true);
         this.verticalRead = sharedPreferences.getBoolean("verticalRead", false);
     }
