@@ -61,7 +61,7 @@ public class SettingFragment extends Fragment {
         flag = Config.getInstance().getSpinnerPlace(readFontSize, getActivity());
         readFontSize.setSelection(flag);
         nightStatus.setChecked(Config.config.isNightStatus());
-        musicStatus.setChecked(Config.config.isMusicStatus());
+//        musicStatus.setChecked(Config.config.isMusicStatus());
         readDirection.setChecked(Config.getInstance().isVerticalRead());
     }
 
@@ -81,12 +81,12 @@ public class SettingFragment extends Fragment {
                 Log.d("fontSize", "NothingSelected");
             }
         });
-        musicStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                Config.getInstance().setMusicStatus(isChecked, getActivity());
-            }
-        });
+//        musicStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+//                Config.getInstance().setMusicStatus(isChecked, getActivity());
+//            }
+//        });
 
         nightStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -131,7 +131,7 @@ public class SettingFragment extends Fragment {
     public void initSettingFrag() {
         readFontSize = view.findViewById(R.id.sp_setFontSize);
         nightStatus = view.findViewById(R.id.sc_night_switch);
-        musicStatus = view.findViewById(R.id.sc_music_switch);
+//        musicStatus = view.findViewById(R.id.sc_music_switch);
         bookMark = view.findViewById(R.id.bt_bookmark);
         collection = view.findViewById(R.id.bt_collection);
         readDirection = view.findViewById(R.id.sc_swipe_mode);

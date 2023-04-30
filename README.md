@@ -131,23 +131,24 @@
     2. text 目录
        存放文本资源
     3. jbk_config.json 文件 定义图书的信息, 格式如下
-    ```json
+```json
     {
         "book_name" : "book_name",
-        "cover" : "/cover.png",
-        "path" : "/book_path/book_name",
+        "cover" : "cover.png",
+        "path" : "book_path/book_name",
         "pages_count" : 2,
         "pages" : [{
             "pages" : 1,
-            "image" : "/page1.png",
-            "text" : "/text1.txt"
+            "image" : "page1.png",
+            "text" : "text1.txt"
         }, {
             "pages" : 2,
             "image" : "/page2.png",
-            "text" : "/text2.txt"
-        }]
+            "text" : "text2.txt"
+        }],
+        "last_read_page" : 0
     }
-
+```
 以上各字段解释如下：
 
 + book_name 图书名

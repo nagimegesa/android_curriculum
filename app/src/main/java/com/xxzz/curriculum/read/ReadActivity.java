@@ -50,7 +50,6 @@ public class ReadActivity extends AppCompatActivity {
     private boolean isBottomSettingMenuShow = false;
     private boolean isNightMode = true;
 
-    private DBHelper dbHelper;
     private Config config;
     // private final ArrayList<View> views = new ArrayList<>();
 
@@ -66,7 +65,6 @@ public class ReadActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        dbHelper = DBHelper.getInstance();
         initBook();
         initGUI();
     }

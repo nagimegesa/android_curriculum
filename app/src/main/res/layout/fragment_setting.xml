@@ -63,33 +63,33 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/rl_show_music"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/setting_common_bg"
-                android:gravity="center"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp">
+<!--            <RelativeLayout-->
+<!--                android:id="@+id/rl_show_music"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:background="@color/setting_common_bg"-->
+<!--                android:gravity="center"-->
+<!--                android:paddingLeft="20dp"-->
+<!--                android:paddingRight="20dp">-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/setting_musicStatus"
-                    android:textColor="@color/setting_textsecondary"
-                    android:textSize="15sp" />
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:text="@string/setting_musicStatus"-->
+<!--                    android:textColor="@color/setting_textsecondary"-->
+<!--                    android:textSize="15sp" />-->
 
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/sc_music_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:clickable="true"
-                    android:longClickable="false" />
+<!--                <androidx.appcompat.widget.SwitchCompat-->
+<!--                    android:id="@+id/sc_music_switch"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_alignParentEnd="true"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:clickable="true"-->
+<!--                    android:longClickable="false" />-->
 
-            </RelativeLayout>
+<!--            </RelativeLayout>-->
 
             <RelativeLayout
                 android:id="@+id/rl_show_night"
