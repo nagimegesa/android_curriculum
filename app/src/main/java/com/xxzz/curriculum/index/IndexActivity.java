@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.RadioGroup;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -39,6 +39,8 @@ import java.util.List;
 
 public class IndexActivity extends AppCompatActivity {
     ActivityResultLauncher<Intent> launcher;
+
+    private boolean isDelete = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +115,7 @@ public class IndexActivity extends AppCompatActivity {
                 startAddBook();
                 break;
             case R.id.dete_book:
-                deteleBook();
+                deleteBook(item);
                 break;
             case R.id.sort_book:
                 IndexFragment.getInstance().getAdapter().refreshData(IndexFragment.getInstance().getList());
@@ -123,53 +125,15 @@ public class IndexActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    private void deteleBook(){
-        IndexFragment.getInstance().gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                try {
-                    IndexFragment.getInstance().deleteBook(IndexFragment.getInstance().getBookNameList().get(position));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
-//                    JSONObject cover = new JSONObject(Utils.readAllFile(getFilesDir().toPath().resolve("cover/text.json")));
-//                    JSONArray array = cover.getJSONArray("cover");
-//                    int count = cover.getInt("count");
-//                    for( int i=0 ;i<array.length();i++) {
-//                        JSONObject object = new JSONObject();
-//                        object= (JSONObject) array.get(i);
-//                        if(object.getString("book_name").equals(IndexFragment.getInstance().getBookNameList().get(position))) {
-//                            object.put("book_name", null);
-//                            object.put("cover_path", null);
-//                            object.put("last_read_time", null);
-//                        }
-//                    }
-//                    count-=1;
-//                    cover.putOpt("count", count);
-//                    Utils.writeFile(getFilesDir().toPath().resolve("cover/text.json"), cover.toString());
-//                } catch (IOException | JSONException e) {
-//                    throw new RuntimeException(e);
-//                }
-//                IndexFragment.getInstance().readBookInfoFromFile();
-//                IndexFragment.getInstance().getAdapter().notifyDataSetChanged();
-            }
-        });
-    }
-    private void testBook() throws IOException, JSONException {
-        List<BooKInfo> infos=new ArrayList<>();
-        String res = Utils.readAllFile(getFilesDir().toPath().resolve("cover/test.json").toFile().toPath());
-        JSONObject context = new JSONObject(res);
-        JSONArray array = context.getJSONArray("cover");
-        for (int i = 0; i < array.length(); i++) {
-            JSONObject object = array.getJSONObject(i);
-            BooKInfo bookinfo = new BooKInfo(object.getString("book_name"), object.getString("cover_path"), object.getString("last_read_time"));
-            infos.add(bookinfo);
+    private void deleteBook(MenuItem item){
+        if(isDelete) {
+            item.setTitle("取消删除");
+            IndexFragment.getInstance().setOnClickToDelete();
+        } else {
+            item.setTitle("删除图书");
+            IndexFragment.getInstance().setOnClickToRead();
         }
-        addBookToJsonFile(infos);
-        IndexFragment.getInstance().readBookInfoFromFile();
-        IndexFragment.getInstance().getAdapter().notifyDataSetChanged();
+        isDelete = !isDelete;
     }
 
     private void startAddBook() {

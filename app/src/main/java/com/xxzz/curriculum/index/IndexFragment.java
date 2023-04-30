@@ -29,7 +29,7 @@ import java.util.List;
 public class IndexFragment extends Fragment {
 
     private static IndexFragment fragment;
-    public DragGridView gridview;
+    private DragGridView gridview;
     private final List<BooKInfo> list = new ArrayList<>();
     private IndexBookAdapter adapter;
     private final List<String> bookNameList = new ArrayList<String>();
@@ -88,24 +88,6 @@ public class IndexFragment extends Fragment {
                 startActivity(intent);
             }
         });
-//        gridview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//            @Override
-//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//                AlertDialog.Builder builder = new AlertDialog.Builder(IndexFragment.this.getContext());
-//                builder.setTitle("确认删除?");
-//                builder.setNegativeButton("取消", (d, w)-> d.dismiss());
-//                builder.setPositiveButton("确定", (d, w) -> {
-//                    TextView name = view.findViewById(R.id.book_name);
-//                    try {
-//                        deleteBook(name.getText().toString());
-//                    } catch (IOException | JSONException e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                });
-//                builder.show();
-//                return true;
-//            }
-//        });
         gridview.setOnChangeListener(new DragGridView.OnChanageListener() {
             @Override
             public void onChange(int from, int to) {
@@ -220,6 +202,44 @@ public class IndexFragment extends Fragment {
         }
     }
 
+    public void setOnClickToRead() {
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                try {
+                    String res = Utils.readAllFile(getActivity().getFilesDir().toPath().resolve("cover/text.json").toFile().toPath());
+                    JSONObject context = new JSONObject(res);
+                    JSONArray array = context.getJSONArray("cover");
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject object = array.getJSONObject(i);
+                        if (object.getString("book_name").equals(bookNameList.get(position))) {
+                            String s = String.valueOf(System.currentTimeMillis());
+                            object.put("last_read_time", s);
+                            Utils.writeFile(getActivity().getFilesDir().toPath().resolve("cover/text.json"), context.toString());
+                        }
+                    }
+                } catch (IOException | JSONException e) {
+                    throw new RuntimeException(e);
+                }
+                Intent intent = new Intent();
+                intent.putExtra("book_name", bookNameList.get(position));
+                intent.setClass(getContext(), ReadActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+    public void setOnClickToDelete() {
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                try {
+                    deleteBook(getBookNameList().get(position));
+                } catch (IOException | JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+    }
     public List<BooKInfo> getList() {
         return list;
     }
